@@ -1,0 +1,6 @@
+# File này sẽ chứa những file và folder sẽ không đẩy lên github
+
+# Nếu là folder không muốn đẩy lên thì để dấu / ở đằng sau
+node_modules/
+# Nếu là một file thì không cần có dấu / ở cuối
+.env
