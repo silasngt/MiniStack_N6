@@ -1,13 +1,12 @@
-doctype html
-html
-  head
-    title Trang chủ đề
-  body
-    h1 Trang chủ đề
-    each item in user
-        h1 #{item.userid}
-        h1 #{item.fullname}
-        h1 #{item.email}
-        h1 #{item.password}
-        h1 #{item.gender}
-        h1 #{item.role}
+extends ../../layouts/default.pug
+
+
+block main
+  h1 Trang chủ đề
+  each item in user
+      h1 #{item.userid}
+      h1 #{item.fullname}
+      h1 #{item.email}
+      h1 #{item.password}
+      h1 #{item.gender}
+      h1 #{item.role}
