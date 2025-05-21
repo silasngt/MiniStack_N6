@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import sequelize from './config/database';
 import { routesClient } from './routes/client/index.routes';
+import { routesAdmin } from './routes/admin/index.routes';
 
 //Kết nối database
 sequelize;
@@ -20,7 +21,7 @@ app.set('view engine', 'pug'); // Thiết lập phần template engines sẽ s�
 // Nhúng các Routes vào app
 // import { routesClient } from './routes/client/index.routes';
 routesClient(app);
-
+routesAdmin(app);
 app.listen(port, () => {
   console.log(`App listening on port http://localhost:${port}`);
 });

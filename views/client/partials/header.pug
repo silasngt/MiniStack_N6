@@ -1,1 +1,16 @@
-div Header
+// Header giống hình ảnh được cung cấp
+header.py-2.border-bottom
+    .container.d-flex.justify-content-between.align-items-center
+        // Logo bên trái
+        a.navbar-brand(href="/") miniStack
+
+        // Ô tìm kiếm ở giữa
+        .d-flex.w-50.justify-content-center
+            .input-group.w-75
+            input.form-control.search-input(type="search" placeholder="" aria-label="Search")
+
+        // Các liên kết và nút đăng nhập bên phải
+        .d-flex.align-items-center
+            a.nav-link.text-dark.me-3(href="/") Trang chủ
+            a.nav-link.text-dark.me-3(href="#") Liên hệ
+            a.btn.btn-login.px-4(href="#") Đăng nhập
