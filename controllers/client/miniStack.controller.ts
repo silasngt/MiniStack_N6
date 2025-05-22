@@ -8,6 +8,7 @@ export const index = async (req: Request, res: Response) => {
     },
     raw: true, //Giữ lại các trường dữ liệu chuẩn như trong db
   });
+  console.log(user);
   res.render('client/pages/stack/index.pug', {
     pageTitle: 'MiniStack',
     user: user,
