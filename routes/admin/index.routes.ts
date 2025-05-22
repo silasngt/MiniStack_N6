@@ -1,6 +1,8 @@
 import { Express } from 'express';
 import { dashboardRoute } from './dashboard.route';
-let { ADMIN_NAME } = process.env;
+import { systemConfig } from '../../config/system';
+
 export const routesAdmin = (app: Express) => {
-  app.use(`/${ADMIN_NAME}/dashboard`, dashboardRoute);
+  const path = systemConfig.prefixAdmin;
+  app.use(`/${path}/dashboard`, dashboardRoute);
 };
