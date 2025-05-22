@@ -2,7 +2,7 @@
   nav.sidebar-nav
     ul.nav-list
       li.nav-item
-        a.nav-link(href="/dashboard", class=(currentPath === '/dashboard' ? 'active' : '')) Dashboard
+        a.nav-link(href=`/${prefixAdmin}/dashboard`, class=(currentPath === '/dashboard' ? 'active' : '')) Dashboard
       li.nav-item
         a.nav-link(href="/quan-ly-nguoi-dung", class=(currentPath === '/quan-ly-nguoi-dung' ? 'active' : '')) Quản lý người dùng
       li.nav-item
