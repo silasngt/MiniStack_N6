@@ -64,6 +64,20 @@ body {
   gap: 10px;
 }
 
+.profile-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  padding: 5px 8px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.profile-link:hover {
+  background-color: rgba(51, 102, 255, 0.1);
+}
+
 .admin-avatar {
   width: 36px;
   height: 36px;
