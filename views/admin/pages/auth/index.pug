@@ -1,0 +1,62 @@
+doctype html
+html(lang="vi")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Đăng nhập Admin - Ministeck
+    // Bootstrap CSS
+    link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet")
+    // Font Awesome
+    link(href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet")
+    // Google Fonts
+    link(href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet")
+    
+    link(rel="stylesheet", href="/admin/css/styleQ.css")
+     
+
+  body
+    .container
+      .row.justify-content-center
+        .col-md-5.col-lg-4
+          .login-container
+            .login-header
+              .logo miniStack
+              p.mb-0 Quản trị hệ thống
+            
+            .p-4
+              #loginAlert.alert.alert-danger(style="display: none;")
+                i.fas.fa-exclamation-triangle.me-2
+                span#alertMessage
+              
+              form#loginForm
+                .mb-3
+                  label.form-label.fw-semibold(for="username") Tên đăng nhập
+                  .input-group
+                    span.input-group-text
+                      i.fas.fa-user.text-muted
+                    input.form-control(type="text" id="username" placeholder="Nhập tên đăng nhập" required)
+                
+                .mb-3
+                  label.form-label.fw-semibold(for="password") Mật khẩu
+                  .input-group
+                    span.input-group-text
+                      i.fas.fa-lock.text-muted
+                    input.form-control(type="password" id="password" placeholder="Nhập mật khẩu" required)
+                    button.btn.btn-outline-secondary(type="button" id="togglePassword")
+                      i.fas.fa-eye
+                
+                .mb-3.form-check
+                  input.form-check-input(type="checkbox" id="rememberMe")
+                  label.form-check-label(for="rememberMe") Ghi nhớ đăng nhập
+                
+                .d-grid.mb-3
+                  button.btn.btn-primary.btn-login(type="submit")
+                    i.fas.fa-sign-in-alt.me-2
+                    | Đăng nhập
+                
+          
+
+    // Bootstrap JS
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js")
+    script(src="/admin/js/scriptQ.js")
+      
