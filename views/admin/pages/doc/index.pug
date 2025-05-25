@@ -1,0 +1,48 @@
+extends ../../layouts/default.pug
+
+block main
+    .post-management-container
+        .post-header
+            h1.post-title Danh sách bài viết
+            a.btn-add-post(href="/admin/bai-viet/them-moi") Thêm bài viết mới
+
+        .post-table-container
+            table.post-table
+                thead
+                    tr
+                        th ID
+                        th Tiêu đề
+                        th Nội dung
+                        th Tác giả
+                        th Danh mục
+                        th Ngày tạo
+                        th Thao tác
+
+                tbody
+                    - for (let i = 1; i <= 6; i++)
+                        tr
+                            td= i
+                            td.truncate iauwsdhfasdfadfs...
+                            td.truncate iauwsdhfasdsdfgasddf...
+                            td sdfgsdfgsddsfg
+                            td sdfgsdfgsddsfg
+                            td 01/01/2025
+                            td.action-buttons
+                                a.btn-view(href="#")
+                                    i.fas.fa-eye
+                                a.btn-edit(href="#")
+                                    i.fas.fa-pencil-alt
+                                a.btn-delete(href="#")
+                                    i.fas.fa-trash
+
+            .pagination
+                a.page-nav(href="#") 
+                    i.fas.fa-chevron-left
+                    |  Prev
+
+                - for (let i = 1; i <= 5; i++)
+                    a.page-number(href="#" class=i === 2 ? 'active' : '')= i
+
+                a.page-nav(href="#") 
+                    | Next 
+                    i.fas.fa-chevron-right

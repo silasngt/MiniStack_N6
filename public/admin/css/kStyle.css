@@ -127,3 +127,155 @@
   background-color: #333;
 }
 /*end  admin profile */
+
+/* CSS for Post Management Page */
+.post-management-container {
+  width: 100%;
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
+  background-color: #4169e1;
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+}
+
+.post-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.btn-add-post {
+  background-color: #ffee58;
+  color: #333;
+  padding: 8px 16px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-add-post:hover {
+  background-color: #fdd835;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.post-table-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.post-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.post-table th,
+.post-table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.post-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #555;
+}
+
+.post-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.truncate {
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-view,
+.btn-edit,
+.btn-delete {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btn-view {
+  background-color: #2196f3;
+}
+
+.btn-edit {
+  background-color: #4caf50;
+}
+
+.btn-delete {
+  background-color: #f44336;
+}
+
+.btn-view:hover,
+.btn-edit:hover,
+.btn-delete:hover {
+  opacity: 0.85;
+  transform: translateY(-2px);
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  padding: 10px 0;
+}
+
+.page-number,
+.page-nav {
+  min-width: 36px;
+  height: 36px;
+  margin: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  color: #555;
+}
+
+.page-nav {
+  padding: 0 10px;
+}
+
+.page-number:hover,
+.page-nav:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.page-number.active {
+  background-color: #4169e1;
+  color: white;
+}
+
+/* end post management */
