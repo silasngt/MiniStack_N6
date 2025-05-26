@@ -1,0 +1,9 @@
+.no-scroll-container {
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+.no-scroll-container .flex-grow {
+  max-height: calc(100vh - 150px); /* hoặc điều chỉnh phù hợp */
+  overflow-y: auto;
+}
