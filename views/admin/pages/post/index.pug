@@ -1,0 +1,65 @@
+extends ../../layouts/default.pug
+
+block main
+    .post-management-content
+        //- Header Section
+        .header-section
+            h1.page-title Danh sách bài viết
+            a.btn-add-post(href="/admin/posts/create") Thêm bài viết mới
+
+        //- Post Table
+        .table-container
+            table.post-table
+                thead
+                    tr
+                        th ID
+                        th Tiêu đề
+                        th Nội dung
+                        th Tác giả
+                        th Danh mục
+                        th Ngày tạo
+                        th Thao tác
+
+                tbody
+                    - 
+                        var posts = [
+                            { id: 1, title: 'Giới thiệu về JavaScript', content: 'JavaScript là ngôn ngữ lập trình phổ biến nhất...', author: 'Nguyễn Văn A', category: 'Lập trình', date: '1/1/2025' },
+                            { id: 2, title: 'Cơ sở dữ liệu NoSQL', content: 'Các loại cơ sở dữ liệu NoSQL phổ biến hiện nay...', author: 'Trần Thị B', category: 'Cơ sở dữ liệu', date: '2/2/2025' },
+                            { id: 3, title: 'Trí tuệ nhân tạo và ứng dụng', content: 'Tổng quan về AI và các ứng dụng trong thực tế...', author: 'Lê Văn C', category: 'Công nghệ mới', date: '3/3/2025' },
+                            { id: 4, title: 'Phát triển ứng dụng với React Native', content: 'Hướng dẫn xây dựng ứng dụng di động cross-platform...', author: 'Phạm Thị D', category: 'Phát triển ứng dụng', date: '4/4/2025' },
+                            { id: 5, title: 'Machine Learning cơ bản', content: 'Giới thiệu các thuật toán machine learning cơ bản...', author: 'Hoàng Văn E', category: 'Trí tuệ nhân tạo', date: '5/5/2025' },
+                            { id: 6, title: 'Thiết kế RESTful API', content: 'Các nguyên tắc thiết kế API hiệu quả và dễ bảo trì...', author: 'Đỗ Thị F', category: 'Phát triển web', date: '6/6/2025' }
+                        ];
+
+                    each post in posts
+                        tr.post-row
+                            td.post-id= post.id
+                            td.post-title.truncate= post.title
+                            td.post-content.truncate= post.content
+                            td.post-author= post.author
+                            td.post-category= post.category
+                            td.post-date= post.date
+                            td.post-actions
+                                .btn-group(role="group")
+                                    button.btn.btn-outline-secondary.btn-sm(title="Xem chi tiết")
+                                        i.fas.fa-eye
+                                    button.btn.btn-outline-primary.btn-sm(title="Chỉnh sửa")
+                                        i.fas.fa-pencil-alt
+                                    button.btn.btn-outline-danger.btn-sm(title="Xóa")
+                                        i.fas.fa-trash
+
+        //- Pagination
+        .pagination-container
+            .pagination
+                button.btn-page.btn-prev(disabled)
+                    i.fas.fa-chevron-left
+                    span Prev
+
+                - var pages = [1, 2, 3, 4, 5]
+                each page in pages
+                    - var pageClass = page === 1 ? 'btn-page active' : 'btn-page'
+                    button(class=pageClass)= page
+
+                button.btn-page.btn-next
+                    span Next
+                    i.fas.fa-chevron-right

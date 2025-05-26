@@ -1,0 +1,524 @@
+/*  Admin Profile Page Styles */
+.profile-container {
+  padding: 20px;
+}
+
+.profile-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.profile-header {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.avatar-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 15px;
+}
+
+.profile-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid #f8f9fa;
+}
+
+.avatar-edit {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background-color: #ffc107;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.admin-name-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.profile-tabs {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-tab {
+  padding: 15px 20px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.profile-tab:hover {
+  background-color: #f8f9fa;
+}
+
+.profile-tab.active {
+  background-color: #f0f8ff;
+  border-left-color: #007bff;
+  font-weight: 600;
+}
+
+.content-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.form-section {
+  margin-bottom: 30px;
+}
+
+.form-section-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.btn-save {
+  background-color: #000;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-save:hover {
+  background-color: #333;
+}
+/*end  admin profile */
+
+/* CSS for Post Management Page */
+.post-management-content {
+  padding: 24px;
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+/* Header section */
+.header-section {
+  background: #4169e1; /* Giữ màu xanh của post management */
+  padding: 32px 40px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-title {
+  color: white;
+  font-size: 32px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.btn-add-post {
+  background-color: #ffee58;
+  color: #333;
+  padding: 8px 16px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-add-post:hover {
+  background-color: #fdd835;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Table container */
+.table-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+/* Table styling */
+.post-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.post-table thead {
+  background-color: #f8fafc;
+}
+
+.post-table th {
+  padding: 16px 20px;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.post-table td {
+  padding: 16px 20px;
+  color: #6b7280;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.post-row:hover {
+  background-color: #f9fafb;
+}
+
+/* Truncate text */
+.truncate {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Action buttons */
+.btn-group {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-outline-secondary,
+.btn-outline-primary,
+.btn-outline-danger {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-outline-secondary {
+  color: #6b7280;
+  border-color: #d1d5db;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #f3f4f6;
+}
+
+.btn-outline-primary {
+  color: #2563eb;
+  border-color: #93c5fd;
+}
+
+.btn-outline-primary:hover {
+  background-color: #dbeafe;
+}
+
+.btn-outline-danger {
+  color: #dc2626;
+  border-color: #fca5a5;
+}
+
+.btn-outline-danger:hover {
+  background-color: #fee2e2;
+}
+
+/* Pagination */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.pagination {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-page {
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #6b7280;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-page:hover:not(:disabled) {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.btn-page.active {
+  background-color: #4169e1;
+  color: white;
+  border-color: #4169e1;
+}
+
+.btn-page:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+/* end post management */
+
+/* Create Post Page Styles */
+.create-post-container {
+  width: 100%;
+  padding: 20px 0;
+}
+
+.create-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.create-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+}
+
+.btn-close {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background-color: white;
+  color: #f44336;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+}
+
+.btn-close:hover {
+  background-color: #f5f5f5;
+  transform: rotate(90deg);
+}
+
+.create-form-container {
+  background-color: white;
+  border-radius: 8px;
+  padding: 25px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.create-post-form .form-group {
+  margin-bottom: 20px;
+}
+
+.create-post-form label {
+  display: block;
+  margin-bottom: 8px;
+  color: #555;
+  font-weight: 500;
+}
+
+.create-post-form .form-control {
+  width: 100%;
+  padding: 0px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.create-post-form .form-control:focus {
+  border-color: #4169e1;
+  outline: none;
+}
+
+.select-container {
+  position: relative;
+  display: none; /* Loại bỏ container thừa gây ra mũi tên thứ 2 */
+}
+
+.select-container::after {
+  content: '\f107';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+select.form-control {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 16px;
+  padding-right: 40px;
+  text-overflow: ellipsis;
+}
+
+select.form-control option {
+  padding: 12px;
+  line-height: 1.5;
+  min-height: 30px;
+  white-space: normal;
+}
+
+/* Fix cho các trình duyệt khác nhau */
+@-moz-document url-prefix() {
+  select.form-control option {
+    padding: 12px;
+  }
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  select.form-control option {
+    padding: 12px;
+  }
+}
+
+/* Xóa bỏ các CSS dư thừa không cần thiết */
+.select-container,
+.custom-select-container {
+  display: none;
+}
+
+.content-area {
+  min-height: 200px;
+  resize: vertical;
+}
+
+.attachment-label {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  color: #555;
+  font-size: 14px;
+}
+
+.image-attachments {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.image-preview,
+.image-upload-box {
+  width: 100px;
+  height: 80px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-upload-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.image-upload-box:hover {
+  background-color: #f0f0f0;
+}
+
+.image-upload-box i {
+  font-size: 24px;
+  color: #4169e1;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.btn-submit,
+.btn-cancel {
+  padding: 12px 40px;
+  border-radius: 4px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: uppercase;
+}
+
+.btn-submit {
+  background-color: #4169e1;
+  color: white;
+  flex: 1;
+  margin-right: 15px;
+}
+
+.btn-submit:hover {
+  background-color: #3451b2;
+}
+
+.btn-cancel {
+  background-color: #f5f5f5;
+  color: #555;
+  flex: 1;
+  margin-left: 15px;
+}
+
+.btn-cancel:hover {
+  background-color: #e5e5e5;
+}
+/* End Create Post Page Styles */
