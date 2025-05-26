@@ -1,0 +1,44 @@
+extends ../../layouts/defaultMenu.pug
+block main
+    //.container-fluid.p-4
+    .row
+      // Sidebar Thông tin
+      .col-md-3.text-center
+        img(src="https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png", alt="icon", width="150")
+
+        h5.font-weight-bold.mb-1 Michael Smith
+        ul.list-group
+          li.list-group-item.active Thông Tin Cá Nhân
+          li.list-group-item Lịch Sử Câu Trả Lời
+
+      // Nội dung chính
+      .col-md-9
+        h4.mb-4 Thông Tin Cá Nhân
+        form
+          .form-group
+            label Name:
+            input.form-control(type="text", value="Michael Smith", readonly)
+
+          .form-group
+            label SĐT
+            input.form-control(type="text", value="+46-7644 384 68", readonly)
+
+          button.btn.btn-dark.mt-3(type="submit") Lưu
+
+        hr.my-5
+
+        h4.mb-4 Security
+        form
+          .form-group
+            label Email
+            input.form-control(type="email", value="masunroom151@gmail.com", readonly)
+
+          .form-group
+            label Mật Khẩu
+            input.form-control(type="password", value="123456")
+
+          .form-group
+            label Xác Nhận Mật Khẩu
+            input.form-control(type="password", value="123456")
+
+          button.btn.btn-dark.mt-3(type="submit") Lưu
