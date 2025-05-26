@@ -1,0 +1,52 @@
+extends ../../layouts/default.pug
+
+block main
+  div(class="max-w-7xl mx-auto p-6")
+    // Tiêu đề lớn ở trên cùng
+    div(class="text-[34px] font-bold text-center bg-blue-500 text-white py-[16px] rounded-md mb-[15px]") Quản lý diễn đàn
+
+    // Bảng danh sách diễn đàn với nền trắng và shadow
+    div(class="bg-white shadow-md rounded-lg p-6")
+      table(class="w-full table-auto text-sm text-center")
+        thead
+          tr(class="bg-gray-100")
+            th(class="px-4 py-2") ID câu hỏi
+            th(class="px-4 py-2") Nội dung
+            th(class="px-4 py-2") Tên người đăng
+            th(class="px-4 py-2") Email
+            th(class="px-4 py-2") Số lượt bình luận
+            th(class="px-4 py-2") Ngày tạo
+            th(class="px-4 py-2") Thao tác
+        tbody
+          each _ in [1, 2, 3, 4, 5, 6]
+            tr(class="border-b")
+              td(class="px-4 py-4") 1
+              td(class="px-4 py-4") iauwsdhfsasdfdsfgsdfg
+              td(class="px-4 py-4") êwgsdfgsdfjfgnsd
+              td(class="px-4 py-4") êwgs@gmail.com
+              td(class="px-4 py-4") 3
+              td(class="px-4 py-4") 03/03/2005
+              td(class="px-4 py-4")
+                div(class="flex justify-center gap-[13px]")
+                  i(class="fa fa-pen text-blue-600 hover:text-blue-800 cursor-pointer" title="Sửa")
+                  i(class="fa fa-trash text-red-600 hover:text-red-800 cursor-pointer" title="Xóa")
+
+    // Phân trang nằm dưới cùng, nền xám, căn giữa
+    div(class="bg-gray-100 py-4 mt-8 rounded-md")
+        div(class="max-w-7xl mx-auto flex justify-center")
+            nav
+               ul(class="flex flex-row items-center space-x-2 list-none m-0 p-0")
+                    li
+                        a(class="px-3 py-1 border rounded-md bg-white hover:bg-gray-200 cursor-pointer hover:no-underline" href="#") Prev
+                    li
+                        a(class="px-3 py-1 border rounded-md bg-white hover:bg-gray-200 cursor-pointer hover:no-underline" href="#") 1
+                    li
+                        a(class="px-3 py-1 border rounded-md bg-white hover:bg-gray-200 cursor-pointer hover:no-underline" href="#") 2
+                    li
+                        a(class="px-3 py-1 border rounded-md bg-white hover:bg-gray-200 cursor-pointer hover:no-underline" href="#") 3
+                    li
+                        a(class="px-3 py-1 border rounded-md bg-white hover:bg-gray-200 cursor-pointer hover:no-underline" href="#") 4
+                    li
+                        a(class="px-3 py-1 border rounded-md bg-white hover:bg-gray-200 cursor-pointer hover:no-underline" href="#") 5
+                    li
+                        a(class="px-3 py-1 border rounded-md bg-white hover:bg-gray-200 cursor-pointer hover:no-underline" href="#") Next
