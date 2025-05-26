@@ -129,24 +129,26 @@
 /*end  admin profile */
 
 /* CSS for Post Management Page */
-.post-management-container {
-  width: 100%;
+.post-management-content {
+  padding: 24px;
+  background-color: #f8fafc;
+  min-height: 100vh;
 }
 
-.post-header {
+/* Header section */
+.header-section {
+  background: #4169e1; /* Giữ màu xanh của post management */
+  padding: 32px 40px;
+  border-radius: 12px;
+  margin-bottom: 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  width: 100%;
-  background-color: #4169e1;
-  padding: 20px;
-  border-radius: 8px;
-  color: white;
 }
 
-.post-title {
-  font-size: 24px;
+.page-title {
+  color: white;
+  font-size: 32px;
   font-weight: 600;
   margin: 0;
 }
@@ -166,116 +168,139 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.post-table-container {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+/* Table container */
+.table-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   overflow: hidden;
 }
 
+/* Table styling */
 .post-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.post-table th,
-.post-table td {
-  padding: 15px;
-  text-align: left;
-  border-bottom: 1px solid #e0e0e0;
+.post-table thead {
+  background-color: #f8fafc;
 }
 
 .post-table th {
-  background-color: #f8f9fa;
+  padding: 16px 20px;
+  text-align: left;
   font-weight: 600;
-  color: #555;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.post-table tbody tr:hover {
-  background-color: #f5f5f5;
+.post-table td {
+  padding: 16px 20px;
+  color: #6b7280;
+  border-bottom: 1px solid #f3f4f6;
 }
 
+.post-row:hover {
+  background-color: #f9fafb;
+}
+
+/* Truncate text */
 .truncate {
-  max-width: 150px;
+  max-width: 200px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.action-buttons {
+/* Action buttons */
+.btn-group {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
-.btn-view,
-.btn-edit,
-.btn-delete {
+.btn-outline-secondary,
+.btn-outline-primary,
+.btn-outline-danger {
   width: 32px;
   height: 32px;
-  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  text-decoration: none;
-  transition: all 0.2s;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.3s;
 }
 
-.btn-view {
-  background-color: #2196f3;
+.btn-outline-secondary {
+  color: #6b7280;
+  border-color: #d1d5db;
 }
 
-.btn-edit {
-  background-color: #4caf50;
+.btn-outline-secondary:hover {
+  background-color: #f3f4f6;
 }
 
-.btn-delete {
-  background-color: #f44336;
+.btn-outline-primary {
+  color: #2563eb;
+  border-color: #93c5fd;
 }
 
-.btn-view:hover,
-.btn-edit:hover,
-.btn-delete:hover {
-  opacity: 0.85;
-  transform: translateY(-2px);
+.btn-outline-primary:hover {
+  background-color: #dbeafe;
+}
+
+.btn-outline-danger {
+  color: #dc2626;
+  border-color: #fca5a5;
+}
+
+.btn-outline-danger:hover {
+  background-color: #fee2e2;
+}
+
+/* Pagination */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
 }
 
 .pagination {
   display: flex;
-  justify-content: center;
+  gap: 8px;
   align-items: center;
-  margin-top: 20px;
-  padding: 10px 0;
 }
 
-.page-number,
-.page-nav {
-  min-width: 36px;
-  height: 36px;
-  margin: 0 5px;
+.btn-page {
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #6b7280;
+  font-weight: 500;
+  transition: all 0.2s;
   display: flex;
   align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  border-radius: 4px;
-  font-weight: 500;
-  transition: background-color 0.2s;
-  color: #555;
+  gap: 5px;
 }
 
-.page-nav {
-  padding: 0 10px;
+.btn-page:hover:not(:disabled) {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
 }
 
-.page-number:hover,
-.page-nav:hover {
-  background-color: #f0f0f0;
-  color: #333;
-}
-
-.page-number.active {
+.btn-page.active {
   background-color: #4169e1;
   color: white;
+  border-color: #4169e1;
+}
+
+.btn-page:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 /* end post management */
 

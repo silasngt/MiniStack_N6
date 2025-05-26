@@ -12,7 +12,7 @@ export const routesAdmin = (app: Express) => {
   const path = systemConfig.prefixAdmin;
   app.use(`/${path}/dashboard`, dashboardRoute);
   app.use(`/${path}/profile`, profileRoute);
-  app.use(`/${path}/quan-ly-bai-viet`, postRoute);
+  app.use(`/${path}/posts`, postRoute);
   app.use(`/${path}/user`, userRoute);
   app.use(`/${path}/categories`, categoriesRoute);
   app.use(`/${path}/auth`, authRoute);
