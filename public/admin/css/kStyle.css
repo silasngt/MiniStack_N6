@@ -277,5 +277,223 @@
   background-color: #4169e1;
   color: white;
 }
-
 /* end post management */
+
+/* Create Post Page Styles */
+.create-post-container {
+  width: 100%;
+  padding: 20px 0;
+}
+
+.create-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.create-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+}
+
+.btn-close {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background-color: white;
+  color: #f44336;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+}
+
+.btn-close:hover {
+  background-color: #f5f5f5;
+  transform: rotate(90deg);
+}
+
+.create-form-container {
+  background-color: white;
+  border-radius: 8px;
+  padding: 25px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.create-post-form .form-group {
+  margin-bottom: 20px;
+}
+
+.create-post-form label {
+  display: block;
+  margin-bottom: 8px;
+  color: #555;
+  font-weight: 500;
+}
+
+.create-post-form .form-control {
+  width: 100%;
+  padding: 0px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.create-post-form .form-control:focus {
+  border-color: #4169e1;
+  outline: none;
+}
+
+.select-container {
+  position: relative;
+  display: none; /* Loại bỏ container thừa gây ra mũi tên thứ 2 */
+}
+
+.select-container::after {
+  content: '\f107';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+select.form-control {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 16px;
+  padding-right: 40px;
+  text-overflow: ellipsis;
+}
+
+select.form-control option {
+  padding: 12px;
+  line-height: 1.5;
+  min-height: 30px;
+  white-space: normal;
+}
+
+/* Fix cho các trình duyệt khác nhau */
+@-moz-document url-prefix() {
+  select.form-control option {
+    padding: 12px;
+  }
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  select.form-control option {
+    padding: 12px;
+  }
+}
+
+/* Xóa bỏ các CSS dư thừa không cần thiết */
+.select-container,
+.custom-select-container {
+  display: none;
+}
+
+.content-area {
+  min-height: 200px;
+  resize: vertical;
+}
+
+.attachment-label {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  color: #555;
+  font-size: 14px;
+}
+
+.image-attachments {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.image-preview,
+.image-upload-box {
+  width: 100px;
+  height: 80px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-upload-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.image-upload-box:hover {
+  background-color: #f0f0f0;
+}
+
+.image-upload-box i {
+  font-size: 24px;
+  color: #4169e1;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.btn-submit,
+.btn-cancel {
+  padding: 12px 40px;
+  border-radius: 4px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: uppercase;
+}
+
+.btn-submit {
+  background-color: #4169e1;
+  color: white;
+  flex: 1;
+  margin-right: 15px;
+}
+
+.btn-submit:hover {
+  background-color: #3451b2;
+}
+
+.btn-cancel {
+  background-color: #f5f5f5;
+  color: #555;
+  flex: 1;
+  margin-left: 15px;
+}
+
+.btn-cancel:hover {
+  background-color: #e5e5e5;
+}
+/* End Create Post Page Styles */
