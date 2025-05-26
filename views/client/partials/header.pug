@@ -3,10 +3,14 @@ header.py-2.border-bottom
         // Logo bên trái
         a.navbar-brand(href="/") miniStack
 
+
         // Ô tìm kiếm ở giữa
         .d-flex.w-50.justify-content-center
-            .input-group.w-75
-            input.form-control.search-input(type="search" placeholder="" aria-label="Search")
+            form.input-group.w-75(action="/search" method="GET")
+                input.form-control.search-input(type="search" name="q" placeholder="Tìm kiếm câu hỏi..." value=searchQuery || "")
+                .input-group-append
+                    button.btn.btn-search(type="submit")
+                        i.fas.fa-search
 
         // Các liên kết và nút đăng nhập bên phải
         .d-flex.align-items-center
