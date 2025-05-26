@@ -1,52 +1,65 @@
 extends ../../layouts/default.pug
 
 block main
-  div(class="max-w-7xl mx-auto p-6")
-    // Tiêu đề lớn ở trên cùng
-    div(class="text-[34px] font-bold text-center bg-blue-500 text-white py-[16px] rounded-md mb-[15px]") Quản lý diễn đàn
+  //- User Management Content
+  .user-management-content
+    //- Header Section
+    .header-section
+      h1.page-title Quản lý diễn đàn
 
-    // Bảng danh sách diễn đàn với nền trắng và shadow
-    div(class="bg-white shadow-md rounded-lg p-6")
-      table(class="w-full table-auto text-sm text-center")
+    //- User Table
+    .table-container
+      table.user-table
         thead
-          tr(class="bg-gray-100")
-            th(class="px-4 py-2") ID câu hỏi
-            th(class="px-4 py-2") Nội dung
-            th(class="px-4 py-2") Tên người đăng
-            th(class="px-4 py-2") Email
-            th(class="px-4 py-2") Số lượt bình luận
-            th(class="px-4 py-2") Ngày tạo
-            th(class="px-4 py-2") Thao tác
+          tr
+            th ID câu hỏi
+            th Nội dung
+            th Tên người đăng
+            th Email
+            th Số lượt bình luận
+            th Ngày tạo
+            th Thao tác
         tbody
-          each _ in [1, 2, 3, 4, 5, 6]
-            tr(class="border-b")
-              td(class="px-4 py-4") 1
-              td(class="px-4 py-4") iauwsdhfsasdfdsfgsdfg
-              td(class="px-4 py-4") êwgsdfgsdfjfgnsd
-              td(class="px-4 py-4") êwgs@gmail.com
-              td(class="px-4 py-4") 3
-              td(class="px-4 py-4") 03/03/2005
-              td(class="px-4 py-4")
-                div(class="flex justify-center gap-[13px]")
-                  i(class="fa fa-pen text-blue-600 hover:text-blue-800 cursor-pointer" title="Sửa")
-                  i(class="fa fa-trash text-red-600 hover:text-red-800 cursor-pointer" title="Xóa")
+          - 
+            var questions = [
+              { id: 1, content: 'Làm sao để nuôi chó con khỏe mạnh?', name: 'Nguyễn Văn A', email: 'a@gmail.com', comments: 3, date: '01/01/2025' },
+              { id: 2, content: 'Nên cho mèo ăn thức ăn gì?', name: 'Trần Thị B', email: 'b@gmail.com', comments: 5, date: '02/01/2025' },
+              { id: 3, content: 'Thú cưng có cần tiêm phòng?', name: 'Lê Văn C', email: 'c@gmail.com', comments: 2, date: '03/01/2025' },
+              { id: 4, content: 'Làm thế nào để dạy chó đi vệ sinh đúng chỗ?', name: 'Phạm Thị D', email: 'd@gmail.com', comments: 7, date: '04/01/2025' },
+              { id: 5, content: 'Cách chăm sóc mèo bị bệnh ngoài da?', name: 'Hoàng Văn E', email: 'e@gmail.com', comments: 1, date: '05/01/2025' }
+            ];
+          
+          each question in questions
+            tr.question-row
+              td.question-id= question.id
+              td.question-content= question.content
+              td.question-name= question.name
+              td.question-email= question.email
+              td.question-comments= question.comments
+              td.question-date= question.date
+              td.question-actions
+                .btn-group(role="group")
+                  button.btn.btn-outline-secondary.btn-sm(title="Xem chi tiết")
+                    i.fas.fa-eye
+                  button.btn.btn-outline-primary.btn-sm(title="Chỉnh sửa")
+                    i.fas.fa-edit
+                  button.btn.btn-outline-danger.btn-sm(title="Xóa")
+                    i.fas.fa-trash
 
-    // Phân trang nằm dưới cùng, nền xám, căn giữa
-    div(class="bg-gray-100 py-4 mt-8 rounded-md")
-        div(class="max-w-7xl mx-auto flex justify-center")
-            nav
-               ul(class="flex flex-row items-center space-x-2 list-none m-0 p-0")
-                    li
-                        a(class="px-3 py-1 border rounded-md bg-white hover:bg-gray-200 cursor-pointer hover:no-underline" href="#") Prev
-                    li
-                        a(class="px-3 py-1 border rounded-md bg-white hover:bg-gray-200 cursor-pointer hover:no-underline" href="#") 1
-                    li
-                        a(class="px-3 py-1 border rounded-md bg-white hover:bg-gray-200 cursor-pointer hover:no-underline" href="#") 2
-                    li
-                        a(class="px-3 py-1 border rounded-md bg-white hover:bg-gray-200 cursor-pointer hover:no-underline" href="#") 3
-                    li
-                        a(class="px-3 py-1 border rounded-md bg-white hover:bg-gray-200 cursor-pointer hover:no-underline" href="#") 4
-                    li
-                        a(class="px-3 py-1 border rounded-md bg-white hover:bg-gray-200 cursor-pointer hover:no-underline" href="#") 5
-                    li
-                        a(class="px-3 py-1 border rounded-md bg-white hover:bg-gray-200 cursor-pointer hover:no-underline" href="#") Next
+    //- Pagination
+    .pagination-container
+      .pagination
+        button.btn-page.btn-prev(disabled)
+          i.icon-prev
+          span Prev
+
+        - var pages = [1, 2, 3, 4, 5]
+        each page in pages
+          - var pageClass = page === 1 ? 'btn-page active' : 'btn-page'
+          button(class=pageClass)= page
+
+        button.btn-page.btn-next
+          span Next
+          i.icon-next
+    
+    
