@@ -10,8 +10,9 @@ html
         //- File CSS
         link(rel="stylesheet", href="/admin/css/style.css")
         link(rel="stylesheet", href="/admin/css/styleQ.css")
+        script(src="https://cdn.tailwindcss.com")
 
-    body 
+    body(class="overflow-y-hidden") 
       .app-container
         include ../partials/header.pug
         .main-content
