@@ -1,0 +1,51 @@
+doctype html
+html(lang='vi')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    title MiniStack - Đăng nhập
+    link(rel="stylesheet", href="/css/styleQ.css")
+      
+  body
+    .container
+      .form-section
+        a.logo(href="/") miniStack
+
+        
+        .greeting Xin chào !
+        
+        h1.title Đăng nhập
+        
+        form#loginForm(method='POST', action='/auth/login')
+          .form-group
+            label(for='username') Tên người dùng
+            input#username(type='text', name='username', placeholder='Vui lòng nhập tên người dùng', required)
+          
+          .form-group
+            label(for='password') Mật khẩu
+            .password-field
+              input#password(type='password', name='password', placeholder='Vui lòng nhập mật khẩu', required)
+              button.password-toggle(type='button', onclick='togglePassword("password")')
+                span 👁
+          
+          .remember-forgot
+            .remember-me
+              input#rememberMe(type='checkbox', name='rememberMe')
+              label(for='rememberMe') Ghi nhớ thông tin đăng nhập
+            
+            a.forgot-password(href='/auth/forgot-password') Quên mật khẩu ?
+          
+          button.submit-btn(type='submit') Đăng nhập
+          
+          .signup-link
+            | Bạn chưa có tài khoản ? 
+            a(href='/auth/register') Đăng ký
+
+      .illustration-section
+        .illustration
+          img.auth-img(src="https://cdn.prod.website-files.com/649c7c91a35b12e0bb55417d/64ec93be340c2e1d871eb5b3_plutonapps_partner.svg" alt="login")
+    
+    script(src="/js/scriptQ.js") 
+
+   
+      

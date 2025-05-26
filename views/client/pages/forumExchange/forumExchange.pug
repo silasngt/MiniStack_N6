@@ -1,0 +1,121 @@
+extends ../../layouts/defaultMenu.pug
+
+block main
+  .container.mx-auto.px-0.py-0.max-w-4xl
+    // Combined header and content section
+    .bg-white.rounded-lg.shadow-sm.border.mb-6
+      // Header section with gray background
+      div(class="bg-[#D9D9D9] rounded-t-lg p-6")
+        .flex.items-center.justify-between
+          h1.text-2xl.font-bold.text-gray-800 Câu hỏi
+          .flex.items-center.space-x-2
+            button(class="bg-blue-500 hover:bg-blue-600 text-[white] px-3 py-1 rounded-[55px] text-sm") Thêm câu hỏi
+      
+      // Content section (white background)
+      .p-6
+        // Error title
+        h2(class="text-xl text-[#000000] font-semibold mb-2") org.hibernate.query.QueryArgumentException: Argument [44]
+
+        
+        // Author and date info
+        div(class="flex items-center space-x-3 mb-4 text-sm text-[#000000]")
+          .flex.items-center.space-x-1
+            i.fas.fa-user.text-xs
+            span : John Doe
+          .flex.items-center.space-x-1
+            i.fas.fa-calendar-alt.text-xs
+            span 15/03/2024 - 14:30
+        
+        // Error description
+        p(class="text-sm text-[20px] text-[#000000] font-Inter leading-relaxed")
+          | I have 2 objects in database "Courses" and "Instructors" with "instructor" table having one to many relation with "Courses" table
+          br
+          | However, trying to use hql to join these two tables using below query 
+          br
+          | public Query getCoursesDeliveredByInstructor(long instructorId) {
+          br
+          | String hql = "FROM Course c WHERE c.instructor_id = :instructorId";
+          br
+          | return getCurrentSession().createQuery(hql).setParameter("instructorId", instructorId);
+          br
+          | }
+          br
+          br
+          | I am getting error as shown below. My requirement is to get all the "Courses" objects for a particular "Instructor" id". using HQL but I am getting this error org.hibernate.query.QueryArgumentException: Argument [44] for parameter with name [instructorId] did not match expected type [long (n/a)]
+          br
+          br
+          | Please suggest me what should I do to the query to to the expected results.
+          br
+          | Thanks for your help in advance.
+          br
+          | Have relationship shown below.
+
+      // Code/Image placeholder
+      .border-l-4.p-4.mb-4
+
+    // Comments section
+    .bg-white.rounded-lg.shadow-sm.border.p-6
+      h3.text-lg.font-semibold.text-gray-800.mb-4 Bình luận
+      
+      // Comment 1
+      .flex.space-x-3.mb-6
+        .flex-shrink-0
+          img.w-8.h-8.rounded-full.bg-gray-300(src="https://cdn2.fptshop.com.vn/unsafe/1920x0/filters:format(webp):quality(75)/2023_5_30_638210812265965423_bat-mi-cach-dang-binh-luan-bang-anh-gif-tren-instagram.jpg" alt="Avatar")
+        .flex-1
+          .flex.items-center.space-x-2.mb-1
+            span.font-medium.text-sm.text-gray-900 Rohit Jaiswal
+            span.text-xs.text-gray-500  09:30 AM
+            span(class="text-xs text-blue-500 cursor-pointer hover:underline") Trả lời
+          p.text-sm.text-gray-700.leading-relaxed
+            | I think the problem might be with the HQL syntax. Instead of using c.instructor_id, you should reference the actual relationship field name as defined in your Course entity.
+            br
+            br
+            | If your Course entity has a field like instructor (not instructor_id), try this: FROM Course c WHERE c.instructor.id = :instructorId
+
+      // Comment 2  
+      .flex.space-x-3.mb-6
+        .flex-shrink-0
+          img.w-8.h-8.rounded-full.bg-gray-300(src="https://cdn2.fptshop.com.vn/unsafe/1920x0/filters:format(webp):quality(75)/2023_5_30_638210812265965423_bat-mi-cach-dang-binh-luan-bang-anh-gif-tren-instagram.jpg" alt="Avatar")
+        .flex-1
+          .flex.items-center.space-x-2.mb-1
+            span.font-medium.text-sm.text-gray-900 Rohit Jaiswal
+            span.text-xs.text-gray-500  09:31 AM
+            span(class="text-xs text-blue-500 cursor-pointer hover:underline") Trả lời
+          p.text-sm.text-gray-700.leading-relaxed
+            | Also, make sure the parameter type matches. If instructorId is coming as String from the frontend, either convert it to Long or use setParameter("instructorId", Long.parseLong(instructorId)).
+            br
+            br
+            | Let me know if this helps or if you need more clarification on the entity relationship mapping.
+
+      // Comment input section
+      .mt-6.pt-6
+        h3.text-lg.font-semibold.text-gray-800.mb-1 Thêm bình luận
+        .border.rounded-lg.p-3.mb-3
+          div(class="flex items-center justify-between mb-2 text-[#000000]")
+            div(class="flex space-x-2 gap-[7px]")
+              button(class=" hover:text-gray-800 text-sm")
+                i.fas.fa-bold
+              button(class=" hover:text-gray-800 text-sm")
+                i.fas.fa-italic
+              button(class=" hover:text-gray-800 text-sm")
+                i.fas.fa-underline
+              button(class=" hover:text-gray-800 text-sm border-l pl-2")
+                i.fas.fa-list
+              button(class=" hover:text-gray-800 text-sm")
+                i.fas.fa-list-ul
+              button(class=" hover:text-gray-800 text-sm")
+                i.fas.fa-list-ol
+              button(class=" hover:text-gray-800 text-sm")
+                i.fas.fa-link
+              button(class=" hover:text-gray-800 text-sm")
+                i.fas.fa-image
+            .flex.space-x-2
+              button(class=" hover:text-gray-800 text-sm")
+                i.fas.fa-file-alt
+              button(class=" hover:text-gray-800 text-sm")
+                i.fas.fa-save
+              button(class=" hover:text-gray-800 text-sm")
+                i.fas.fa-eye
+          textarea(class="w-full h-24 resize-none border-0 focus:outline-none text-sm" placeholder="Viết bình luận của bạn...")
+        .flex.justify-end
+          button(class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 mb-3 rounded text-sm") Đăng bình luận
