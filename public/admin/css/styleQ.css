@@ -199,7 +199,8 @@
 }
 
 .btn-login {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: white;
+  background: #4169e1;
   border: none;
   border-radius: 10px;
   padding: 12px;
@@ -239,4 +240,43 @@
 .forgot-password:hover {
   color: #4f46e5;
 }
+/*End */
+
+/* Form styling for add category */
+.form-label {
+  color: #374151;
+  font-size: 16px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.form-select {
+  border: 2px solid #4beaf2;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.form-select:focus {
+  border-color: #46e5c5;
+  box-shadow: 0 0 0 0.2rem rgba(70, 229, 221, 0.25);
+}
+.add-category-btn {
+  border: none;
+  background-color: #ffda32;
+  color: #020202;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+.add-category-btn:hover {
+  background-color: #cda805;
+
+  text-decoration: none;
+}
+
 /*End */
