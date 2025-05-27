@@ -1,113 +1,51 @@
 extends ../../layouts/default.pug
 
 block main
-  .container-fluid.p-4
-    // Header section với nút thêm danh mục
-    .row.mb-4
-      .col-12
-        .bg-primary.text-white.rounded.p-4.d-flex.justify-content-between.align-items-center
-          h2.mb-0 Danh sách danh mục
-          button.btn.btn-warning.btn-lg.fw-bold(type="button" data-bs-toggle="modal" data-bs-target="#addCategoryModal")
-            | Thêm danh mục mới
+  //- Categories Management Content
+  .user-management-content
+    //- Header Section
+    .header-section
+      h1.page-title Danh sách danh mục
+      button.add-category-btn(type="button" id="showAddCategoryForm")
+        | Thêm danh mục mới
 
-    // Bảng danh sách danh mục
-    .row
-      .col-12
-        .table-responsive
-          table.table.table-hover.bg-white.rounded.shadow-sm
-            thead.table-light
-              tr
-                th.text-center.fw-bold ID
-                th.fw-bold Tên danh mục
-                th.fw-bold Loại
-                th.text-center.fw-bold Số lượng bài viết
-                th.text-center.fw-bold Thao tác
-            tbody
-              tr
-                td.text-center 1
-                td ádfasdf
-                td.text-muted adsfasasdasdgsdfgsdfghfsdghdf...
-                td.text-center 3
-                td.text-center
-                  .btn-group(role="group")
-                    button.btn.btn-outline-secondary.btn-sm(title="Xem chi tiết")
-                      i.fas.fa-eye
-                    button.btn.btn-outline-primary.btn-sm(title="Chỉnh sửa")
-                      i.fas.fa-edit
-                    button.btn.btn-outline-danger.btn-sm(title="Xóa")
-                      i.fas.fa-trash
-              
-              tr
-                td.text-center 2
-                td ádfasdf
-                td.text-muted adsfasasdasdgsdfgsdfghfsdghdf...
-                td.text-center 3
-                td.text-center
-                  .btn-group(role="group")
-                    button.btn.btn-outline-secondary.btn-sm(title="Xem chi tiết")
-                      i.fas.fa-eye
-                    button.btn.btn-outline-primary.btn-sm(title="Chỉnh sửa")
-                      i.fas.fa-edit
-                    button.btn.btn-outline-danger.btn-sm(title="Xóa")
-                      i.fas.fa-trash
+    //- Categories Table
+    .table-container
+      table.user-table
+        thead
+          tr
+            th ID
+            th Tên danh mục
+            th Loại
+            th Số lượng bài viết
+            th Thao tác
+        tbody
+          - 
+            var categories = [
+              { id: 1, name: 'Công nghệ', type: 'Bài viết', count: 15 },
+              { id: 2, name: 'Giáo dục', type: 'Tài liệu', count: 8 },
+              { id: 3, name: 'Thể thao', type: 'Diễn đàn', count: 12 },
+              { id: 4, name: 'Du lịch', type: 'Bài viết', count: 6 },
+              { id: 5, name: 'Ẩm thực', type: 'Tài liệu', count: 9 },
+              { id: 6, name: 'Sức khỏe', type: 'Diễn đàn', count: 11 }
+            ];
+          
+          each category in categories
+            tr.user-row
+              td= category.id
+              td= category.name
+              td= category.type
+              td= category.count
+              td
+                .action-buttons
+                  button.btn-action.btn-view(title="Xem chi tiết")
+                    i.fas.fa-eye
+                  button.btn-action.btn-edit(title="Chỉnh sửa")
+                    i.fas.fa-edit
+                  button.btn-action.btn-delete(title="Xóa")
+                    i.fas.fa-trash
 
-              tr
-                td.text-center 3
-                td ádfasdf
-                td.text-muted adsfasasdasdgsdfgsdfghfsdghdf...
-                td.text-center 3
-                td.text-center
-                  .btn-group(role="group")
-                    button.btn.btn-outline-secondary.btn-sm(title="Xem chi tiết")
-                      i.fas.fa-eye
-                    button.btn.btn-outline-primary.btn-sm(title="Chỉnh sửa")
-                      i.fas.fa-edit
-                    button.btn.btn-outline-danger.btn-sm(title="Xóa")
-                      i.fas.fa-trash
-
-              tr
-                td.text-center 4
-                td ádfasdf
-                td.text-muted adsfasasdasdgsdfgsdfghfsdghdf...
-                td.text-center 3
-                td.text-center
-                  .btn-group(role="group")
-                    button.btn.btn-outline-secondary.btn-sm(title="Xem chi tiết")
-                      i.fas.fa-eye
-                    button.btn.btn-outline-primary.btn-sm(title="Chỉnh sửa")
-                      i.fas.fa-edit
-                    button.btn.btn-outline-danger.btn-sm(title="Xóa")
-                      i.fas.fa-trash
-
-              tr
-                td.text-center 5
-                td ádfasdf
-                td.text-muted adsfasasdasdgsdfgsdfghfsdghdf...
-                td.text-center 3
-                td.text-center
-                  .btn-group(role="group")
-                    button.btn.btn-outline-secondary.btn-sm(title="Xem chi tiết")
-                      i.fas.fa-eye
-                    button.btn.btn-outline-primary.btn-sm(title="Chỉnh sửa")
-                      i.fas.fa-edit
-                    button.btn.btn-outline-danger.btn-sm(title="Xóa")
-                      i.fas.fa-trash
-
-              tr
-                td.text-center 6
-                td ádfasdf
-                td.text-muted adsfasasdasdgsdfgsdfghfsdghdf...
-                td.text-center 3
-                td.text-center
-                  .btn-group(role="group")
-                    button.btn.btn-outline-secondary.btn-sm(title="Xem chi tiết")
-                      i.fas.fa-eye
-                    button.btn.btn-outline-primary.btn-sm(title="Chỉnh sửa")
-                      i.fas.fa-edit
-                    button.btn.btn-outline-danger.btn-sm(title="Xóa")
-                      i.fas.fa-trash
-
-    //-Phân trang 
+    //- Pagination
     .pagination-container
       .pagination
         button.btn-page.btn-prev(disabled)
@@ -123,37 +61,31 @@ block main
           span Next
           i.icon-next
 
-  // Trang thêm danh mục mới (ẩn mặc định)
+  //- Add Category Form (Hidden by default)
   .add-category-page(id="addCategoryPage" style="display: none;")
-    .container-fluid.p-4
-      .row
-        .col-12
-          .d-flex.justify-content-between.align-items-center.mb-4
-            h3.mb-0 Thêm danh mục mới
-            button.btn.btn-light.btn-sm(id="closeCategoryForm" title="Đóng")
-              i.fas.fa-times.text-danger
-          
-          .card.shadow-sm
-            .card-body.p-4
-              form(id="categoryForm")
-                .mb-4
-                  label.form-label.fw-bold(for="categoryTitle") Tiêu đề
-                  input.form-control.form-control-lg(type="text" id="categoryTitle" placeholder="Nhập tiêu đề danh mục")
-                
-                .mb-4
-                  label.form-label.fw-bold(for="categoryType") Loại
-                  select.form-select.form-select-lg.ml-3(id="categoryType")
-                    option(value="" selected) Chọn loại danh mục
-                    option(value="bai-viet") Bài viết
-                    option(value="tai-lieu") Tài liệu
-                    option(value="dien-dan") Diễn đàn
-                
-                
-                .mt-5.d-flex.justify-content-between
-                    button.btn.btn-primary.btn-lg.px-5(type="submit") THÊM
-                    button.btn.btn-outline-secondary.btn-lg.px-4(type="button" id="cancelCategory") HỦY
-
-
+    .user-management-content
+      .header-section
+        h1.page-title Thêm danh mục mới
+        button.btn.btn-light.btn-sm(id="closeCategoryForm" title="Đóng")
+          i.fas.fa-times
+      
+      .table-container
+        .p-4
+          form(id="categoryForm")
+            .mb-4
+              label.form-label.fw-bold(for="categoryTitle") Tiêu đề
+              input.form-control.form-control-lg(type="text" id="categoryTitle" placeholder="Nhập tiêu đề danh mục")
+            
+            .mb-4
+              label.form-label.fw-bold(for="categoryType") Loại
+              select.form-select.form-select-lg(id="categoryType")
+                option(value="" selected) Chọn loại danh mục
+                option(value="bai-viet") Bài viết
+                option(value="tai-lieu") Tài liệu
+                option(value="dien-dan") Diễn đàn
+            
+            .mt-5.d-flex.justify-content-between
+              button.btn-login.btn-lg.px-4(type="submit") THÊM
+              button.btn.btn-outline-secondary.btn-lg.p-4(type="button" id="cancelCategory") HỦY
 
   script(src="/admin/js/scriptQ.js")
-    
