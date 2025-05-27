@@ -8,6 +8,7 @@ import { userDocumentRoute} from './userDocument.route';
 import { historyRoute } from './history.route';
 import { forumExchangeRoute } from './forumExchange.route';
 import { chatBoxRoute } from './chatBox.route';
+import { compileRoute } from './compile.route';
 import { searchRoute } from './search.routes';
 
 export const routesClient = (app: Express) => {
@@ -19,6 +20,7 @@ export const routesClient = (app: Express) => {
   app.use ('/history',historyRoute)
   app.use('/forumExchange', forumExchangeRoute);
   app.use('/chatBox', chatBoxRoute);
+  app.use('/compile', compileRoute);
   app.use('/search', searchRoute);
   app.use ('/history',historyRoute);
   app.use ('/userDocument',userDocumentRoute)

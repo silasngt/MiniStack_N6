@@ -1,24 +1,21 @@
 extends ../../layouts/default.pug
 
 block main
-  //- User Management Content
-  .user-management-content
-    //- Header Section
-    .header-section
-      h1.page-title Quản lý diễn đàn
+  .forum-management-container
+    .forum-header
+      h1.forum-title Quản lý diễn đàn
 
-    //- User Table
-    .table-container
-      table.user-table
+    .forum-table-wrapper
+      table.forum-table
         thead
           tr
-            th ID câu hỏi
-            th Nội dung
-            th Tên người đăng
-            th Email
-            th Số lượt bình luận
-            th Ngày tạo
-            th Thao tác
+            th.forum-th-id ID câu hỏi
+            th.forum-th-content Nội dung
+            th.forum-th-name Tên người đăng
+            th.forum-th-email Email
+            th.forum-th-comments Số lượt bình luận
+            th.forum-th-date Ngày tạo
+            th.forum-th-actions Thao tác
         tbody
           - 
             var questions = [
@@ -30,36 +27,33 @@ block main
             ];
           
           each question in questions
-            tr.question-row
-              td.question-id= question.id
-              td.question-content= question.content
-              td.question-name= question.name
-              td.question-email= question.email
-              td.question-comments= question.comments
-              td.question-date= question.date
-              td.question-actions
-                .btn-group(role="group")
-                  button.btn.btn-outline-secondary.btn-sm(title="Xem chi tiết")
+            tr.forum-tr-question
+              td.forum-td-id= question.id
+              td.forum-td-content= question.content
+              td.forum-td-name= question.name
+              td.forum-td-email= question.email
+              td.forum-td-comments= question.comments
+              td.forum-td-date= question.date
+              td.forum-td-actions
+                .forum-btn-group(role="group")
+                  button.forum-btn.forum-btn-view(title="Xem chi tiết")
                     i.fas.fa-eye
-                  button.btn.btn-outline-primary.btn-sm(title="Chỉnh sửa")
+                  button.forum-btn.forum-btn-edit(title="Chỉnh sửa")
                     i.fas.fa-edit
-                  button.btn.btn-outline-danger.btn-sm(title="Xóa")
+                  button.forum-btn.forum-btn-delete(title="Xóa")
                     i.fas.fa-trash
 
-    //- Pagination
-    .pagination-container
-      .pagination
-        button.btn-page.btn-prev(disabled)
+    .forum-pagination-wrapper
+      .forum-pagination
+        button.forum-btn-page.forum-btn-prev(disabled)
           i.icon-prev
           span Prev
 
         - var pages = [1, 2, 3, 4, 5]
         each page in pages
-          - var pageClass = page === 1 ? 'btn-page active' : 'btn-page'
+          - var pageClass = page === 1 ? 'forum-btn-page forum-btn-active' : 'forum-btn-page'
           button(class=pageClass)= page
 
-        button.btn-page.btn-next
+        button.forum-btn-page.forum-btn-next
           span Next
           i.icon-next
-    
-    
