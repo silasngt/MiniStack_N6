@@ -1,0 +1,314 @@
+/*  UserProfile Page Styles */
+.profile-container {
+  padding: 20px;
+  
+}
+
+.profile-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.profile-header {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.avatar-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 15px;
+}
+
+.profile-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid #f8f9fa;
+}
+
+.avatar-edit {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background-color: #ffc107;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.user-name-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.profile-tabs {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-tab {
+  padding: 15px 20px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.profile-tab:hover {
+  background-color: #f8f9fa;
+}
+
+.profile-tab.active {
+  background-color: #f0f8ff;
+  border-left-color: #007bff;
+  font-weight: 600;
+}
+
+.content-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.form-section {
+  margin-bottom: 30px;
+}
+
+.form-section-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.btn-save {
+  background-color: #000;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-save:hover {
+  background-color: #333;
+}
+/*end  userprofile */
+
+/* Lịch sử câu trả lời */
+ .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f8f9fa;
+    }
+    
+    .section-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 0;
+    }
+    
+    .question-count {
+        font-size: 14px;
+        color: #6c757d;
+        background: #f8f9fa;
+        padding: 8px 15px;
+        border-radius: 20px;
+    }
+    
+    .question-history-list {
+        max-height: 600px;
+        overflow-y: auto;
+    }
+    
+    .question-item {
+        background: #fff;
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+    }
+    
+    .question-item:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transform: translateY(-2px);
+    }
+    
+    .question-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 12px;
+    }
+    
+    .question-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #000000;
+        margin: 0;
+        flex: 1;
+        margin-right: 15px;
+        line-height: 1.4;
+    }
+    
+    .question-date {
+        font-size: 12px;
+        color: #6c757d;
+        white-space: nowrap;
+    }
+    
+    .question-content {
+        margin-bottom: 15px;
+    }
+    
+    .question-content p {
+        font-size: 14px;
+        color: #2200ff;
+        margin: 0;
+        line-height: 1.5;
+    }
+    
+    .question-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .question-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    
+    .tag {
+        background: #e7f3ff;
+        color: #0066cc;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 500;
+    }
+    
+    .question-actions {
+        display: flex;
+        gap: 8px;
+    }
+    
+    .btn-view, .btn-delete {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-view {
+        background: #007bff;
+        color: white;
+    }
+    
+    .btn-view:hover {
+        background: #0056b3;
+    }
+    
+    .btn-delete {
+        background: #dc3545;
+        color: white;
+    }
+    
+    .btn-delete:hover {
+        background: #c82333;
+    }
+    
+    .pagination-container {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #e9ecef;
+    }
+    
+    .pagination .page-link {
+        color: #007bff;
+        border: 1px solid #dee2e6;
+        padding: 8px 12px;
+    }
+    
+    .pagination .page-item.active .page-link {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    
+    .pagination .page-item.disabled .page-link {
+        color: #6c757d;
+        background-color: #fff;
+        border-color: #dee2e6;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .question-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .question-footer {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .question-actions {
+            width: 100%;
+            justify-content: flex-end;
+        }
+      }
+/*end Lịch sử câu trả lời */
