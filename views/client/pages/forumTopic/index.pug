@@ -1,5 +1,21 @@
 extends ../../layouts/defaultMenu.pug
 
-
 block main
-    div #{pageTitle}
+  div(class="container mx-auto p-6 ")
+    each result, index in [1, 2, 3, 4, 5]
+      div(class="flex items-start justify-between border border-gray-300 rounded-[20px] p-2 mb-3 bg-white shadow-sm")
+        div(class="text-gray-500 font-weight-[500] text-[18px] w-17 text-center py-[4px]")
+            div 0 answer
+            div 3 view
+        div(class="ml-4 flex-1")
+          h2(class="text-[#000000] font-bold  text-[21px] mb-1")
+            a(href="/forumExchange") org.hibernate.query.QueryArgumentException: Argument [44]
+          p(class="text-[#2200FF] text-[16px] font-Inter")
+            | I have 2 tables in database "Courses" and "Instructor" with "Instructor" table having one to many relation with "Courses" table and "Courses" table having many to one relation with same....
+
+    // Dòng cuối: kết quả tìm được
+    div(class="container mx-[37%] p-6")
+        div(class="relative mb-4")
+            p(class="text-center text-sm text-gray-600")
+            | Tìm kiếm được 
+            span(class="text-blue-600 font-semibold") 5 kết quả

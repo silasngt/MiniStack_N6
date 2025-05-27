@@ -1,0 +1,65 @@
+extends ../../layouts/default.pug
+
+block main
+  //- User Management Content
+  .user-management-content
+    //- Header Section
+    .header-section
+      h1.page-title Quản lý diễn đàn
+
+    //- User Table
+    .table-container
+      table.user-table
+        thead
+          tr
+            th ID câu hỏi
+            th Nội dung
+            th Tên người đăng
+            th Email
+            th Số lượt bình luận
+            th Ngày tạo
+            th Thao tác
+        tbody
+          - 
+            var questions = [
+              { id: 1, content: 'Làm sao để nuôi chó con khỏe mạnh?', name: 'Nguyễn Văn A', email: 'a@gmail.com', comments: 3, date: '01/01/2025' },
+              { id: 2, content: 'Nên cho mèo ăn thức ăn gì?', name: 'Trần Thị B', email: 'b@gmail.com', comments: 5, date: '02/01/2025' },
+              { id: 3, content: 'Thú cưng có cần tiêm phòng?', name: 'Lê Văn C', email: 'c@gmail.com', comments: 2, date: '03/01/2025' },
+              { id: 4, content: 'Làm thế nào để dạy chó đi vệ sinh đúng chỗ?', name: 'Phạm Thị D', email: 'd@gmail.com', comments: 7, date: '04/01/2025' },
+              { id: 5, content: 'Cách chăm sóc mèo bị bệnh ngoài da?', name: 'Hoàng Văn E', email: 'e@gmail.com', comments: 1, date: '05/01/2025' }
+            ];
+          
+          each question in questions
+            tr.question-row
+              td.question-id= question.id
+              td.question-content= question.content
+              td.question-name= question.name
+              td.question-email= question.email
+              td.question-comments= question.comments
+              td.question-date= question.date
+              td.question-actions
+                .btn-group(role="group")
+                  button.btn.btn-outline-secondary.btn-sm(title="Xem chi tiết")
+                    i.fas.fa-eye
+                  button.btn.btn-outline-primary.btn-sm(title="Chỉnh sửa")
+                    i.fas.fa-edit
+                  button.btn.btn-outline-danger.btn-sm(title="Xóa")
+                    i.fas.fa-trash
+
+    //- Pagination
+    .pagination-container
+      .pagination
+        button.btn-page.btn-prev(disabled)
+          i.icon-prev
+          span Prev
+
+        - var pages = [1, 2, 3, 4, 5]
+        each page in pages
+          - var pageClass = page === 1 ? 'btn-page active' : 'btn-page'
+          button(class=pageClass)= page
+
+        button.btn-page.btn-next
+          span Next
+          i.icon-next
+    
+    

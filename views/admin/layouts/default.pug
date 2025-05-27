@@ -1,27 +1,31 @@
 doctype html 
 html 
-    head 
-        title #{pageTitle}
-        //- Nhúng Bootstrap 4 vào
-        link(rel="stylesheet" 
-        href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css")
-        link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css")
-    
-        //- File CSS
-        link(rel="stylesheet", href="/admin/css/style.css")
-        link(rel="stylesheet", href="/admin/css/styleQ.css")
+  head 
+    title #{pageTitle}
+    //- Nhúng Bootstrap 4 vào
+    link(rel="stylesheet" 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css")
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css")
 
-    body
-      .app-container
-        include ../partials/header.pug
-        .main-content
-          include ../partials/sider-bar.pug
-          .content
-            block main
-        
-        //- Nhúng thư viện jQuery và Bootstrap 4 vào
-        script(src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js")
-        script(src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js")
-        script(src="https://cdn.tailwindcss.com")
-        //- File JS
-        script(src="/js/script.js")
+    //- File CSS
+    link(rel="stylesheet" href="/admin/css/style.css")
+    link(rel="stylesheet" href="/admin/css/styleQ.css")
+    script(src="https://cdn.tailwindcss.com")
+    link(rel="stylesheet" href="/admin/css/styleK.css")
+    //- Block cho CSS tùy chỉnh theo trang
+    block styles
+  body 
+    .app-container
+      include ../partials/header.pug
+      .main-content
+        include ../partials/sider-bar.pug
+        .content
+          block main
+
+      //- Nhúng thư viện jQuery và Bootstrap 4 vào
+      script(src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js")
+      script(src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js")
+      script(src="https://cdn.tailwindcss.com")
+
+      //- File JS
+      script(src="/js/script.js")

@@ -1,0 +1,57 @@
+extends ../../layouts/default.pug
+
+block styles
+    link(rel="stylesheet" href="/admin/css/kStyle.css")
+block main
+    .profile-container
+        .row
+            .col-md-4.mb-4
+                .profile-card
+                    .profile-header
+                        .avatar-container
+                            img.profile-avatar(src="https://e7.pngegg.com/pngimages/349/288/png-clipart-teacher-education-student-course-school-avatar-child-face.png" alt="Admin")
+                            .avatar-edit
+                                label(for="avatar-upload")
+                                    i.fas.fa-pencil-alt
+                                input#avatar-upload(type="file", hidden)
+                        .admin-name-title Admin
+
+                    .profile-tabs
+                        .profile-tab.active Thông Tin Cá Nhân
+                        .profile-tab Lịch Sử Câu Trả Lời
+
+            .col-md-8
+                .content-card
+                    h2.section-title Thông Tin Cá Nhân
+
+                    form.profile-form
+                        .form-section
+                            h3.form-section-title Thông tin cơ bản
+                            .form-group
+                                label(for="fullName") Name:
+                                input#fullName.form-control(type="text" value="Michael Smith")
+
+                            .form-group
+                                label(for="phone") SĐT:
+                                input#phone.form-control(type="text" value="+46-7644 394 68")
+
+                            .form-group
+                                button.btn-save Lưu
+
+                        .form-section.mt-5
+                            h3.form-section-title Security
+
+                            .form-group
+                                label(for="email") Email
+                                input#email.form-control(type="email" value="masumrana15@gmail.com", readonly)
+
+                            .form-group
+                                label(for="password") Mật Khẩu
+                                input#password.form-control(type="password" value="**********")
+
+                            .form-group
+                                label(for="confirmPassword") Xác Nhận Mật Khẩu
+                                input#confirmPassword.form-control(type="password" value="**********")
+
+                            .form-group
+                                button.btn-save Lưu
