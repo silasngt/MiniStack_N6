@@ -78,7 +78,7 @@
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 25px;
+  padding: 10px;
 }
 
 .section-title {
@@ -89,7 +89,7 @@
 }
 
 .form-section {
-  margin-bottom: 30px;
+  margin-bottom: -20px;
 }
 
 .form-section-title {
@@ -102,7 +102,7 @@
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .form-control {
@@ -144,6 +144,7 @@
         font-weight: 600;
         color: #2c3e50;
         margin: 0;
+        
     }
     
     .question-count {
@@ -163,8 +164,8 @@
         background: #fff;
         border: 1px solid #e9ecef;
         border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 20px;
+        padding: 10px;
+        margin-bottom: 10px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.08);
         transition: all 0.3s ease;
     }
@@ -179,6 +180,7 @@
         justify-content: space-between;
         align-items: flex-start;
         margin-bottom: 12px;
+        text-decoration: underline;
     }
     
     .question-title {
@@ -312,3 +314,243 @@
         }
       }
 /*end Lịch sử câu trả lời */
+/*userDocument */
+  .post-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    background: white;
+    border-radius: 16px;
+    padding: 3px;
+    margin-bottom: 16px;
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  .post-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    transform: translateX(-4px);
+    transition: transform 0.3s ease;
+  }
+  .post-box:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+      0 20px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border-color: rgba(102, 126, 234, 0.2);
+  }
+
+
+  .post-box:nth-child(1) {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(255, 255, 255, 0.95) 100%);
+    border-color: rgba(102, 126, 234, 0.3);
+    box-shadow: 
+      0 8px 15px -3px rgba(102, 126, 234, 0.1),
+      0 4px 6px -2px rgba(102, 126, 234, 0.05);
+  }
+  /* Image Styles */
+  .post-box img {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    object-fit: cover;
+    flex-shrink: 10;
+    background: linear-gradient(135deg, #4d7cfe 0%, #4d7cef 100%);
+    padding: 1px;
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.2);
+    transition: transform 0.3s ease;
+  }
+  .post-box:hover img {
+    transform: scale(1.05);
+  }
+
+  /* Post Content */
+  .post-content {
+    flex: 1;
+    min-width: 0;
+  }
+  .post-content h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 5px;
+    line-height: 20px;
+    letter-spacing: 0%;
+    text-decoration: underline;
+  }
+
+  .post-box:nth-child(1) .post-content h3 {
+    color: #3182ce;
+  }
+
+  .post-content p {
+    font-size: 15px;
+    color: #2200ff;
+    line-height: 1.6;
+    display: -webkit-box;
+
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .post-box:nth-child(1) .post-content p {
+    color: #2c5aa0;
+  }
+  /* Pagination Styles */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    padding: -5px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .pagination span {
+    width: 60px;
+    height: 40px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #4a5568;
+    user-select: none;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+  }
+
+  .pagination span:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #000000;
+    transform: translateY(-1px);
+  }
+
+  .pagination .page {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+  }
+
+  .pagination .page.active {
+    background: linear-gradient(135deg, #000000, #000000);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.4),
+      0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .pagination .page.active:hover {
+    background: linear-gradient(135deg, #1a1a1a, #000000);
+    transform: translateY(-2px);
+  }
+
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .container {
+      padding: 20px 15px;
+    }
+    
+    .post-box {
+      padding: 20px;
+      gap: 16px;
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .post-box img {
+      width: 60px;
+      height: 60px;
+      align-self: center;
+    }
+    
+    .post-content h3 {
+      font-size: 16px;
+    }
+    
+    .post-content p {
+      font-size: 14px;
+    }
+    
+    .pagination {
+      gap: 8px;
+      padding: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .pagination span {
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+    
+    .pagination .page {
+      width: 36px;
+      height: 36px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .post-box {
+      margin-bottom: 12px;
+      padding: 16px;
+    }
+    
+    .post-content h3 {
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+    
+    .post-content p {
+      font-size: 13px;
+      -webkit-line-clamp: 2;
+    }
+    
+    .pagination {
+      margin-top: 30px;
+    }
+  }
+  /* Animation cho page load */
+  .post-box {
+    animation: slideInUp 0.6s ease-out;
+    animation-fill-mode: both;
+  }
+
+  .post-box:nth-child(1) { animation-delay: 0.1s; }
+  .post-box:nth-child(2) { animation-delay: 0.2s; }
+  .post-box:nth-child(3) { animation-delay: 0.3s; }
+  .post-box:nth-child(4) { animation-delay: 0.4s; }
+  .post-box:nth-child(5) { animation-delay: 0.5s; }
+
+  .pagination {
+    animation: fadeInUp 0.6s ease-out 0.6s both;
+  }
+/*end userDocument */

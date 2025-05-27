@@ -1,65 +1,64 @@
 extends ../../layouts/default.pug
 
 block main
-  div(class="user-management-content max-w-7xl mx-auto px-4")
+  .user-management-content
     //- Header Section
-    div(class="header-section row align-items-center mb-2 flex justify-between items-center")
-      div(class="col text-center flex-1 ")
-        h1(class="page-title mb-0 text-[#FFFFFF] font-Poppins text-[40px] ") Danh sách tài liệu
-      div(class="col-auto ml-auto")
-        a(href="/admin/addDocument" class="btn btn-success bg-[#FFDA32] text-[#020202] font-bold px-4 py-2 rounded shadow-md hover:bg-yellow-400 transition  !important;")
+    .header-section
+      .header-title
+        h1.page-title Danh sách tài liệu
+      .header-actions
+        a.btn-add(href="/admin/addDocument")
           | Thêm Tài liệu mới
-
+    
     //- User Table
-    div(class="table-container overflow-hidden")
-      table(class="user-table min-w-full divide-y divide-gray-200 border")
-        thead(class="bg-blue-600 text-white")
+    .table-container
+      table.user-table
+        thead.table-header
           tr
-            th(class="py-3 px-6 text-left font-semibold") ID
-            th(class="py-3 px-6 text-left font-semibold") Tên Tài Liệu
-            th(class="py-3 px-6 text-left font-semibold") Danh Mục
-            th(class="py-3 px-6 text-left font-semibold") Người đăng
-            th(class="py-3 px-6 text-left font-semibold") Ngày tạo
-            th(class="py-3 px-6 text-left font-semibold") Thao tác
-        tbody(class="bg-white divide-y divide-gray-200")
+            th ID
+            th Tên Tài Liệu
+            th Danh Mục
+            th Người đăng
+            th Ngày tạo
+            th Thao tác
+        tbody.table-body
           -
             var documents = [
               { id: 1, title: 'Tài liệu HTML', category: 'Lập trình web', author: 'Nguyễn Văn A', createdAt: '1/1/2025' },
               { id: 2, title: 'Tài liệu CSS', category: 'Lập trình web', author: 'Trần Thị B', createdAt: '2/2/2025' },
               { id: 3, title: 'Tài liệu JavaScript', category: 'Frontend', author: 'Lê Văn C', createdAt: '3/3/2025' },
               { id: 4, title: 'Tài liệu Node.js', category: 'Backend', author: 'Phạm Thị D', createdAt: '4/4/2025' },
-              { id: 5, title: 'Tài liệu SQL', category: 'Cơ sở dữ liệu', author: 'Hoàng Văn E', createdAt: '5/5/2025' }    
+              { id: 5, title: 'Tài liệu SQL', category: 'Cơ sở dữ liệu', author: 'Hoàng Văn E', createdAt: '5/5/2025' },
+              { id: 6, title: 'Tài liệu SQL', category: 'Cơ sở dữ liệu', author: 'Nguyễn Thị F', createdAt: '6/6/2025' },
             ];
           each doc in documents
-            tr(class="hover:bg-gray-50")
-              td(class="py-3 px-6")= doc.id
-              td(class="py-3 px-6")= doc.title
-              td(class="py-3 px-6")= doc.category
-              td(class="py-3 px-6")= doc.author
-              td(class="py-3 px-6")= doc.createdAt
-              td(class="py-3 px-6")
-                div(class="btn-group" role="group")
-                  button(class="btn btn-outline-secondary btn-sm" title="Xem chi tiết")
-                    i(class="fas fa-eye")
-                  button(class="btn btn-outline-primary btn-sm" title="Chỉnh sửa")
-                    i(class="fas fa-edit")
-                  button(class="btn btn-outline-danger btn-sm" title="Xóa")
-                    i(class="fas fa-trash")
-
+            tr.table-row
+              td= doc.id
+              td= doc.title
+              td= doc.category
+              td= doc.author
+              td= doc.createdAt
+              td
+                .btn-group
+                  button.btn-action.btn-view(title="Xem chi tiết")
+                    i.fas.fa-eye
+                  button.btn-action.btn-edit(title="Chỉnh sửa")
+                    i.fas.fa-edit
+                  button.btn-action.btn-delete(title="Xóa")
+                    i.fas.fa-trash
+    
     //- Pagination
-    div(class="pagination-container mt-[38px] flex justify-center space-x-2")
-      div(class="pagination flex items-center space-x-2")
-        button(class="btn-page btn-prev disabled:opacity-50 disabled:cursor-not-allowed" disabled)
-          i(class="icon-prev")
+    .pagination-container
+      .pagination
+        button.btn-page.btn-prev(disabled)
+          i.icon-prev
           span Prev
-
         -
           var pages = [1, 2, 3, 4, 5]
         each page in pages
           -
-            var pageClass = page === 1 ? 'btn-page active bg-blue-600 text-white rounded px-3 py-1' : 'btn-page bg-gray-200 rounded px-3 py-1 hover:bg-gray-300 cursor-pointer'
+            var pageClass = page === 1 ? 'btn-page active' : 'btn-page'
           button(class=pageClass)= page
-
-        button(class="btn-page btn-next")
+        button.btn-page.btn-next
           span Next
-          i(class="icon-next")
+          i.icon-next
