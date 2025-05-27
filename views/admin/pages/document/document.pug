@@ -1,0 +1,64 @@
+extends ../../layouts/default.pug
+
+block main
+  .user-management-content
+    //- Header Section
+    .header-section
+      .header-title
+        h1.page-title Danh sách tài liệu
+      .header-actions
+        a.btn-add(href="/admin/addDocument")
+          | Thêm Tài liệu mới
+    
+    //- User Table
+    .table-container
+      table.user-table
+        thead.table-header
+          tr
+            th ID
+            th Tên Tài Liệu
+            th Danh Mục
+            th Người đăng
+            th Ngày tạo
+            th Thao tác
+        tbody.table-body
+          -
+            var documents = [
+              { id: 1, title: 'Tài liệu HTML', category: 'Lập trình web', author: 'Nguyễn Văn A', createdAt: '1/1/2025' },
+              { id: 2, title: 'Tài liệu CSS', category: 'Lập trình web', author: 'Trần Thị B', createdAt: '2/2/2025' },
+              { id: 3, title: 'Tài liệu JavaScript', category: 'Frontend', author: 'Lê Văn C', createdAt: '3/3/2025' },
+              { id: 4, title: 'Tài liệu Node.js', category: 'Backend', author: 'Phạm Thị D', createdAt: '4/4/2025' },
+              { id: 5, title: 'Tài liệu SQL', category: 'Cơ sở dữ liệu', author: 'Hoàng Văn E', createdAt: '5/5/2025' },
+              { id: 6, title: 'Tài liệu SQL', category: 'Cơ sở dữ liệu', author: 'Nguyễn Thị F', createdAt: '6/6/2025' },
+            ];
+          each doc in documents
+            tr.table-row
+              td= doc.id
+              td= doc.title
+              td= doc.category
+              td= doc.author
+              td= doc.createdAt
+              td
+                .btn-group
+                  button.btn-action.btn-view(title="Xem chi tiết")
+                    i.fas.fa-eye
+                  button.btn-action.btn-edit(title="Chỉnh sửa")
+                    i.fas.fa-edit
+                  button.btn-action.btn-delete(title="Xóa")
+                    i.fas.fa-trash
+    
+    //- Pagination
+    .pagination-container
+      .pagination
+        button.btn-page.btn-prev(disabled)
+          i.icon-prev
+          span Prev
+        -
+          var pages = [1, 2, 3, 4, 5]
+        each page in pages
+          -
+            var pageClass = page === 1 ? 'btn-page active' : 'btn-page'
+          button(class=pageClass)= page
+        button.btn-page.btn-next
+          span Next
+          i.icon-next

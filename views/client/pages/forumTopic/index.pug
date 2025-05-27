@@ -1,5 +1,34 @@
 extends ../../layouts/defaultMenu.pug
 
-
 block main
-    div #{pageTitle}
+  div(class="forum")
+    // Section Câu hỏi
+    div(class="forum__question-section")
+      div(class="forum__header")
+        h1(class="forum__title") Câu hỏi
+        button(class="forum__add-btn")
+          svg(class="forum__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24")
+            path(stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4")
+          span Thêm câu hỏi
+
+    // Danh sách kết quả
+    each result, index in [1, 2, 3, 4, 5]
+      div(class="forum__item")
+        div(class="forum__stats")
+          div(class="forum__stat forum__stat--answer") 0 answer
+          div(class="forum__stat forum__stat--view") 3 view
+        div(class="forum__content")
+          h2(class="forum__question")
+            a(href="/forumExchange") org.hibernate.query.QueryArgumentException: Argument [44]
+          p(class="forum__description")
+            | I have 2 tables in database "Courses" and "Instructor" with "Instructor" table having one to many relation with "Courses" table and "Courses" table having many to one relation with same....
+
+    // Phân trang
+    div(class="forum__pagination")
+      button(class="forum__page-btn") Prev
+      button(class="forum__page-btn") 1
+      button(class="forum__page-btn forum__page-btn--active") 2
+      button(class="forum__page-btn") 3
+      button(class="forum__page-btn") 4
+      button(class="forum__page-btn") 5
+      button(class="forum__page-btn") Next
