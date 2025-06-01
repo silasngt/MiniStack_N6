@@ -111,6 +111,21 @@ header {
   font-weight: 500;
 }
 
+.sidebar-item[href="/forum-topic"]:has([href$="/forum-topic"]):not(:has([href$="/forum-topic"] ~ [href$="/forum-topic"])),
+.sidebar-item[href="/chatBox"]:has([href$="/chatBox"]):not(:has([href$="/chatBox"] ~ [href$="/chatBox"])),
+.sidebar-item[href="/compile"]:has([href$="/compile"]):not(:has([href$="/compile"] ~ [href$="/compile"])),
+.sidebar-item[href="/blog"]:has([href$="/blog"]):not(:has([href$="/blog"] ~ [href$="/blog"])),
+.sidebar-item[href="/userDocument"]:has([href$="/userDocument"]):not(:has([href$="/userDocument"] ~ [href$="/userDocument"])) {
+  background-color: #cfe2ff;
+  color: #0d6efd;
+  font-weight: 500;
+}
+
+/* Sửa phần CSS cho sidebar-icon trong trạng thái active */
+.sidebar-item[href]:has([href$=":current"]) .sidebar-icon {
+  color: inherit;
+}
+
 .sidebar-icon {
   width: 20px;
   height: 20px;

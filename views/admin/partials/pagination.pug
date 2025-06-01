@@ -1,0 +1,14 @@
+.pagination-container
+    .pagination
+        button.btn-page.btn-prev(disabled)
+            i.icon-prev
+            span Prev
+
+        - var pages = [1, 2, 3, 4, 5]
+        each page in pages
+            - var pageClass = page === 1 ? 'btn-page active' : 'btn-page'
+            button(class=pageClass)= page
+
+        button.btn-page.btn-next
+            span Next
+            i.icon-next
