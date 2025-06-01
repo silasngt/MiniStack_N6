@@ -1,0 +1,41 @@
+extends ../../layouts/default.pug
+
+block main 
+    if error
+        .alert.alert-danger= error
+
+    form#uploadForm(
+        action=`/${prefixAdmin}/testCloud`
+        method="POST" 
+        enctype="multipart/form-data")
+        div.form-group
+            label(for="testCloud") Test Cloud
+            input(type="file" id="testCloud" name="testCloud" accept="image/*")
+        button.btn.btn-primary(type="submit") Upload
+
+    if imageUrl
+        div#result.mt-4
+            .alert.alert-success Upload thành công!
+            p Link ảnh: #{imageUrl}
+            img(src=imageUrl style="max-width: 300px")
+    if message 
+        div#message.mt-4
+            .alert.alert-info= message
+
+    form#uploadMultipleForm(
+        action=`/${prefixAdmin}/testCloud/imageField`
+        method="POST"
+        enctype="multipart/form-data")
+        .form-group
+            label(for="testCloudMultiple") Upload Multiple Images
+            input(type="file" id="testCloudMultiple" name="testCloudMultiple" accept="image/*" multiple required)
+        button.btn.btn-primary(type="submit") Upload Images
+    if imageUrls && imageUrls.length > 0
+        div#resultMultiple.mt-4
+            .alert.alert-success Upload thành công!
+            p Links ảnh:
+            ul
+                each url in imageUrls
+                    li: a(href=url target="_blank")= url
+                    li: img(src=url style="max-width: 300px")
+
