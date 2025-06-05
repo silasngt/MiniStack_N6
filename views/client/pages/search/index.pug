@@ -11,17 +11,20 @@ block main
         .search-results-list
             each result in searchResults
                 .search-result-item
-                    .result-header
-                        .result-stats
-                            span.result-answers #{result.answers} answer
-                            span.result-views #{result.views} view
-                        h3.result-title
-                            a(href=`/forum-topic/${result.id}`) #{result.title}
-                    .result-content
-                        p #{result.content}
-                    .result-tags
-                        each tag in result.tags
-                            span.result-tag #{tag}
+                    .result-left
+                        .stats-box
+                            .stat-item
+                                .stat-number #{result.answers}
+                                .stat-label answer
+                            .stat-item
+                                .stat-number #{result.views}
+                                .stat-label view
+                    .result-right
+                        .result-header
+                            h3.result-title
+                                a(href=`/forum-topic/${result.id}`) #{result.title}
+                        .result-content
+                            p #{result.content}
 
         .pagination-container
             if totalPages > 1

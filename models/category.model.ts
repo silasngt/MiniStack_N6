@@ -1,23 +1,16 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/database';
 
-const User = sequelize.define(
-  'User',
+const Category = sequelize.define(
+  'Category',
   {
-    UserID: {
+    CategoryID: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    FullName: DataTypes.STRING(255),
-    Email: {
-      type: DataTypes.STRING(255),
-      unique: true,
-    },
-    Password: DataTypes.STRING(255),
-    Gender: DataTypes.ENUM('Nam', 'Nữ', 'Khác'),
-    Avatar: DataTypes.STRING(255),
-    Role: DataTypes.ENUM('User', 'Admin'),
+    Name: DataTypes.STRING(255),
+    Type: DataTypes.ENUM('Post', 'Document', 'Forum'),
     deleted: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
@@ -28,9 +21,9 @@ const User = sequelize.define(
     },
   },
   {
-    tableName: 'User',
+    tableName: 'Category',
     timestamps: false,
   }
 );
 
-export default User;
+export default Category;

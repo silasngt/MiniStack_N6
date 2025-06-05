@@ -9,7 +9,7 @@ import { forumManagerRoute } from './forumManager.route';
 import { systemConfig } from '../../config/system';
 import { profileRoute } from './adminProfile.route';
 import { postRoute } from './post.route';
-
+import { testCloudRoute } from './testCloud.route';
 
 export const routesAdmin = (app: Express) => {
   const path = systemConfig.prefixAdmin;
@@ -22,4 +22,5 @@ export const routesAdmin = (app: Express) => {
   app.use(`/${path}/document`, documentRoute);
  
   app.use(`/${path}/forumManager`, forumManagerRoute);
+  app.use(`/${path}/testCloud`, testCloudRoute);
 };

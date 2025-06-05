@@ -11,18 +11,22 @@ html
         link(rel="stylesheet", href="/admin/css/style.css")
         link(rel="stylesheet", href="/admin/css/styleQ.css")
         link(rel="stylesheet", href="/admin/css/styleN.css")
+        link(rel="stylesheet" href="/admin/css/styleK.css")
+        link(rel="stylesheet" href="/admin/css/forumTopic.css")
 
-    body
+    //- Block cho CSS tùy chỉnh theo trang
+
+    body 
       .app-container
         include ../partials/header.pug
         .main-content
           include ../partials/sider-bar.pug
           .content
             block main
-        
+
         //- Nhúng thư viện jQuery và Bootstrap 4 vào
         script(src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js")
         script(src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js")
-        
         //- File JS
         script(src="/js/script.js")
+
