@@ -3,9 +3,9 @@ import { miniStackRoute } from './miniStack.route';
 import { forumTopicRoute } from './forumTopic.route';
 import { blogRoute } from './blog.route';
 import { authRoute } from './auth.route';
-import { UserProfileRoute } from './UserProfile.route';
-import { userDocumentRoute } from './userDocument.route';
-import { historyRoute } from './history.route';
+import { ProfileRoute } from './Profile.route';
+import { DocumentRoute} from './Document.route';
+
 import { forumExchangeRoute } from './forumExchange.route';
 import { chatBoxRoute } from './chatBox.route';
 import { compileRoute } from './compile.route';
@@ -16,12 +16,11 @@ export const routesClient = (app: Express) => {
   app.use('/forum-topic', forumTopicRoute);
   app.use('/blog', blogRoute);
   app.use('/auth', authRoute);
-  app.use('/UserProfile', UserProfileRoute);
-  app.use('/history', historyRoute);
+  app.use ('/Profile',ProfileRoute);
   app.use('/forumExchange', forumExchangeRoute);
   app.use('/chatBox', chatBoxRoute);
   app.use('/compile', compileRoute);
   app.use('/search', searchRoute);
-  app.use('/history', historyRoute);
-  app.use('/userDocument', userDocumentRoute);
+  app.use ('/Document',DocumentRoute)
+
 };
