@@ -411,17 +411,51 @@ select.form-control option {
   white-space: normal;
 }
 
-/* Fix cho các trình duyệt khác nhau */
-@-moz-document url-prefix() {
-  select.form-control option {
-    padding: 12px;
-  }
+/* CSS cho select multiple */
+.category-select-wrapper {
+  position: relative;
 }
 
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  select.form-control option {
-    padding: 12px;
-  }
+.multiple-select {
+  min-height: 120px !important;
+  padding: 8px 12px;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  background-color: #fff;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.multiple-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+.multiple-select option {
+  padding: 8px 12px;
+  margin: 2px 0;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.multiple-select option:hover {
+  background-color: #f8f9fa;
+}
+
+.multiple-select option:checked {
+  background-color: #007bff;
+  color: white;
+  font-weight: 500;
+}
+
+.select-hint {
+  margin-top: 5px;
+}
+
+.select-hint small {
+  color: #6c757d;
+  font-size: 12px;
 }
 
 /* Xóa bỏ các CSS dư thừa không cần thiết */
@@ -430,10 +464,10 @@ select.form-control option {
   display: none;
 }
 
-.content-area {
+/* .content-area {
   min-height: 200px;
   resize: vertical;
-}
+} */
 
 .attachment-label {
   display: flex;
@@ -450,37 +484,137 @@ select.form-control option {
   margin-top: 10px;
 }
 
-.image-preview,
-.image-upload-box {
-  width: 100px;
-  height: 80px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+.image-preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
+  min-height: 60px;
+  width: 100%;
+}
+
+.image-preview {
+  position: relative;
+  border-radius: 8px;
   overflow: hidden;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e1e5e9;
+  width: 120px; /* Fixed width cho consistent layout */
+  flex-shrink: 0; /* Không cho shrink */
 }
 
 .image-preview img {
   width: 100%;
-  height: 100%;
+  height: 80px;
   object-fit: cover;
+  display: block; /* Tránh whitespace */
 }
 
-.image-upload-box {
+.remove-image {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(255, 0, 0, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f9f9f9;
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+
+.remove-image:hover {
+  background: rgba(255, 0, 0, 1);
+  transform: scale(1.1);
+}
+
+.image-name {
+  padding: 8px;
+  font-size: 11px;
+  text-align: center;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.image-upload-box {
+  border: 2px dashed #007bff;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
 }
 
 .image-upload-box:hover {
-  background-color: #f0f0f0;
+  background-color: #e3f2fd;
+  border-color: #0056b3;
+}
+
+.image-upload-box label {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
 }
 
 .image-upload-box i {
-  font-size: 24px;
-  color: #4169e1;
+  font-size: 1.5rem;
+  color: #007bff;
+}
+
+.image-upload-box span {
+  font-size: 12px;
+  color: #007bff;
+  font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .image-preview-container {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  .image-preview {
+    width: 100px;
+  }
+
+  .image-preview img {
+    height: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  .image-preview-container {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+
+  .image-preview {
+    width: 80px;
+  }
+
+  .image-preview img {
+    height: 60px;
+  }
+
+  .image-attachments {
+    padding: 15px;
+  }
 }
 
 .form-buttons {
@@ -511,6 +645,12 @@ select.form-control option {
   background-color: #3451b2;
 }
 
+/* Loading state */
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .btn-cancel {
   background-color: #f5f5f5;
   color: #555;
@@ -520,5 +660,15 @@ select.form-control option {
 
 .btn-cancel:hover {
   background-color: #e5e5e5;
+}
+
+/* Success message */
+.alert-success {
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  color: #155724;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 20px;
 }
 /* End Create Post Page Styles */

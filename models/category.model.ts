@@ -10,7 +10,17 @@ const Category = sequelize.define(
       autoIncrement: true,
     },
     Name: DataTypes.STRING(255),
-    Type: DataTypes.ENUM('Post', 'Document', 'Forum'),
+    Type: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      get() {
+        const raw = this.getDataValue('Type');
+        return raw ? JSON.parse(raw) : [];
+      },
+      set(val: string[] | string) {
+        this.setDataValue('Type', JSON.stringify(val));
+      },
+    },
     deleted: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
