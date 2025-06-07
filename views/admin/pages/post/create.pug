@@ -42,13 +42,13 @@ block main
                     label.attachment-label Đính kèm hình ảnh
                     .image-attachments
                         .image-preview-container#imagePreviewContainer
-                            // Dynamic previews will be added here
+                            // Single image preview will be added here
 
                         .image-upload-box
                             label(for="image-upload")
                                 i.fas.fa-cloud-upload-alt
-                                span Chọn ảnh (tối đa 10 ảnh)
-                            input#image-upload(type="file" name="images" accept="image/*" multiple hidden)
+                                span Chọn ảnh (chỉ chọn 1 ảnh)
+                            input#image-upload(type="file" name="image" accept="image/*" hidden)
 
                 .form-buttons
                     button.btn-submit(type="submit") THÊM

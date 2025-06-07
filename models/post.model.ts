@@ -33,16 +33,9 @@ const Post = sequelize.define(
         this.setDataValue('Categories', JSON.stringify(categoryArray));
       },
     },
-    Images: {
+    Image: {
       type: DataTypes.TEXT,
       allowNull: true,
-      get() {
-        const raw = this.getDataValue('Images');
-        return raw ? JSON.parse(raw) : [];
-      },
-      set(val: string[]) {
-        this.setDataValue('Images', JSON.stringify(val || []));
-      },
     },
     deleted: {
       type: DataTypes.BOOLEAN,

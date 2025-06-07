@@ -1,27 +1,16 @@
 document.addEventListener('DOMContentLoaded', function () {
   const imageUpload = document.getElementById('image-upload');
   const previewContainer = document.getElementById('imagePreviewContainer');
-  const maxImages = 10;
-  let selectedFiles = [];
-
   if (imageUpload && previewContainer) {
     imageUpload.addEventListener('change', function (e) {
-      const files = Array.from(e.target.files);
+      const file = e.target.files[0]; // Chỉ lấy file đầu tiên
 
-      // Kiểm tra số lượng ảnh
-      if (selectedFiles.length + files.length > maxImages) {
-        alert(`Chỉ được chọn tối đa ${maxImages} ảnh!`);
-        return;
+      // Clear previous preview
+      previewContainer.innerHTML = '';
+
+      if (file && file.type.startsWith('image/')) {
+        createImagePreview(file);
       }
-
-      files.forEach((file) => {
-        if (file.type.startsWith('image/')) {
-          selectedFiles.push(file);
-          createImagePreview(file, selectedFiles.length - 1);
-        }
-      });
-
-      updateFileInput();
     });
   }
 
@@ -30,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     reader.onload = function (e) {
       const previewDiv = document.createElement('div');
-      previewDiv.className = 'image-preview';
+      previewDiv.className = 'image-preview single-image';
       previewDiv.dataset.index = index;
 
       previewDiv.innerHTML = `
@@ -48,24 +37,10 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // Function để remove ảnh
-  window.removeImage = function (index) {
-    selectedFiles.splice(index, 1);
-    updatePreviews();
-    updateFileInput();
-  };
-
-  function updatePreviews() {
+  window.removeImage = function () {
     previewContainer.innerHTML = '';
-    selectedFiles.forEach((file, index) => {
-      createImagePreview(file, index);
-    });
-  }
-
-  function updateFileInput() {
-    const dt = new DataTransfer();
-    selectedFiles.forEach((file) => dt.items.add(file));
-    imageUpload.files = dt.files;
-  }
+    imageUpload.value = ''; // Clear input
+  };
 
   // Form validation
   const form = document.querySelector('.create-post-form');

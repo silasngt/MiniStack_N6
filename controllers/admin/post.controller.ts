@@ -10,9 +10,39 @@ export const index = async (req: Request, res: Response) => {
       order: [['CreatedAt', 'DESC']],
     });
 
+    // Xử lý data để hiển thị categories
+    const postsWithCategories = await Promise.all(
+      posts.map(async (post) => {
+        const postData = post.toJSON();
+
+        // Parse categories từ JSON
+        const categoryIds = postData.Categories || [];
+        let categoryNames = [];
+
+        if (categoryIds.length > 0) {
+          const categories = await Category.findAll({
+            where: {
+              CategoryID: categoryIds,
+              deleted: false,
+            },
+          });
+          categoryNames = categories.map((cat) => cat.get('Name'));
+        }
+
+        return {
+          ...postData,
+          categoryNames: categoryNames.join(', '),
+          formattedDate: new Date(postData.CreatedAt).toLocaleDateString(
+            'vi-VN'
+          ),
+          hasImage: !!postData.Image,
+        };
+      })
+    );
+
     res.render('admin/pages/post/index.pug', {
       pageTitle: 'Quản lý bài viết',
-      posts: posts,
+      posts: postsWithCategories,
     });
     return;
   } catch (error) {
@@ -108,20 +138,16 @@ export const createPost = async (req: Request, res: Response) => {
         return;
       }
     }
-
-    // Xử lý images từ Cloudinary (đã được upload qua middleware)
-    let imageUrls: string[] = [];
-    if (req.body.images && Array.isArray(req.body.images)) {
-      imageUrls = req.body.images;
-    }
+    // Xử lý single image từ Cloudinary - lưu trực tiếp URL string
+    const imageUrl: string | null = req.body.image || null;
 
     // Tạo post với multiple categories và images
     const newPost = await Post.create({
       Title: title,
       Content: content,
-      AuthorID: 1, // TODO: Lấy từ session user thực tế
+      AuthorName: author,
       Categories: categoryIds, // Sequelize sẽ tự động stringify thành JSON
-      Images: imageUrls, // Sequelize sẽ tự động stringify thành JSON
+      Image: imageUrl, // Sequelize sẽ tự động stringify thành JSON
       CreatedAt: new Date(),
       deleted: false,
       status: 'active',
@@ -130,9 +156,8 @@ export const createPost = async (req: Request, res: Response) => {
     console.log('✅ Post created successfully:', {
       postId: newPost.get('PostID'),
       title: title,
-      author: author,
+      authorName: author,
       categories: categoryIds,
-      imagesCount: imageUrls.length,
     });
 
     // Redirect với success message

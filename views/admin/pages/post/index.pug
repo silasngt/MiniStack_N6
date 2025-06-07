@@ -7,6 +7,10 @@ block main
             h1.page-title Danh sách bài viết
             a.btn-add-post(href="/admin/posts/create") Thêm bài viết mới
 
+        //- Success message nếu có
+        if success === 'created'
+            .alert.alert-success ✅ Bài viết đã được tạo thành công!
+
         //- Post Table
         .table-container
             table.post-table
@@ -21,45 +25,84 @@ block main
                         th Thao tác
 
                 tbody
-                    - 
-                        var posts = [
-                            { id: 1, title: 'Giới thiệu về JavaScript', content: 'JavaScript là ngôn ngữ lập trình phổ biến nhất...', author: 'Nguyễn Văn A', category: 'Lập trình', date: '1/1/2025' },
-                            { id: 2, title: 'Cơ sở dữ liệu NoSQL', content: 'Các loại cơ sở dữ liệu NoSQL phổ biến hiện nay...', author: 'Trần Thị B', category: 'Cơ sở dữ liệu', date: '2/2/2025' },
-                            { id: 3, title: 'Trí tuệ nhân tạo và ứng dụng', content: 'Tổng quan về AI và các ứng dụng trong thực tế...', author: 'Lê Văn C', category: 'Công nghệ mới', date: '3/3/2025' },
-                            { id: 4, title: 'Phát triển ứng dụng với React Native', content: 'Hướng dẫn xây dựng ứng dụng di động cross-platform...', author: 'Phạm Thị D', category: 'Phát triển ứng dụng', date: '4/4/2025' },
-                            { id: 5, title: 'Machine Learning cơ bản', content: 'Giới thiệu các thuật toán machine learning cơ bản...', author: 'Hoàng Văn E', category: 'Trí tuệ nhân tạo', date: '5/5/2025' },
-                            { id: 6, title: 'Thiết kế RESTful API', content: 'Các nguyên tắc thiết kế API hiệu quả và dễ bảo trì...', author: 'Đỗ Thị F', category: 'Phát triển web', date: '6/6/2025' }
-                        ];
+                    if posts && posts.length > 0
+                        each post in posts
+                            tr.post-row
+                                td.post-id= post.PostID
+                                td.post-title.truncate(title=post.Title)= post.Title
+                                td.post-content.truncate(title=post.Content)= post.Content
+                                td.post-author= post.AuthorName || 'Chưa xác định'
+                                td.post-category= post.categoryNames || 'Chưa phân loại'
+                                td.post-date= post.formattedDate
+                                td.post-actions
+                                    .btn-group(role="group")
+                                        button.btn.btn-outline-secondary.btn-sm(title="Trạng thái hoạt động" onclick=`viewPost(${post.PostID})`)
+                                            i.fas.fa-eye
+                                        button.btn.btn-outline-primary.btn-sm(title="Chỉnh sửa" onclick=`editPost(${post.PostID})`)
+                                            i.fas.fa-pencil-alt
+                                        button.btn.btn-outline-danger.btn-sm(title="Xóa" onclick=`deletePost(${post.PostID})`)
+                                            i.fas.fa-trash
+                    else
+                        tr
+                            td(colspan="9" style="text-align: center; padding: 40px; color: #999;")
+                                i.fas.fa-inbox(style="font-size: 3rem; margin-bottom: 15px; display: block;")
+                                div Chưa có bài viết nào
+                                a.btn-add-post(href="/admin/posts/create" style="margin-top: 15px; display: inline-block;") Thêm bài viết đầu tiên
 
-                    each post in posts
-                        tr.post-row
-                            td.post-id= post.id
-                            td.post-title.truncate= post.title
-                            td.post-content.truncate= post.content
-                            td.post-author= post.author
-                            td.post-category= post.category
-                            td.post-date= post.date
-                            td.post-actions
-                                .btn-group(role="group")
-                                    button.btn.btn-outline-secondary.btn-sm(title="Xem chi tiết")
-                                        i.fas.fa-eye
-                                    button.btn.btn-outline-primary.btn-sm(title="Chỉnh sửa")
-                                        i.fas.fa-pencil-alt
-                                    button.btn.btn-outline-danger.btn-sm(title="Xóa")
-                                        i.fas.fa-trash
+        //- Pagination (simple version)
+        if posts && posts.length > 10
+            .pagination-container
+                .pagination
+                    button.btn-page.btn-prev(disabled)
+                        i.fas.fa-chevron-left
+                        span Prev
 
-        //- Pagination
-        .pagination-container
-            .pagination
-                button.btn-page.btn-prev(disabled)
-                    i.fas.fa-chevron-left
-                    span Prev
+                    button.btn-page.active 1
 
-                - var pages = [1, 2, 3, 4, 5]
-                each page in pages
-                    - var pageClass = page === 1 ? 'btn-page active' : 'btn-page'
-                    button(class=pageClass)= page
+                    button.btn-page.btn-next
+                        span Next
+                        i.fas.fa-chevron-right
 
-                button.btn-page.btn-next
-                    span Next
-                    i.fas.fa-chevron-right
+    //- JavaScript functions
+    script.
+        function viewPost(postId) {
+            // TODO: Implement view post detail
+            console.log('View post:', postId);
+            alert('Xem chi tiết bài viết #' + postId);
+        }
+
+        function editPost(postId) {
+            // TODO: Implement edit post
+            console.log('Edit post:', postId);
+            window.location.href = `/admin/posts/edit/${postId}`;
+        }
+
+        function deletePost(postId) {
+            if (confirm('Bạn có chắc chắn muốn xóa bài viết này?')) {
+                // TODO: Implement delete post
+                console.log('Delete post:', postId);
+                // Call API to delete post
+                fetch(`/admin/posts/delete/${postId}`, {
+                    method: 'DELETE'
+                }).then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Có lỗi xảy ra khi xóa bài viết!');
+                    }
+                });
+            }
+        }
+
+        // Success message auto hide
+        document.addEventListener('DOMContentLoaded', function() {
+            const successAlert = document.querySelector('.alert-success');
+            if (successAlert) {
+                setTimeout(() => {
+                    successAlert.style.opacity = '0';
+                    setTimeout(() => {
+                        successAlert.remove();
+                    }, 300);
+                }, 3000);
+            }
+        });
