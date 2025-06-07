@@ -239,3 +239,132 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
     return;
   }
 };
+
+// [POST] /admin/posts/edit/:id
+export const editPost = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const postId = parseInt(req.params.id);
+    const { title, content, category, currentImage } = req.body;
+
+    console.log('🔍 Edit Post Debug:', {
+      postId,
+      title,
+      content,
+      category,
+      currentImage,
+      newImage: req.body.image,
+    });
+
+    // Validate required fields
+    if (!title || !content) {
+      res.status(400).json({
+        success: false,
+        message: 'Vui lòng điền đầy đủ thông tin bắt buộc!',
+      });
+      return;
+    }
+
+    // Tìm post cần edit
+    const existingPost = await Post.findByPk(postId);
+    if (!existingPost || existingPost.get('deleted')) {
+      res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy bài viết!',
+      });
+      return;
+    }
+
+    // Kiểm tra quyền edit (tạm thời skip - sau này check AuthorID)
+    // const currentUserId = 1; // Mock user ID
+    // if (existingPost.get('AuthorID') !== currentUserId) {
+    //   res.status(403).json({
+    //     success: false,
+    //     message: 'Bạn không có quyền chỉnh sửa bài viết này!',
+    //   });
+    //   return;
+    // }
+
+    // Xử lý multiple categories
+    let categoryIds: number[] = [];
+    if (Array.isArray(category)) {
+      categoryIds = category.map((id) => parseInt(id));
+    } else if (category) {
+      categoryIds = [parseInt(category)];
+    }
+
+    // Validate categories exist và thuộc type 'Bài viết'
+    if (categoryIds.length > 0) {
+      const validCategories = await Category.findAll({
+        where: {
+          CategoryID: categoryIds,
+          deleted: false,
+          status: 'active',
+        },
+      });
+
+      const invalidCategories = validCategories.filter((cat) => {
+        const types = cat.get('Type') as string[];
+        return !types || !types.includes('Bài viết');
+      });
+
+      if (invalidCategories.length > 0) {
+        res.status(400).json({
+          success: false,
+          message: 'Một số danh mục không hợp lệ cho bài viết!',
+        });
+        return;
+      }
+
+      if (validCategories.length !== categoryIds.length) {
+        res.status(400).json({
+          success: false,
+          message: 'Một số danh mục không tồn tại!',
+        });
+        return;
+      }
+    }
+
+    // Xử lý image: Ưu tiên ảnh mới, fallback về ảnh cũ
+    let finalImageUrl: string | null = null;
+
+    if (req.body.image) {
+      // Có ảnh mới được upload
+      finalImageUrl = req.body.image;
+      console.log('✅ Using new image:', finalImageUrl);
+    } else if (currentImage) {
+      // Giữ ảnh cũ
+      finalImageUrl = currentImage;
+      console.log('✅ Keeping current image:', finalImageUrl);
+    }
+    // Nếu cả 2 đều null thì sẽ xóa ảnh (finalImageUrl = null)
+
+    // Cập nhật post (AuthorID không được thay đổi)
+    await existingPost.update({
+      Title: title,
+      Content: content,
+      Categories: categoryIds, // Sequelize tự động stringify
+      Image: finalImageUrl,
+      // AuthorID: KHÔNG CẬP NHẬT - giữ nguyên người tạo ban đầu
+      // CreatedAt: KHÔNG CẬP NHẬT - giữ nguyên thời gian tạo
+      // UpdatedAt sẽ tự động update nếu có timestamps
+    });
+
+    console.log('✅ Post updated successfully:', {
+      postId: postId,
+      title: title,
+      categories: categoryIds,
+      imageUpdated: !!finalImageUrl,
+      newImageUrl: finalImageUrl,
+    });
+
+    res.redirect(`/admin/posts?success=updated&id=${postId}`);
+    return;
+  } catch (error) {
+    console.error('❌ Error updating post:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Có lỗi xảy ra khi cập nhật bài viết!',
+    });
+    return;
+  }
+};

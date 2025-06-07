@@ -6,10 +6,13 @@ block main
         .header-section
             h1.page-title Danh sách bài viết
             a.btn-add-post(href="/admin/posts/create") Thêm bài viết mới
-
-        //- Success message nếu có
+        //- Success messages
         if success === 'created'
             .alert.alert-success ✅ Bài viết đã được tạo thành công!
+        if success === 'updated'
+            .alert.alert-success ✅ Bài viết đã được cập nhật thành công!
+        if success === 'deleted'
+            .alert.alert-success ✅ Bài viết đã được xóa thành công!
 
         //- Post Table
         .table-container
@@ -50,7 +53,7 @@ block main
                                 a.btn-add-post(href="/admin/posts/create" style="margin-top: 15px; display: inline-block;") Thêm bài viết đầu tiên
 
         //- Pagination (simple version)
-        if posts && posts.length > 10
+        if posts && posts.length > 5
             .pagination-container
                 .pagination
                     button.btn-page.btn-prev(disabled)

@@ -53,8 +53,10 @@ block main
                             input#image-upload(type="file" name="image" accept="image/*" hidden)
 
                         // Hidden input để giữ ảnh cũ nếu không thay đổi
-                        input(type="hidden" name="currentImage" value=post.Image)
-
+                        if post.Image
+                            input(type="hidden" name="currentImage" value=post.Image)
+                        else
+                            input(type="hidden" name="currentImage" value="")
                 .form-buttons
                     button.btn-submit(type="submit") CẬP NHẬT
                     button.btn-cancel(type="button" onclick="window.history.back()") HỦY
