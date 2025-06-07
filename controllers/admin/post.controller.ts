@@ -246,15 +246,6 @@ export const editPost = async (req: Request, res: Response): Promise<void> => {
     const postId = parseInt(req.params.id);
     const { title, content, category, currentImage } = req.body;
 
-    console.log('🔍 Edit Post Debug:', {
-      postId,
-      title,
-      content,
-      category,
-      currentImage,
-      newImage: req.body.image,
-    });
-
     // Validate required fields
     if (!title || !content) {
       res.status(400).json({
@@ -349,14 +340,6 @@ export const editPost = async (req: Request, res: Response): Promise<void> => {
       // UpdatedAt sẽ tự động update nếu có timestamps
     });
 
-    console.log('✅ Post updated successfully:', {
-      postId: postId,
-      title: title,
-      categories: categoryIds,
-      imageUpdated: !!finalImageUrl,
-      newImageUrl: finalImageUrl,
-    });
-
     res.redirect(`/admin/posts?success=updated&id=${postId}`);
     return;
   } catch (error) {
@@ -364,6 +347,64 @@ export const editPost = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({
       success: false,
       message: 'Có lỗi xảy ra khi cập nhật bài viết!',
+    });
+    return;
+  }
+};
+
+// [DELETE] /admin/posts/delete/:id
+export const deletePost = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const postId = parseInt(req.params.id);
+
+    console.log('🗑️ Delete Post Request:', { postId });
+
+    // Tìm post cần xóa
+    const existingPost = await Post.findByPk(postId);
+    if (!existingPost || existingPost.get('deleted')) {
+      res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy bài viết!',
+      });
+      return;
+    }
+
+    // ✅ Kiểm tra quyền xóa (uncomment khi có login)
+    // const currentUserId = req.session?.userId || 1; // Mock user ID
+    // const authorId = existingPost.get('AuthorID');
+    // const currentUser = await User.findByPk(currentUserId);
+
+    // if (authorId !== currentUserId && currentUser?.get('Role') !== 'Admin') {
+    //   res.status(403).json({
+    //     success: false,
+    //     message: 'Bạn không có quyền xóa bài viết này!',
+    //   });
+    //   return;
+    // }
+
+    // Soft delete - chỉ đánh dấu deleted = true
+    await existingPost.update({
+      deleted: true,
+    });
+
+    console.log('✅ Post deleted successfully:', {
+      postId: postId,
+      title: existingPost.get('Title'),
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Xóa bài viết thành công!',
+    });
+    return;
+  } catch (error) {
+    console.error('❌ Error deleting post:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Có lỗi xảy ra khi xóa bài viết!',
     });
     return;
   }

@@ -26,6 +26,6 @@ router.post(
   uploadSingle,
   controller.editPost
 );
-// router.delete('/delete/:id', controller.deletePost);
+router.delete('/delete/:id', controller.deletePost);
 
 export const postRoute = router;

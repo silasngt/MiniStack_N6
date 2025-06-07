@@ -67,43 +67,5 @@ block main
                         i.fas.fa-chevron-right
 
     //- JavaScript functions
-    script.
-        function viewPost(postId) {
-            // TODO: Implement view post detail
-            console.log('View post:', postId);
-            alert('Xem chi tiết bài viết #' + postId);
-        }
 
-        function editPost(postId) {
-            window.location.href = `/admin/posts/edit/${postId}`;
-        }
-
-        function deletePost(postId) {
-            if (confirm('Bạn có chắc chắn muốn xóa bài viết này?')) {
-                // TODO: Implement delete post
-                console.log('Delete post:', postId);
-                // Call API to delete post
-                fetch(`/admin/posts/delete/${postId}`, {
-                    method: 'DELETE'
-                }).then(response => {
-                    if (response.ok) {
-                        location.reload();
-                    } else {
-                        alert('Có lỗi xảy ra khi xóa bài viết!');
-                    }
-                });
-            }
-        }
-
-        // Success message auto hide
-        document.addEventListener('DOMContentLoaded', function() {
-            const successAlert = document.querySelector('.alert-success');
-            if (successAlert) {
-                setTimeout(() => {
-                    successAlert.style.opacity = '0';
-                    setTimeout(() => {
-                        successAlert.remove();
-                    }, 300);
-                }, 3000);
-            }
-        });
+    script(src="/admin/js/scriptK.js")
