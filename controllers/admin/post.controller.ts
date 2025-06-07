@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Category from '../../models/category.model';
 import Post from '../../models/post.model';
+import User from '../../models/user.model';
 
 // [GET] /admin/posts
 export const index = async (req: Request, res: Response) => {
@@ -29,9 +30,18 @@ export const index = async (req: Request, res: Response) => {
           categoryNames = categories.map((cat) => cat.get('Name'));
         }
 
+        let authorName = 'Chưa xác định';
+        if (postData.AuthorID) {
+          const author = await User.findByPk(postData.AuthorID);
+          if (author) {
+            authorName = author.get('FullName') as string;
+          }
+        }
+
         return {
           ...postData,
           categoryNames: categoryNames.join(', '),
+          authorName: authorName,
           formattedDate: new Date(postData.CreatedAt).toLocaleDateString(
             'vi-VN'
           ),
@@ -87,10 +97,10 @@ export const create = async (req: Request, res: Response) => {
 // [POST] /admin/posts/create
 export const createPost = async (req: Request, res: Response) => {
   try {
-    const { title, content, author, category } = req.body;
+    const { title, content, category } = req.body;
 
     // Validate required fields
-    if (!title || !content || !author) {
+    if (!title || !content) {
       res.status(400).json({
         success: false,
         message: 'Vui lòng điền đầy đủ thông tin bắt buộc!',
@@ -141,11 +151,25 @@ export const createPost = async (req: Request, res: Response) => {
     // Xử lý single image từ Cloudinary - lưu trực tiếp URL string
     const imageUrl: string | null = req.body.image || null;
 
+    // ✅ LẤY UserID từ session (tạm thời dùng mẫu)
+    // TODO: Thay thế bằng req.session.userId sau khi implement login
+    const currentUserId = 1; // MOCK DATA - user đang đăng nhập
+
+    // Validate user exists
+    const currentUser = await User.findByPk(currentUserId);
+    if (!currentUser) {
+      res.status(400).json({
+        success: false,
+        message: 'Người dùng không tồn tại!',
+      });
+      return;
+    }
+
     // Tạo post với multiple categories và images
     const newPost = await Post.create({
       Title: title,
       Content: content,
-      AuthorName: author,
+      AuthorID: currentUserId,
       Categories: categoryIds, // Sequelize sẽ tự động stringify thành JSON
       Image: imageUrl, // Sequelize sẽ tự động stringify thành JSON
       CreatedAt: new Date(),
@@ -156,8 +180,10 @@ export const createPost = async (req: Request, res: Response) => {
     console.log('✅ Post created successfully:', {
       postId: newPost.get('PostID'),
       title: title,
-      authorName: author,
+      authorId: currentUserId,
+      authorName: currentUser.get('FullName'),
       categories: categoryIds,
+      hasImage: !!imageUrl,
     });
 
     // Redirect với success message
@@ -169,6 +195,47 @@ export const createPost = async (req: Request, res: Response) => {
       success: false,
       message: 'Có lỗi xảy ra khi tạo bài viết!',
     });
+    return;
+  }
+};
+
+// [GET] /admin/posts/edit/:id
+export const edit = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const postId = parseInt(req.params.id);
+
+    // Lấy thông tin bài viết
+    const post = await Post.findByPk(postId);
+
+    if (!post || post.get('deleted')) {
+      res.status(404).render('admin/pages/404', {
+        pageTitle: 'Không tìm thấy bài viết',
+      });
+      return;
+    }
+
+    // Lấy danh sách categories
+    const categories = await Category.findAll({
+      where: {
+        deleted: false,
+        status: 'active',
+      },
+    });
+
+    const postCategories = categories.filter((category) => {
+      const types = category.get('Type') as string[];
+      return types && types.includes('Bài viết');
+    });
+
+    res.render('admin/pages/post/edit', {
+      pageTitle: 'Chỉnh sửa bài viết',
+      post: post.toJSON(),
+      categories: postCategories,
+    });
+    return;
+  } catch (error) {
+    console.error('Error loading edit page:', error);
+    res.redirect('/admin/posts');
     return;
   }
 };

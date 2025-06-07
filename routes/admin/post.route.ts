@@ -19,4 +19,13 @@ router.post(
   controller.createPost
 );
 
+router.get('/edit/:id', controller.edit);
+// router.post(
+//   '/edit/:id',
+//   upload.single('image'),
+//   uploadSingle,
+//   controller.editPost
+// );
+// router.delete('/delete/:id', controller.deletePost);
+
 export const postRoute = router;

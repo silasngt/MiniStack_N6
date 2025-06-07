@@ -31,7 +31,7 @@ block main
                                 td.post-id= post.PostID
                                 td.post-title.truncate(title=post.Title)= post.Title
                                 td.post-content.truncate(title=post.Content)= post.Content
-                                td.post-author= post.AuthorName || 'Chưa xác định'
+                                td.post-author= post.authorName
                                 td.post-category= post.categoryNames || 'Chưa phân loại'
                                 td.post-date= post.formattedDate
                                 td.post-actions
@@ -72,8 +72,6 @@ block main
         }
 
         function editPost(postId) {
-            // TODO: Implement edit post
-            console.log('Edit post:', postId);
             window.location.href = `/admin/posts/edit/${postId}`;
         }
 

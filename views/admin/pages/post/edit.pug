@@ -3,15 +3,15 @@ extends ../../layouts/default.pug
 block main
     .create-post-container
         .create-header
-            h1.create-title Thêm bài viết mới
+            h1.create-title Chỉnh sửa bài viết
             button.btn-close(onclick="window.history.back()")
                 i.fas.fa-times
 
         .create-form-container
-            form.create-post-form(action="/admin/posts/create" method="POST" enctype="multipart/form-data")
+            form.create-post-form(action=`/admin/posts/edit/${post.PostID}` method="POST" enctype="multipart/form-data")
                 .form-group
                     label(for="title") Tiêu đề
-                    input#title.form-control(type="text" name="title", required)
+                    input#title.form-control(type="text" name="title" value=post.Title required)
 
                 .form-group
                     label(for="category") Danh mục
@@ -19,7 +19,7 @@ block main
                         select#category.form-control.multiple-select(name="category", required multiple size="4")
                             if categories && categories.length > 0
                                 each cat in categories
-                                    option(value=cat.CategoryID)= cat.Name
+                                    option(value=cat.CategoryID selected=(post.Categories.includes(cat.CategoryID)))= cat.Name
                             else
                                 option(value="1") Lập trình
                                 option(value="2") Cơ sở dữ liệu
@@ -29,23 +29,35 @@ block main
                                 option(value="6") Phát triển ứng dụng di động
                         .select-hint
                             small.text-muted Giữ Ctrl + Click để chọn nhiều danh mục
+
                 .form-group
                     label(for="content") Nội dung
-                    textarea#content.form-control.content-area(name="content" rows="10", required)
+                    textarea#content.form-control.content-area(name="content" rows="10", required)= post.Content
 
                 .form-group
                     label.attachment-label Đính kèm hình ảnh
                     .image-attachments
                         .image-preview-container#imagePreviewContainer
-                            // Single image preview will be added here
+                            // Current image preview
+                            if post.Image
+                                .image-preview.single-image.current-image
+                                    img(src=post.Image alt="Current image")
+                                    button.btn-change-image(type="button" onclick="changeImage()")
+                                        i.fas.fa-edit
+                                    .image-name Ảnh hiện tại
 
-                        .image-upload-box
+                        .image-upload-box#imageUploadBox(style=post.Image ? "display: none;" : "")
                             label(for="image-upload")
                                 i.fas.fa-cloud-upload-alt
-                                span Chọn ảnh (chỉ chọn 1 ảnh)
+                                span Chọn ảnh mới (chỉ chọn 1 ảnh)
                             input#image-upload(type="file" name="image" accept="image/*" hidden)
 
+                        // Hidden input để giữ ảnh cũ nếu không thay đổi
+                        input(type="hidden" name="currentImage" value=post.Image)
+
                 .form-buttons
-                    button.btn-submit(type="submit") THÊM
+                    button.btn-submit(type="submit") CẬP NHẬT
                     button.btn-cancel(type="button" onclick="window.history.back()") HỦY
-    script(src="/admin/js/scriptK.js") 
+                    button.btn-delete(type="button" onclick=`deletePost(${post.PostID})`) XÓA BÀI VIẾT
+
+    script(src="/admin/js/scriptK.js")
