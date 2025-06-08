@@ -19,12 +19,23 @@ const Post = sequelize.define(
         key: 'UserID',
       },
     },
-    CategoryID: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'Category',
-        key: 'CategoryID',
+    Categories: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      get() {
+        const raw = this.getDataValue('Categories');
+        return raw ? JSON.parse(raw) : [];
       },
+      set(val: number[] | string[]) {
+        const categoryArray = Array.isArray(val)
+          ? val.map((id) => parseInt(id.toString()))
+          : [];
+        this.setDataValue('Categories', JSON.stringify(categoryArray));
+      },
+    },
+    Image: {
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
     deleted: {
       type: DataTypes.BOOLEAN,
