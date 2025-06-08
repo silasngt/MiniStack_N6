@@ -7,11 +7,11 @@ block main
                 .profile-card
                     .profile-header
                         .avatar-container
-                            img.profile-avatar(src="https://e7.pngegg.com/pngimages/349/288/png-clipart-teacher-education-student-course-school-avatar-child-face.png" alt="Admin")
+                            img.profile-avatar(src=profile.avatar alt="Avatar" id="current-avatar")
                             .avatar-edit
                                 label(for="avatar-upload")
                                     i.fas.fa-pencil-alt
-                                input#avatar-upload(type="file", hidden)
+                                input#avatar-upload(type="file" accept="image/*" hidden)
                         .admin-name-title= profile.fullName
                         .admin-role= profile.role
 

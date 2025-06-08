@@ -180,6 +180,71 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       });
     }
+
+    // ===== AVATAR UPLOAD HANDLER =====
+    if (avatarUpload && currentAvatar) {
+      avatarUpload.addEventListener('change', async function (e) {
+        const file = e.target.files[0];
+
+        if (file && file.type.startsWith('image/')) {
+          const formData = new FormData();
+          formData.append('avatar', file);
+
+          // ✅ Prevent multiple simultaneous uploads
+          if (avatarUpload.hasAttribute('data-uploading')) {
+            console.log('⚠️ Upload already in progress...');
+            return;
+          }
+
+          try {
+            avatarUpload.setAttribute('data-uploading', 'true');
+            // Show loading state
+            const avatarEditIcon = document.querySelector('.avatar-edit i');
+            if (avatarEditIcon) {
+              avatarEditIcon.setAttribute(
+                'data-original-class',
+                avatarEditIcon.className
+              );
+              avatarEditIcon.className = 'fas fa-spinner fa-spin';
+            }
+
+            const response = await fetch('/admin/profile/upload-avatar', {
+              method: 'POST',
+              body: formData,
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+              const timestamp = new Date().getTime();
+              currentAvatar.src = `${result.data.avatarUrl}?t=${timestamp}`;
+              showProfileNotification(result.message, 'success');
+            } else {
+              showProfileNotification(result.message, 'error');
+            }
+          } catch (error) {
+            console.error('❌ Avatar upload error:', error);
+            showProfileNotification('Có lỗi xảy ra khi tải ảnh lên!', 'error');
+          } finally {
+            avatarUpload.removeAttribute('data-uploading');
+
+            const avatarEditIcon = document.querySelector('.avatar-edit i');
+            if (avatarEditIcon) {
+              const originalClass =
+                avatarEditIcon.getAttribute('data-original-class') ||
+                'fas fa-pencil-alt';
+              avatarEditIcon.className = originalClass;
+              avatarEditIcon.removeAttribute('data-original-class');
+            }
+          }
+
+          // Reset file input
+          this.value = '';
+        } else {
+          showProfileNotification('Vui lòng chọn file ảnh hợp lệ!', 'error');
+        }
+      });
+    }
   }
   // ===== IMAGE UPLOAD LOGIC (CREATE & EDIT PAGES) =====
   if (imageUpload && previewContainer) {

@@ -178,3 +178,53 @@ export const changePassword = async (
     return;
   }
 };
+
+// [POST] /admin/profile/upload-avatar
+export const uploadAvatar = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    // Avatar URL sẽ được xử lý bởi uploadCloud middleware
+    const avatarUrl = req.body.avatar; // Từ uploadCloud middleware
+
+    if (!avatarUrl) {
+      res.status(400).json({
+        success: false,
+        message: 'Không tìm thấy file ảnh!',
+      });
+      return;
+    }
+
+    // Tìm user hiện tại
+    const currentUser = await User.findByPk(CURRENT_USER_ID);
+    if (!currentUser || currentUser.get('deleted')) {
+      res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy thông tin người dùng!',
+      });
+      return;
+    }
+
+    // Cập nhật avatar
+    await currentUser.update({
+      Avatar: avatarUrl,
+    });
+
+    res.json({
+      success: true,
+      message: 'Cập nhật ảnh đại diện thành công!',
+      data: {
+        avatarUrl: avatarUrl,
+      },
+    });
+    return;
+  } catch (error) {
+    console.error('❌ Error uploading avatar:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Có lỗi xảy ra khi tải ảnh lên!',
+    });
+    return;
+  }
+};
