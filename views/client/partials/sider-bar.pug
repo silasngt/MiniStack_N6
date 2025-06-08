@@ -1,6 +1,5 @@
 .sidebar
     .sidebar-menu
-        // Menu chính
         a.sidebar-item.active(href="/forum-topic")
             i.fas.fa-comments.sidebar-icon
             span Diễn đàn
@@ -21,17 +20,13 @@
             i.fas.fa-book.sidebar-icon
             span Tài liệu
 
-    // Phần footer của sidebar
     .sidebar-footer
         a.sidebar-item(href="/Profile")
             i.fas.fa-cog.sidebar-icon
             span Cài đặt
-        
-        a.sidebar-item(href="#")
+        a.sidebar-item(href="javascript:void(0)" id="sidebar-logout")
             i.fas.fa-sign-out-alt.sidebar-icon
             span Đăng xuất
-
-    // Thông tin người dùng
     .user-profile
         if user
             if user.Avatar
@@ -47,11 +42,5 @@
                 .user-name Guest
                 .user-email ""
 
-form#sidebar-logout-form(action="/auth/logout", method="post", style="display:none")
-
-//js cho logout 
-script.
-    document.getElementById('sidebar-logout')?.addEventListener('click', function(e) {
-        e.preventDefault();
-        document.getElementById('sidebar-logout-form').submit();
-    });
+form#sidebar-logout-form(action="/auth/logout" method="POST" style="display:none")
+script(src="/js/scriptQ.js")
