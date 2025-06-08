@@ -115,6 +115,71 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       });
     }
+
+    // ===== PASSWORD FORM HANDLER =====
+    if (passwordForm) {
+      passwordForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const submitBtn = this.querySelector('.btn-save');
+        const originalContent = submitBtn.innerHTML;
+
+        // Validate password match
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword =
+          document.getElementById('confirmPassword').value;
+
+        if (newPassword !== confirmPassword) {
+          showProfileNotification(
+            'Mật khẩu mới và xác nhận mật khẩu không khớp!',
+            'error'
+          );
+          return;
+        }
+
+        if (newPassword.length < 6) {
+          showProfileNotification('Mật khẩu phải có ít nhất 6 ký tự!', 'error');
+          return;
+        }
+
+        console.log('🔐 Submitting password form...');
+
+        // Show loading
+        submitBtn.disabled = true;
+        submitBtn.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> Đang đổi...';
+
+        try {
+          const response = await fetch('/admin/profile/change-password', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              newPassword: newPassword,
+              confirmPassword: confirmPassword,
+            }),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            showProfileNotification(result.message, 'success');
+            // Clear password fields
+            this.reset();
+          } else {
+            showProfileNotification(result.message, 'error');
+          }
+        } catch (error) {
+          console.error('❌ Password change error:', error);
+          showProfileNotification('Có lỗi xảy ra khi đổi mật khẩu!', 'error');
+        } finally {
+          // Restore button
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalContent;
+        }
+      });
+    }
   }
   // ===== IMAGE UPLOAD LOGIC (CREATE & EDIT PAGES) =====
   if (imageUpload && previewContainer) {

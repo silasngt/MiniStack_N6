@@ -8,4 +8,7 @@ router.get('/', controller.index);
 // POST update basic info
 router.post('/update-basic', controller.updateBasicInfo);
 
+// POST change password
+router.post('/change-password', controller.changePassword);
+
 export const profileRoute = router;
