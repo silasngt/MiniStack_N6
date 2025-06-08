@@ -15,7 +15,107 @@ document.addEventListener('DOMContentLoaded', function () {
   const isEditPage = form ? form.action.includes('/edit/') : false;
   const isIndexPage =
     window.location.pathname.includes('/admin/posts') && !isEditPage;
+  const isProfilePage = window.location.pathname.includes('/admin/profile');
+  console.log('🔍 Page detection:', { isEditPage, isIndexPage, isProfilePage });
 
+  // ===== PROFILE PAGE LOGIC =====
+  if (isProfilePage) {
+    // Profile page elements
+    const basicInfoForm = document.getElementById('basicInfoForm');
+    const passwordForm = document.getElementById('passwordForm');
+    const avatarUpload = document.getElementById('avatar-upload');
+    const currentAvatar = document.getElementById('current-avatar');
+    const notificationArea = document.getElementById('notificationArea');
+
+    // ===== PROFILE NOTIFICATION FUNCTION =====
+    function showProfileNotification(message, type = 'info') {
+      if (!notificationArea) {
+        console.warn('⚠️ Notification area not found');
+        return;
+      }
+
+      const alertClass = type === 'error' ? 'alert-danger' : 'alert-success';
+      const icon =
+        type === 'error' ? 'fas fa-exclamation-circle' : 'fas fa-check-circle';
+
+      notificationArea.innerHTML = `
+        <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+          <i class="${icon}"></i>
+          ${message}
+          <button type="button" class="close" data-dismiss="alert">
+            <span>&times;</span>
+          </button>
+        </div>
+      `;
+
+      // Auto hide after 5 seconds
+      setTimeout(() => {
+        const alert = notificationArea.querySelector('.alert');
+        if (alert) {
+          alert.classList.remove('show');
+          setTimeout(() => {
+            alert.remove();
+          }, 150);
+        }
+      }, 5000);
+    }
+
+    // ===== BASIC INFO FORM HANDLER =====
+    if (basicInfoForm) {
+      basicInfoForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const submitBtn = this.querySelector('.btn-save');
+        const originalContent = submitBtn.innerHTML;
+
+        console.log('📝 Submitting basic info form...');
+
+        // Show loading
+        submitBtn.disabled = true;
+        submitBtn.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+
+        try {
+          const formData = new FormData(this);
+          const data = Object.fromEntries(formData);
+
+          console.log('📤 Sending basic info data:', data);
+
+          const response = await fetch('/admin/profile/update-basic', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          });
+
+          const result = await response.json();
+          console.log('📥 Basic info response:', result);
+
+          if (result.success) {
+            showProfileNotification(result.message, 'success');
+            // Update displayed name in sidebar
+            const nameTitle = document.querySelector('.admin-name-title');
+            if (nameTitle) {
+              nameTitle.textContent = data.fullName;
+            }
+          } else {
+            showProfileNotification(result.message, 'error');
+          }
+        } catch (error) {
+          console.error('❌ Basic info update error:', error);
+          showProfileNotification(
+            'Có lỗi xảy ra khi cập nhật thông tin!',
+            'error'
+          );
+        } finally {
+          // Restore button
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalContent;
+        }
+      });
+    }
+  }
   // ===== IMAGE UPLOAD LOGIC (CREATE & EDIT PAGES) =====
   if (imageUpload && previewContainer) {
     imageUpload.addEventListener('change', function (e) {

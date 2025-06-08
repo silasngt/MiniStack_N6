@@ -18,7 +18,6 @@ export const index = async (req: Request, res: Response): Promise<void> => {
     }
 
     const userData = currentUser.toJSON();
-    console.log(userData);
 
     // Format data để hiển thị
     const profileData = {
@@ -34,14 +33,6 @@ export const index = async (req: Request, res: Response): Promise<void> => {
       phone: userData.Phone || '',
     };
 
-    console.log('👤 Profile data loaded:', {
-      userID: profileData.userID,
-      fullName: profileData.fullName,
-      email: profileData.email,
-      phone: profileData.phone,
-      role: profileData.role,
-    });
-
     res.render('admin/pages/profile/index.pug', {
       pageTitle: 'Thông tin cá nhân',
       profile: profileData,
@@ -51,6 +42,68 @@ export const index = async (req: Request, res: Response): Promise<void> => {
     console.error('❌ Error loading profile:', error);
     res.status(500).render('admin/pages/500', {
       pageTitle: 'Lỗi hệ thống',
+    });
+    return;
+  }
+};
+
+// [POST] /admin/profile/update-basic
+export const updateBasicInfo = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { fullName, gender, phone } = req.body;
+
+    if (!fullName || fullName.trim().length === 0) {
+      res.status(400).json({
+        success: false,
+        message: 'Họ và tên không được để trống!',
+      });
+      return;
+    }
+
+    // Validate phone format (optional)
+    if (phone && phone.trim().length > 0) {
+      const phoneRegex = /^[\+]?[0-9\-\s\(\)]{8,20}$/;
+      if (!phoneRegex.test(phone.trim())) {
+        res.status(400).json({
+          success: false,
+          message: 'Số điện thoại không hợp lệ!',
+        });
+        return;
+      }
+    }
+
+    // Tìm user hiện tại
+    const currentUser = await User.findByPk(CURRENT_USER_ID);
+    if (!currentUser || currentUser.get('deleted')) {
+      res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy thông tin người dùng!',
+      });
+      return;
+    }
+    await currentUser.update({
+      FullName: fullName.trim(),
+      Gender: gender || null,
+      Phone: phone ? phone.trim() : null,
+    });
+    res.json({
+      success: true,
+      message: 'Cập nhật thông tin thành công!',
+      data: {
+        fullName: fullName.trim(),
+        gender: gender,
+        phone: phone?.trim() || '',
+      },
+    });
+    return;
+  } catch (error) {
+    console.error('❌ Error updating basic info:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Có lỗi xảy ra khi cập nhật thông tin!',
     });
     return;
   }

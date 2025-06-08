@@ -28,7 +28,7 @@ block main
                             h3.form-section-title Thông tin cơ bản
                             .form-group
                                 label(for="fullName") Họ và tên:
-                                input#fullName.form-control(type="text" value=profile.fullName required)
+                                input#fullName.form-control(type="text" name="fullName" value=profile.fullName required)
 
                             .form-group
                                 label(for="gender") Giới tính:
@@ -40,7 +40,7 @@ block main
 
                             .form-group
                                 label(for="phone") SĐT:
-                                input#phone.form-control(type="text" value=profile.phone)
+                                input#phone.form-control(type="text" name="phone" value=profile.phone placeholder="Nhập số điện thoại")
 
                             .form-group
                                 button.btn-save(type="submit") Lưu
@@ -63,3 +63,5 @@ block main
 
                             .form-group
                                 button.btn-save(type="submit") Lưu
+
+    script(src="/admin/js/scriptK.js") 
