@@ -12,8 +12,10 @@
   "dependencies": {
     "body-parser": "^2.2.0",
     "cloudinary": "^2.6.1",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "express-session": "^1.18.1",
     "md5": "^2.3.0",
     "multer": "^2.0.0",
     "mysql2": "^3.14.1",
@@ -22,8 +24,12 @@
     "streamifier": "^0.1.1"
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.2",
+    "@types/express-session": "^1.18.1",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.15.19",
+    "jsonwebtoken": "^9.0.2",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"

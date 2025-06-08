@@ -16,4 +16,24 @@ header.py-2.border-bottom
         .d-flex.align-items-center
             a.nav-link.text-dark.me-3(href="/") Trang chủ
             a.nav-link.text-dark.me-3(href="#") Liên hệ
-            a.btn.btn-login.px-4(href="/auth/login") Đăng nhập
+
+            if !user
+                a.btn.btn-login.px-4(href="/auth/login") Đăng nhập
+            else if isHomePage
+                .dropdown
+                    button.btn.btn-user.dropdown-toggle.d-flex.align-items-center(type="button", data-bs-toggle="dropdown", aria-expanded="false")
+                        if user.Avatar
+                            img.rounded-circle.me-2(src=user.Avatar, alt="Avatar", width="32", height="32")
+                        else
+                            i.fas.fa-user-circle.fa-2x.me-2
+                        span= user.FullName || user.Email
+                    ul.dropdown-menu.dropdown-menu-end
+                        li
+                            a.dropdown-item(href="/UserProfile") Thông tin cá nhân
+                        li
+                            hr.dropdown-divider
+                        li
+                            form(action="/auth/logout", method="post", style="display:inline")
+                                button.dropdown-item(type="submit") Đăng xuất
+
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js")

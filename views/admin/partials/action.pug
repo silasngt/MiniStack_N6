@@ -1,0 +1,11 @@
+.btn-group(role="group")
+  button.btn.btn-outline-secondary.btn-sm(
+    title=status === 'active' ? 'Tắt hoạt động' : 'Bật hoạt động'
+    onclick=`toggleStatus('${type}', ${id}, this)`
+    style=status === 'active' ? 'color: #28a745' : 'color: #dc3545'
+  )
+    i(class=status === 'active' ? 'fas fa-eye' : 'fas fa-eye-slash')
+  a.btn.btn-outline-primary.btn-sm(href=editUrl title="Chỉnh sửa")
+    i.fas.fa-edit
+  button.btn.btn-outline-danger.btn-sm(title="Xóa" onclick=`${deleteFunc}(${id}, this)`)
+    i.fas.fa-trash

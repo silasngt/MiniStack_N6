@@ -17,7 +17,7 @@ html(lang='vi')
         
         h1.title Đăng ký
         
-        form#signupForm(method='POST', action='/signup')
+        form#signupForm(method='POST', action='/auth/register')
           .form-group
             label(for='email') Email
             input#email(type='email', name='email', placeholder='Nhập email', required)
@@ -44,14 +44,14 @@ html(lang='vi')
             .password-field
               input#password(type='password', name='password', placeholder='Nhập mật khẩu', required)
               button.password-toggle(type='button', onclick='togglePassword("password")')
-                span 👁
+               
           
           .form-group
             label(for='confirmPassword') Xác nhận mật khẩu
             .password-field
               input#confirmPassword(type='password', name='confirmPassword', placeholder='Nhập xác nhận mật khẩu', required)
               button.password-toggle(type='button', onclick='togglePassword("confirmPassword")')
-                span 👁
+              
           
           button.submit-btn(type='submit') Đăng ký
           
@@ -62,6 +62,5 @@ html(lang='vi')
       .illustration-section
         .illustration
           img.auth-img(src="https://cdn.prod.website-files.com/649c7c91a35b12e0bb55417d/64ec93be340c2e1d871eb5b3_plutonapps_partner.svg" alt="register")
-    script(src="/js/scriptQ.js") 
+    script(src="/js/scriptQ.js")
 
-     

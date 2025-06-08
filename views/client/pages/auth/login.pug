@@ -15,25 +15,21 @@ html(lang='vi')
         .greeting Xin chào !
         
         h1.title Đăng nhập
-        
+        if error
+          .alert.alert-danger.mt-3.mb-3.text-center(style="max-width:400px;margin:auto")= error
         form#loginForm(method='POST', action='/auth/login')
           .form-group
-            label(for='username') Tên người dùng
-            input#username(type='text', name='username', placeholder='Vui lòng nhập tên người dùng', required)
+            label(for='username') Email
+            input#username(type='email', name='username', required)
           
           .form-group
             label(for='password') Mật khẩu
-            .password-field
-              input#password(type='password', name='password', placeholder='Vui lòng nhập mật khẩu', required)
-              button.password-toggle(type='button', onclick='togglePassword("password")')
-                span 👁
+            input#password(type='password', name='password', required)
           
-          .remember-forgot
-            .remember-me
+          .form-group
+            label
               input#rememberMe(type='checkbox', name='rememberMe')
-              label(for='rememberMe') Ghi nhớ thông tin đăng nhập
-            
-            a.forgot-password(href='/auth/forgot-password') Quên mật khẩu ?
+              | Ghi nhớ đăng nhập
           
           button.submit-btn(type='submit') Đăng nhập
           
@@ -45,7 +41,9 @@ html(lang='vi')
         .illustration
           img.auth-img(src="https://cdn.prod.website-files.com/649c7c91a35b12e0bb55417d/64ec93be340c2e1d871eb5b3_plutonapps_partner.svg" alt="login")
     
-    script(src="/js/scriptQ.js") 
+    script(src="/js/scriptQ.js")
+    
+  
 
-   
-      
+
+
