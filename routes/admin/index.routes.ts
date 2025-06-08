@@ -4,7 +4,7 @@ import { userRoute } from './user.route';
 import { categoriesRoute } from './categories.route';
 import { authRoute } from './auth.route';
 import { documentRoute } from './document.route';
-import { addDocumentRoute } from './addDocument.route';
+
 import { forumManagerRoute } from './forumManager.route';
 import { systemConfig } from '../../config/system';
 import { profileRoute } from './adminProfile.route';
@@ -23,9 +23,8 @@ export const routesAdmin = (app: Express) => {
   app.use(`/${path}/posts`, requireAdminLogin, postRoute);
   app.use(`/${path}/user`, requireAdminLogin, userRoute);
   app.use(`/${path}/categories`, requireAdminLogin, categoriesRoute);
-  app.use(`/${path}/auth`, authRoute);
-  app.use(`/${path}/document`, requireAdminLogin, documentRoute);
-  app.use(`/${path}/addDocument`, requireAdminLogin, addDocumentRoute);
-  app.use(`/${path}/forumManager`, requireAdminLogin, forumManagerRoute);
-  app.use(`/${path}/testCloud`, requireAdminLogin, testCloudRoute);
+  app.use(`/${path}/auth`, requireAdminLogin,authRoute);
+  app.use(`/${path}/document`, requireAdminLogin,documentRoute);
+  app.use(`/${path}/forumManager`, requireAdminLogin,forumManagerRoute);
+  app.use(`/${path}/testCloud`, testCloudRoute);
 };

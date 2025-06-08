@@ -1,0 +1,14 @@
+extends ../../layouts/defaultMenu.pug
+
+
+block main
+    .blog-detail.container
+        .row
+        .col-md-12
+            
+            img(src=blog.Image, alt=blog.Title, class="img-fluid")
+            h1= blog.Title
+            p Được đăng vào #{blog.FormattedCreatedAt} bởi #{blog.AuthorName}
+            p= blog.Content
+            a(href="/blog") Trở về trang danh sách bài viết
+        

@@ -111,18 +111,28 @@ header {
   font-weight: 500;
 }
 
-.sidebar-item[href="/forum-topic"]:has([href$="/forum-topic"]):not(:has([href$="/forum-topic"] ~ [href$="/forum-topic"])),
-.sidebar-item[href="/chatBox"]:has([href$="/chatBox"]):not(:has([href$="/chatBox"] ~ [href$="/chatBox"])),
-.sidebar-item[href="/compile"]:has([href$="/compile"]):not(:has([href$="/compile"] ~ [href$="/compile"])),
-.sidebar-item[href="/blog"]:has([href$="/blog"]):not(:has([href$="/blog"] ~ [href$="/blog"])),
-.sidebar-item[href="/userDocument"]:has([href$="/userDocument"]):not(:has([href$="/userDocument"] ~ [href$="/userDocument"])) {
+.sidebar-item[href='/forum-topic']:has([href$='/forum-topic']):not(
+    :has([href$='/forum-topic'] ~ [href$='/forum-topic'])
+  ),
+.sidebar-item[href='/chatBox']:has([href$='/chatBox']):not(
+    :has([href$='/chatBox'] ~ [href$='/chatBox'])
+  ),
+.sidebar-item[href='/compile']:has([href$='/compile']):not(
+    :has([href$='/compile'] ~ [href$='/compile'])
+  ),
+.sidebar-item[href='/blog']:has([href$='/blog']):not(
+    :has([href$='/blog'] ~ [href$='/blog'])
+  ),
+.sidebar-item[href='/userDocument']:has([href$='/userDocument']):not(
+    :has([href$='/userDocument'] ~ [href$='/userDocument'])
+  ) {
   background-color: #cfe2ff;
   color: #0d6efd;
   font-weight: 500;
 }
 
 /* Sửa phần CSS cho sidebar-icon trong trạng thái active */
-.sidebar-item[href]:has([href$=":current"]) .sidebar-icon {
+.sidebar-item[href]:has([href$=':current']) .sidebar-icon {
   color: inherit;
 }
 
@@ -269,3 +279,54 @@ footer {
   margin-left: 5px;
 }
 /* END CSS For Blog */
+/* CSS For Blog Detail */
+/* Container styling */
+.blog-detail.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Title styling */
+.blog-detail h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Author and date styling */
+.blog-detail p {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Image styling */
+.blog-detail img.img-fluid {
+  width: 100%;
+  height: 362px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* Content styling */
+.blog-detail p:last-of-type {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #444;
+}
+
+/* Back to Blog List link styling */
+.blog-detail a {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 1rem;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.blog-detail a:hover {
+  text-decoration: underline;
+}
+/* END CSS For Blog Detail */
