@@ -18,6 +18,10 @@ const User = sequelize.define(
     Gender: DataTypes.ENUM('Nam', 'Nữ', 'Khác'),
     Avatar: DataTypes.STRING(255),
     Role: DataTypes.ENUM('User', 'Admin'),
+    Phone: {
+      type: DataTypes.STRING(20),
+      allowNull: true,
+    },
     deleted: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
