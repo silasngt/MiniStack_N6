@@ -32,7 +32,7 @@ block main
 
                             .form-group
                                 label(for="gender") Giới tính:
-                                select#gender.form-control(name="gender")
+                                select#gender.form-control(name="gender" style="padding:0px 16px;")
                                     option(value="" selected=!profile.gender) Chọn giới tính
                                     option(value="Nam" selected=profile.gender==="Nam") Nam
                                     option(value="Nữ" selected=profile.gender==="Nữ") Nữ

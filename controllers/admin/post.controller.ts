@@ -1,11 +1,29 @@
+// File: controllers/admin/post.controller.ts
 import { Request, Response } from 'express';
 import Category from '../../models/category.model';
 import Post from '../../models/post.model';
 import User from '../../models/user.model';
 
+// ✅ HELPER: Get current user from session
+const getCurrentUser = (req: Request): { id: number; role: string } | null => {
+  const adminUser = (req.session as any)?.adminUser;
+  return adminUser
+    ? { id: adminUser.id, role: adminUser.role || 'User' }
+    : null;
+};
+
 // [GET] /admin/posts
 export const index = async (req: Request, res: Response) => {
   try {
+    // ✅ CHECK: Authentication
+    const currentUser = getCurrentUser(req);
+    if (!currentUser) {
+      res.redirect('/admin/auth/login');
+      return;
+    }
+
+    console.log('📋 Loading posts for user:', currentUser.id);
+
     const posts = await Post.findAll({
       where: { deleted: false },
       order: [['CreatedAt', 'DESC']],
@@ -46,6 +64,7 @@ export const index = async (req: Request, res: Response) => {
             'vi-VN'
           ),
           hasImage: !!postData.Image,
+          status: postData.status || 'active', // ✅ Include status
         };
       })
     );
@@ -53,6 +72,7 @@ export const index = async (req: Request, res: Response) => {
     res.render('admin/pages/post/index.pug', {
       pageTitle: 'Quản lý bài viết',
       posts: postsWithCategories,
+      success: req.query.success,
     });
     return;
   } catch (error) {
@@ -71,7 +91,22 @@ export const toggleStatus = async (
   res: Response
 ): Promise<void> => {
   try {
+    // ✅ CHECK: Authentication
+    const currentUser = getCurrentUser(req);
+    if (!currentUser) {
+      res.status(401).json({
+        success: false,
+        message: 'Vui lòng đăng nhập lại!',
+      });
+      return;
+    }
+
     const postId = parseInt(req.params.id);
+
+    console.log('🔄 Toggle status request:', {
+      postId,
+      userId: currentUser.id,
+    });
 
     // Tìm post cần toggle
     const existingPost = await Post.findByPk(postId);
@@ -83,18 +118,15 @@ export const toggleStatus = async (
       return;
     }
 
-    // ✅ Kiểm tra quyền toggle (uncomment khi có login)
-    // const currentUserId = req.session?.userId || 1;
-    // const authorId = existingPost.get('AuthorID');
-    // const currentUser = await User.findByPk(currentUserId);
-
-    // if (authorId !== currentUserId && currentUser?.get('Role') !== 'Admin') {
-    //   res.status(403).json({
-    //     success: false,
-    //     message: 'Bạn không có quyền thay đổi trạng thái bài viết này!',
-    //   });
-    //   return;
-    // }
+    // ✅ CHECK: Quyền toggle - chỉ Author hoặc Admin
+    const authorId = existingPost.get('AuthorID');
+    if (authorId !== currentUser.id && currentUser.role !== 'Admin') {
+      res.status(403).json({
+        success: false,
+        message: 'Bạn không có quyền thay đổi trạng thái bài viết này!',
+      });
+      return;
+    }
 
     // Toggle status: active <-> inactive
     const currentStatus = existingPost.get('status') as string;
@@ -102,6 +134,13 @@ export const toggleStatus = async (
 
     await existingPost.update({
       status: newStatus,
+    });
+
+    console.log('✅ Post status toggled:', {
+      postId,
+      oldStatus: currentStatus,
+      newStatus,
+      byUser: currentUser.id,
     });
 
     res.status(200).json({
@@ -129,7 +168,14 @@ export const toggleStatus = async (
 // [GET] /admin/posts/create
 export const create = async (req: Request, res: Response) => {
   try {
-    // Lấy categories có Type chứa 'Post' (vì Type là JSON array)
+    // ✅ CHECK: Authentication
+    const currentUser = getCurrentUser(req);
+    if (!currentUser) {
+      res.redirect('/admin/auth/login');
+      return;
+    }
+
+    // Lấy categories có Type chứa 'Post'
     const categories = await Category.findAll({
       where: {
         deleted: false,
@@ -137,7 +183,6 @@ export const create = async (req: Request, res: Response) => {
       },
     });
 
-    // Filter categories có chứa 'Post' trong Type array
     const postCategories = categories.filter((category) => {
       const types = category.get('Type') as string[];
       return types && types.includes('Bài viết');
@@ -158,7 +203,19 @@ export const create = async (req: Request, res: Response) => {
 // [POST] /admin/posts/create
 export const createPost = async (req: Request, res: Response) => {
   try {
+    // ✅ CHECK: Authentication
+    const currentUser = getCurrentUser(req);
+    if (!currentUser) {
+      res.status(401).json({
+        success: false,
+        message: 'Vui lòng đăng nhập lại!',
+      });
+      return;
+    }
+
     const { title, content, category } = req.body;
+
+    console.log('📝 Creating post by user:', currentUser.id);
 
     // Validate required fields
     if (!title || !content) {
@@ -187,7 +244,6 @@ export const createPost = async (req: Request, res: Response) => {
         },
       });
 
-      // Check if categories are valid for Posts
       const invalidCategories = validCategories.filter((cat) => {
         const types = cat.get('Type') as string[];
         return !types || !types.includes('Bài viết');
@@ -209,30 +265,17 @@ export const createPost = async (req: Request, res: Response) => {
         return;
       }
     }
-    // Xử lý single image từ Cloudinary - lưu trực tiếp URL string
+
+    // Xử lý single image từ Cloudinary
     const imageUrl: string | null = req.body.image || null;
 
-    // ✅ LẤY UserID từ session (tạm thời dùng mẫu)
-    // TODO: Thay thế bằng req.session.userId sau khi implement login
-    const currentUserId = 1; // MOCK DATA - user đang đăng nhập
-
-    // Validate user exists
-    const currentUser = await User.findByPk(currentUserId);
-    if (!currentUser) {
-      res.status(400).json({
-        success: false,
-        message: 'Người dùng không tồn tại!',
-      });
-      return;
-    }
-
-    // Tạo post với multiple categories và images
+    // ✅ FIX: Sử dụng currentUser.id thay vì hardcode
     const newPost = await Post.create({
       Title: title,
       Content: content,
-      AuthorID: currentUserId,
-      Categories: categoryIds, // Sequelize sẽ tự động stringify thành JSON
-      Image: imageUrl, // Sequelize sẽ tự động stringify thành JSON
+      AuthorID: currentUser.id, // ✅ Từ session
+      Categories: categoryIds,
+      Image: imageUrl,
       CreatedAt: new Date(),
       deleted: false,
       status: 'active',
@@ -241,13 +284,11 @@ export const createPost = async (req: Request, res: Response) => {
     console.log('✅ Post created successfully:', {
       postId: newPost.get('PostID'),
       title: title,
-      authorId: currentUserId,
-      authorName: currentUser.get('FullName'),
+      authorId: currentUser.id,
       categories: categoryIds,
       hasImage: !!imageUrl,
     });
 
-    // Redirect với success message
     res.redirect('/admin/posts?success=created');
     return;
   } catch (error) {
@@ -263,6 +304,13 @@ export const createPost = async (req: Request, res: Response) => {
 // [GET] /admin/posts/edit/:id
 export const edit = async (req: Request, res: Response): Promise<void> => {
   try {
+    // ✅ CHECK: Authentication
+    const currentUser = getCurrentUser(req);
+    if (!currentUser) {
+      res.redirect('/admin/auth/login');
+      return;
+    }
+
     const postId = parseInt(req.params.id);
 
     // Lấy thông tin bài viết
@@ -271,6 +319,16 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
     if (!post || post.get('deleted')) {
       res.status(404).render('admin/pages/404', {
         pageTitle: 'Không tìm thấy bài viết',
+      });
+      return;
+    }
+
+    // ✅ CHECK: Quyền edit - chỉ Author hoặc Admin
+    const authorId = post.get('AuthorID');
+    if (authorId !== currentUser.id && currentUser.role !== 'Admin') {
+      res.status(403).render('admin/pages/403', {
+        pageTitle: 'Không có quyền truy cập',
+        message: 'Bạn không có quyền chỉnh sửa bài viết này!',
       });
       return;
     }
@@ -304,8 +362,20 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
 // [POST] /admin/posts/edit/:id
 export const editPost = async (req: Request, res: Response): Promise<void> => {
   try {
+    // ✅ CHECK: Authentication
+    const currentUser = getCurrentUser(req);
+    if (!currentUser) {
+      res.status(401).json({
+        success: false,
+        message: 'Vui lòng đăng nhập lại!',
+      });
+      return;
+    }
+
     const postId = parseInt(req.params.id);
     const { title, content, category, currentImage } = req.body;
+
+    console.log('✏️ Editing post:', { postId, userId: currentUser.id });
 
     // Validate required fields
     if (!title || !content) {
@@ -326,15 +396,17 @@ export const editPost = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Kiểm tra quyền edit (tạm thời skip - sau này check AuthorID)
-    // const currentUserId = 1; // Mock user ID
-    // if (existingPost.get('AuthorID') !== currentUserId) {
-    //   res.status(403).json({
-    //     success: false,
-    //     message: 'Bạn không có quyền chỉnh sửa bài viết này!',
-    //   });
-    //   return;
-    // }
+    // ✅ CHECK: Quyền edit
+    const authorId = existingPost.get('AuthorID');
+    if (authorId !== currentUser.id && currentUser.role !== 'Admin') {
+      res.status(403).json({
+        success: false,
+        message: 'Bạn không có quyền chỉnh sửa bài viết này!',
+      });
+      return;
+    }
+
+    // ... rest of the edit logic remains the same ...
 
     // Xử lý multiple categories
     let categoryIds: number[] = [];
@@ -344,7 +416,7 @@ export const editPost = async (req: Request, res: Response): Promise<void> => {
       categoryIds = [parseInt(category)];
     }
 
-    // Validate categories exist và thuộc type 'Bài viết'
+    // Validate categories
     if (categoryIds.length > 0) {
       const validCategories = await Category.findAll({
         where: {
@@ -376,29 +448,20 @@ export const editPost = async (req: Request, res: Response): Promise<void> => {
       }
     }
 
-    // Xử lý image: Ưu tiên ảnh mới, fallback về ảnh cũ
+    // Xử lý image
     let finalImageUrl: string | null = null;
-
     if (req.body.image) {
-      // Có ảnh mới được upload
       finalImageUrl = req.body.image;
-      console.log('✅ Using new image:', finalImageUrl);
     } else if (currentImage) {
-      // Giữ ảnh cũ
       finalImageUrl = currentImage;
-      console.log('✅ Keeping current image:', finalImageUrl);
     }
-    // Nếu cả 2 đều null thì sẽ xóa ảnh (finalImageUrl = null)
 
-    // Cập nhật post (AuthorID không được thay đổi)
+    // Cập nhật post
     await existingPost.update({
       Title: title,
       Content: content,
-      Categories: categoryIds, // Sequelize tự động stringify
+      Categories: categoryIds,
       Image: finalImageUrl,
-      // AuthorID: KHÔNG CẬP NHẬT - giữ nguyên người tạo ban đầu
-      // CreatedAt: KHÔNG CẬP NHẬT - giữ nguyên thời gian tạo
-      // UpdatedAt sẽ tự động update nếu có timestamps
     });
 
     res.redirect(`/admin/posts?success=updated&id=${postId}`);
@@ -419,9 +482,19 @@ export const deletePost = async (
   res: Response
 ): Promise<void> => {
   try {
+    // ✅ CHECK: Authentication
+    const currentUser = getCurrentUser(req);
+    if (!currentUser) {
+      res.status(401).json({
+        success: false,
+        message: 'Vui lòng đăng nhập lại!',
+      });
+      return;
+    }
+
     const postId = parseInt(req.params.id);
 
-    console.log('🗑️ Delete Post Request:', { postId });
+    console.log('🗑️ Delete Post Request:', { postId, userId: currentUser.id });
 
     // Tìm post cần xóa
     const existingPost = await Post.findByPk(postId);
@@ -433,20 +506,17 @@ export const deletePost = async (
       return;
     }
 
-    // ✅ Kiểm tra quyền xóa (uncomment khi có login)
-    // const currentUserId = req.session?.userId || 1; // Mock user ID
-    // const authorId = existingPost.get('AuthorID');
-    // const currentUser = await User.findByPk(currentUserId);
+    // ✅ CHECK: Quyền xóa - chỉ Author hoặc Admin
+    const authorId = existingPost.get('AuthorID');
+    if (authorId !== currentUser.id && currentUser.role !== 'Admin') {
+      res.status(403).json({
+        success: false,
+        message: 'Bạn không có quyền xóa bài viết này!',
+      });
+      return;
+    }
 
-    // if (authorId !== currentUserId && currentUser?.get('Role') !== 'Admin') {
-    //   res.status(403).json({
-    //     success: false,
-    //     message: 'Bạn không có quyền xóa bài viết này!',
-    //   });
-    //   return;
-    // }
-
-    // Soft delete - chỉ đánh dấu deleted = true
+    // Soft delete
     await existingPost.update({
       deleted: true,
     });
@@ -454,6 +524,7 @@ export const deletePost = async (
     console.log('✅ Post deleted successfully:', {
       postId: postId,
       title: existingPost.get('Title'),
+      byUser: currentUser.id,
     });
 
     res.status(200).json({

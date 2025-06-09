@@ -1,15 +1,29 @@
+// File: controllers/admin/adminProfile.controller.ts
 import { Request, Response } from 'express';
 import User from '../../models/user.model';
 import md5 from 'md5';
 
-// Mock current user ID - sẽ thay bằng req.session.userId sau khi có login
-const CURRENT_USER_ID = 2;
+// ✅ HELPER: Get current user ID from session
+const getCurrentUserId = (req: Request): number | null => {
+  const adminUser = (req.session as any)?.adminUser;
+  return adminUser?.id || null;
+};
 
 // [GET] /admin/profile
 export const index = async (req: Request, res: Response): Promise<void> => {
   try {
+    // ✅ FIX: Lấy user ID từ session thay vì hardcode
+    const currentUserId = getCurrentUserId(req);
+
+    if (!currentUserId) {
+      res.redirect('/admin/auth/login');
+      return;
+    }
+
+    console.log('👤 Loading profile for user ID:', currentUserId);
+
     // Lấy thông tin user hiện tại
-    const currentUser = await User.findByPk(CURRENT_USER_ID);
+    const currentUser = await User.findByPk(currentUserId);
 
     if (!currentUser || currentUser.get('deleted')) {
       res.status(404).render('admin/pages/404', {
@@ -54,7 +68,20 @@ export const updateBasicInfo = async (
   res: Response
 ): Promise<void> => {
   try {
+    // ✅ FIX: Lấy user ID từ session
+    const currentUserId = getCurrentUserId(req);
+
+    if (!currentUserId) {
+      res.status(401).json({
+        success: false,
+        message: 'Vui lòng đăng nhập lại!',
+      });
+      return;
+    }
+
     const { fullName, gender, phone } = req.body;
+
+    console.log('📝 Updating basic info for user:', currentUserId);
 
     if (!fullName || fullName.trim().length === 0) {
       res.status(400).json({
@@ -77,7 +104,7 @@ export const updateBasicInfo = async (
     }
 
     // Tìm user hiện tại
-    const currentUser = await User.findByPk(CURRENT_USER_ID);
+    const currentUser = await User.findByPk(currentUserId);
     if (!currentUser || currentUser.get('deleted')) {
       res.status(404).json({
         success: false,
@@ -85,11 +112,20 @@ export const updateBasicInfo = async (
       });
       return;
     }
+
     await currentUser.update({
       FullName: fullName.trim(),
       Gender: gender || null,
       Phone: phone ? phone.trim() : null,
     });
+
+    // ✅ UPDATE: Session data với thông tin mới
+    const adminUser = (req.session as any).adminUser;
+    if (adminUser) {
+      adminUser.name = fullName.trim();
+      (req.session as any).adminUser = adminUser;
+    }
+
     res.json({
       success: true,
       message: 'Cập nhật thông tin thành công!',
@@ -116,10 +152,21 @@ export const changePassword = async (
   res: Response
 ): Promise<void> => {
   try {
-    // Chỉ nhận newPassword và confirmPassword - KHÔNG CẦN currentPassword
+    // ✅ FIX: Lấy user ID từ session
+    const currentUserId = getCurrentUserId(req);
+
+    if (!currentUserId) {
+      res.status(401).json({
+        success: false,
+        message: 'Vui lòng đăng nhập lại!',
+      });
+      return;
+    }
+
+    // Chỉ nhận newPassword và confirmPassword
     const { newPassword, confirmPassword } = req.body;
 
-    console.log('🔍 Change password request for user:', CURRENT_USER_ID);
+    console.log('🔑 Change password request for user:', currentUserId);
 
     // Validation
     if (!newPassword || !confirmPassword) {
@@ -147,7 +194,7 @@ export const changePassword = async (
     }
 
     // Tìm user hiện tại
-    const currentUser = await User.findByPk(CURRENT_USER_ID);
+    const currentUser = await User.findByPk(currentUserId);
     if (!currentUser || currentUser.get('deleted')) {
       res.status(404).json({
         success: false,
@@ -185,8 +232,21 @@ export const uploadAvatar = async (
   res: Response
 ): Promise<void> => {
   try {
+    // ✅ FIX: Lấy user ID từ session
+    const currentUserId = getCurrentUserId(req);
+
+    if (!currentUserId) {
+      res.status(401).json({
+        success: false,
+        message: 'Vui lòng đăng nhập lại!',
+      });
+      return;
+    }
+
     // Avatar URL sẽ được xử lý bởi uploadCloud middleware
-    const avatarUrl = req.body.avatar; // Từ uploadCloud middleware
+    const avatarUrl = req.body.avatar;
+
+    console.log('📸 Uploading avatar for user:', currentUserId);
 
     if (!avatarUrl) {
       res.status(400).json({
@@ -197,7 +257,7 @@ export const uploadAvatar = async (
     }
 
     // Tìm user hiện tại
-    const currentUser = await User.findByPk(CURRENT_USER_ID);
+    const currentUser = await User.findByPk(currentUserId);
     if (!currentUser || currentUser.get('deleted')) {
       res.status(404).json({
         success: false,
@@ -210,6 +270,13 @@ export const uploadAvatar = async (
     await currentUser.update({
       Avatar: avatarUrl,
     });
+
+    // ✅ UPDATE: Session data với avatar mới
+    const adminUser = (req.session as any).adminUser;
+    if (adminUser) {
+      adminUser.Avatar = avatarUrl;
+      (req.session as any).adminUser = adminUser;
+    }
 
     res.json({
       success: true,
