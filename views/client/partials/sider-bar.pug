@@ -1,6 +1,5 @@
 .sidebar
     .sidebar-menu
-        // Menu chính
         a.sidebar-item.active(href="/forum-topic")
             i.fas.fa-comments.sidebar-icon
             span Diễn đàn
@@ -17,23 +16,31 @@
             i.fas.fa-file-alt.sidebar-icon
             span Bài viết
         
-        a.sidebar-item(href="/userDocument")
+        a.sidebar-item(href="/Document")
             i.fas.fa-book.sidebar-icon
             span Tài liệu
 
-    // Phần footer của sidebar
     .sidebar-footer
-        a.sidebar-item(href="/UserProfile")
+        a.sidebar-item(href="/Profile")
             i.fas.fa-cog.sidebar-icon
             span Cài đặt
-        
-        a.sidebar-item(href="#")
+        a.sidebar-item(href="javascript:void(0)" id="sidebar-logout")
             i.fas.fa-sign-out-alt.sidebar-icon
             span Đăng xuất
-
-    // Thông tin người dùng
     .user-profile
-        img.user-avatar(src="https://i.pravatar.cc/100" alt="User Avatar")
-        .user-info
-            .user-name Michael Smith
-            .user-email michaelsmith123@gmail.com
+        if user
+            if user.Avatar
+                img.user-avatar(src=user.Avatar alt="User Avatar")
+            else
+                i.fas.fa-user-circle.fa-2x.user-avatar
+            .user-info
+                .user-name= user.FullName || user.Email
+                .user-email= user.Email
+        else
+            img.user-avatar(src="https://i.pravatar.cc/100" alt="User Avatar")
+            .user-info
+                .user-name Guest
+                .user-email ""
+
+form#sidebar-logout-form(action="/auth/logout" method="POST" style="display:none")
+script(src="/js/scriptQ.js")

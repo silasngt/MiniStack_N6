@@ -11,6 +11,7 @@ const sequelize = new Sequelize(
     dialectOptions: {
       ssl: {
         ca: fs.readFileSync(__dirname + '/certs/ca.pem'), // bạn phải lưu file `ca.pem` tại đây
+        rejectUnauthorized: false, //tắt xác thực
       },
     },
     logging: false,

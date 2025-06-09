@@ -13,30 +13,41 @@ block main
   // Câu hỏi nổi bật
   .container.mb-5
     h4.mb-4 Câu hỏi nổi bật
+    .row.g-4
+      each question, idx in forumTopics.slice(0, 3)
+        .col-md-4
+          .question-card
+            .d-flex.align-items-start
+              .question-number #{idx + 1}
+              div
+                .error-text #{question.ErrorText}
+                p.mb-0 #{question.Content}
+                a.text-decoration-none(href=`/forum-topic/${question.TopicID}`) Xem chi tiết
+                i.fas.fa-arrow-right.arrow-icon
     
-    // Câu hỏi 1
-    .question-card
-      .d-flex.align-items-start
-        .question-number 1
-        div
-          .error-text org.hibernate.query.QueryArgumentException: Argument [44]
-          p.mb-0 I have 2 tables in database "Courses" and "Instructor" with "Instructor" table having one to many relation with "Courses" table and "Courses" table having many to one relation with Instr...
+    //- // Câu hỏi 1
+    //- .question-card
+    //-   .d-flex.align-items-start
+    //-     .question-number 1
+    //-     div
+    //-       .error-text org.hibernate.query.QueryArgumentException: Argument [44]
+    //-       p.mb-0 I have 2 tables in database "Courses" and "Instructor" with "Instructor" table having one to many relation with "Courses" table and "Courses" table having many to one relation with Instr...
     
-    // Câu hỏi 2
-    .question-card
-      .d-flex.align-items-start
-        .question-number 1
-        div
-          .error-text org.hibernate.query.QueryArgumentException: Argument [44]
-          p.mb-0 I have 2 tables in database "Courses" and "Instructor" with "Instructor" table having one to many relation with "Courses" table and "Courses" table having many to one relation with Instr...
+    //- // Câu hỏi 2
+    //- .question-card
+    //-   .d-flex.align-items-start
+    //-     .question-number 1
+    //-     div
+    //-       .error-text org.hibernate.query.QueryArgumentException: Argument [44]
+    //-       p.mb-0 I have 2 tables in database "Courses" and "Instructor" with "Instructor" table having one to many relation with "Courses" table and "Courses" table having many to one relation with Instr...
     
-    // Câu hỏi 3
-    .question-card
-      .d-flex.align-items-start
-        .question-number 1
-        div
-          .error-text org.hibernate.query.QueryArgumentException: Argument [44]
-          p.mb-0 I have 2 tables in database "Courses" and "Instructor" with "Instructor" table having one to many relation with "Courses" table and "Courses" table having many to one relation with Instr...
+    //- // Câu hỏi 3
+    //- .question-card
+    //-   .d-flex.align-items-start
+    //-     .question-number 1
+    //-     div
+    //-       .error-text org.hibernate.query.QueryArgumentException: Argument [44]
+    //-       p.mb-0 I have 2 tables in database "Courses" and "Instructor" with "Instructor" table having one to many relation with "Courses" table and "Courses" table having many to one relation with Instr...
   
   // Tính năng nổi bật
   .container.mb-5
@@ -49,68 +60,41 @@ block main
           i.fas.fa-brain.feature-icon
           h3 AI Chat 
           p Hệ thống gợi ý thông minh, hiểu ý của bạn, tự động phân tích mọi vấn đề. Tích hợp sẵn nguồn kiến thức lập trình. Hỏi AI bất cứ khi nào bạn cần!
-          button.feature-btn Khám phá ngay!
-      
+          a.feature-btn(href="/chatBox") Khám phá ngay!
+
       // Tính năng 2: Biên dịch
       .col-md-4
         .feature-card.text-center
           i.fas.fa-cogs.feature-icon
           h3 Biên dịch
           p Biên dịch nhanh chóng, không cần cài đặt gì thêm! Ngôn ngữ đa dạng, không giới hạn. Tiết kiệm thời gian biên dịch, kiểm thử. Kết quả ngay lập tức.
-          button.feature-btn Khám phá ngay!
-      
+          a.feature-btn(href="/compile") Khám phá ngay!
+
       // Tính năng 3: Tài liệu
       .col-md-4
         .feature-card.text-center
           i.fas.fa-file-alt.feature-icon
           h3 Tài liệu
           p Kho tài liệu phong phú, hay đáp ứng mọi nhu cầu tìm kiếm. Tài liệu chuyên sâu từ những nền tảng hàng đầu. Liên tục cập nhật các tài liệu mới về những chủ đề hot nhất hiện nay.
-          button.feature-btn Khám phá ngay!
-  
+          a.feature-btn(href="/document") Khám phá ngay!
+
   // Bài viết nổi bật
   .container.mb-5
     h4.mb-4 Bài viết nổi bật
-    
+
     .row.g-4
-      // Bài viết 1
-      .col-md-4
-        .card.blog-card
-          img.blog-img(src="https://images.unsplash.com/photo-1491002052546-bf38f186af56" alt="Mountain landscape")
-          .card-body
-            .blog-date Kevin Parker • 3 Apr 2023
-            h5.blog-title Technology and the Future of Work
-            p.blog-desc The future of work is changing rapidly, and technology is at the forefront of this transformation. From AI to remote work, the landscape is evolving...
-            .d-flex.justify-content-between.align-items-center
-              div
-                span.blog-tag Information Technology
-              a.text-decoration-none(href="#") Read more
-                i.fas.fa-arrow-right.arrow-icon
-      
-      // Bài viết 2
-      .col-md-4
-        .card.blog-card
-          img.blog-img(src="https://images.unsplash.com/photo-1553877522-43269d4ea984" alt="Team collaboration")
-          .card-body
-            .blog-date David Miller • 5 Jan 2023
-            h5.blog-title Cyber Security: Best Practices
-            p.blog-desc   In an increasingly digital world, cyber security is more important than ever. Here are some best practices to keep your data safe and secure...
-            .d-flex.justify-content-between.align-items-center
-              div
-                span.blog-tag Cyber Security
-              a.text-decoration-none(href="#") Read more
-                i.fas.fa-arrow-right.arrow-icon
-      
-      // Bài viết 3
-      .col-md-4
-        .card.blog-card
-          img.blog-img(src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4" alt="Computer setup")
-          .card-body
-            .blog-date Sarah Lee • 7 Apr 2023
-            h5.blog-title The Importance of UI/UX Design
-            p.blog-desc UI/UX design is crucial for creating user-friendly applications. It enhances user experience and increases engagement. Here are some tips to improve your UI/UX design...
-            .d-flex.justify-content-between.align-items-center
-              div
-                span.blog-tag UI/UX
-              a.text-decoration-none(href="#") Read more
-                i.fas.fa-arrow-right.arrow-icon
+      each blog , idx in posts.slice(0, 3)
+        .col-md-4
+          .card.blog-card
+            img.blog-img(src=blog.Image alt=blog.Title)
+            .card-body
+              .blog-date #{blog.AuthorName} • #{blog.FormattedCreatedAt}
+              h5.blog-title #{blog.Title}
+              p.blog-desc #{blog.Content}
+              .d-flex.justify-content-between.align-items-center
+                div
+                  each category in blog.CategoryNames
+                    span.blog-tag= category
+                a.text-decoration-none(href=`/blog/${blog.PostID}`) Read more
+                  i.fas.fa-arrow-right.arrow-icon
   

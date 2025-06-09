@@ -1,294 +1,280 @@
-// JavaScript để xử lý hiển thị form thêm danh mục
-// Đợi DOM load xong
-document.addEventListener('DOMContentLoaded', function () {
-  console.log('DOM loaded, initializing category management...');
-
-  // Lấy các elements
-  const showAddFormBtn = document.getElementById('showAddCategoryForm');
-  const closeFormBtn = document.getElementById('closeCategoryForm');
-  const cancelBtn = document.getElementById('cancelCategory');
-  const categoryForm = document.getElementById('categoryForm');
-  const mainContent = document.querySelector('.user-management-content');
-  const addCategoryPage = document.getElementById('addCategoryPage');
-
-  // Kiểm tra elements có tồn tại không
-  if (!showAddFormBtn) {
-    console.error('Không tìm thấy nút "Thêm danh mục mới"');
-    return;
-  }
-
-  // Hàm hiển thị form thêm danh mục
-  function showAddCategoryForm() {
-    console.log('Hiển thị form thêm danh mục');
-    if (mainContent) mainContent.style.display = 'none';
-    if (addCategoryPage) addCategoryPage.style.display = 'block';
-
-    // Reset form khi mở
-    if (categoryForm) categoryForm.reset();
-
-    // Focus vào input đầu tiên
-    const firstInput = document.getElementById('categoryTitle');
-    if (firstInput) {
-      setTimeout(() => firstInput.focus(), 100);
-    }
-  }
-
-  // Hàm ẩn form thêm danh mục
-  function hideAddCategoryForm() {
-    console.log('Ẩn form thêm danh mục');
-    if (addCategoryPage) addCategoryPage.style.display = 'none';
-    if (mainContent) mainContent.style.display = 'block';
-
-    // Reset form khi đóng
-    if (categoryForm) categoryForm.reset();
-  }
-
-  // Event listeners
-
-  // 1. Nút "Thêm danh mục mới"
-  showAddFormBtn.addEventListener('click', function (e) {
-    e.preventDefault();
-    console.log('Clicked: Thêm danh mục mới');
-    showAddCategoryForm();
-  });
-
-  // 2. Nút đóng form (X)
-  if (closeFormBtn) {
-    closeFormBtn.addEventListener('click', function (e) {
-      e.preventDefault();
-      console.log('Clicked: Đóng form');
-      hideAddCategoryForm();
-    });
-  }
-
-  // 3. Nút hủy
-  if (cancelBtn) {
-    cancelBtn.addEventListener('click', function (e) {
-      e.preventDefault();
-      console.log('Clicked: Hủy');
-
-      // Xác nhận trước khi hủy nếu có dữ liệu
-      const titleInput = document.getElementById('categoryTitle');
-      const typeSelect = document.getElementById('categoryType');
-
-      let hasData = false;
-      if (titleInput && titleInput.value.trim()) hasData = true;
-      if (typeSelect && typeSelect.value) hasData = true;
-
-      if (hasData) {
-        if (confirm('Bạn có chắc chắn muốn hủy? Dữ liệu đã nhập sẽ bị mất.')) {
-          hideAddCategoryForm();
+// JS for categories
+function deleteCategory(id, btn) {
+  if (confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
+    fetch(`/admin/categories/delete/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          // Ẩn dòng vừa xóa khỏi bảng
+          const row = btn.closest('tr');
+          if (row) row.remove();
+        } else {
+          alert(data.message || 'Xóa không thành công');
         }
+      })
+      .catch(() => alert('Có lỗi xảy ra khi xóa!'));
+  }
+}
+
+function toggleStatus(type, id, btn) {
+  fetch(`/admin/${type}/toggle-status/${id}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.success) {
+        const icon = btn.querySelector('i');
+        if (data.newStatus === 'active') {
+          icon.className = 'fas fa-eye';
+          btn.style.color = '#28a745';
+          btn.title = 'Tắt hoạt động';
+        } else {
+          icon.className = 'fas fa-eye-slash';
+          btn.style.color = '#dc3545';
+          btn.title = 'Bật hoạt động';
+        }
+        alert(
+          'Đã chuyển trạng thái thành: ' +
+            (data.newStatus === 'active' ? 'Hoạt động' : 'Không hoạt động')
+        );
       } else {
-        hideAddCategoryForm();
+        alert(data.message || 'Chuyển trạng thái thất bại');
       }
-    });
-  }
+    })
+    .catch(() => alert('Có lỗi xảy ra!'));
+}
 
-  // 4. Xử lý submit form
-  if (categoryForm) {
-    categoryForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      console.log('Form submitted');
-
-      // Lấy dữ liệu form
-      const title = document.getElementById('categoryTitle').value.trim();
-      const type = document.getElementById('categoryType').value;
-
-      // Validation
-      if (!title) {
-        alert('Vui lòng nhập tiêu đề danh mục');
-        document.getElementById('categoryTitle').focus();
-        return;
-      }
-
-      if (!type) {
-        alert('Vui lòng chọn loại danh mục');
-        document.getElementById('categoryType').focus();
-        return;
-      }
-
-      // Hiển thị loading (có thể thêm spinner)
-      const submitBtn = categoryForm.querySelector('button[type="submit"]');
-      const originalText = submitBtn.textContent;
-      submitBtn.textContent = 'ĐANG THÊM...';
-      submitBtn.disabled = true;
-
-      // Giả lập API call
-      console.log('Thêm danh mục:', { title, type });
-
-      // Simulate API call
-      setTimeout(() => {
-        // Reset button
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-
-        // Thông báo thành công
-        alert('Thêm danh mục thành công!');
-
-        // Ẩn form và quay về trang chính
-        hideAddCategoryForm();
-
-        // TODO: Reload danh sách hoặc thêm vào bảng
-        // location.reload(); // Hoặc cập nhật bảng dynamically
-      }, 1000);
-    });
-  }
-
-  // 5. Xử lý phím ESC để đóng form
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') {
-      const isFormVisible =
-        addCategoryPage && addCategoryPage.style.display !== 'none';
-      if (isFormVisible) {
-        console.log('ESC pressed, closing form');
-        hideAddCategoryForm();
-      }
-    }
-  });
-
-  // 6. Validation real-time cho form
-  const titleInput = document.getElementById('categoryTitle');
-  if (titleInput) {
-    titleInput.addEventListener('input', function () {
-      const value = this.value.trim();
-      if (value.length > 0 && value.length < 3) {
-        this.style.borderColor = '#ef4444';
-      } else if (value.length >= 3) {
-        this.style.borderColor = '#10b981';
-      } else {
-        this.style.borderColor = '#e5e7eb';
-      }
-    });
-  }
-
-  // 7. Action buttons trong bảng (View, Edit, Delete)
-  const actionButtons = document.querySelectorAll('.btn-action');
-  actionButtons.forEach((btn) => {
-    btn.addEventListener('click', function (e) {
-      e.preventDefault();
-      const action = this.classList.contains('btn-view')
-        ? 'view'
-        : this.classList.contains('btn-edit')
-        ? 'edit'
-        : 'delete';
-
-      // Lấy ID từ row
-      const row = this.closest('tr');
-      const id = row ? row.cells[0].textContent : 'unknown';
-
-      console.log(`Action: ${action}, ID: ${id}`);
-
-      switch (action) {
-        case 'view':
-          alert(`Xem chi tiết danh mục ID: ${id}`);
-          // TODO: Implement view functionality
-          break;
-        case 'edit':
-          alert(`Chỉnh sửa danh mục ID: ${id}`);
-          // TODO: Implement edit functionality
-          break;
-        case 'delete':
-          if (confirm(`Bạn có chắc chắn muốn xóa danh mục ID: ${id}?`)) {
-            alert(`Đã xóa danh mục ID: ${id}`);
-            // TODO: Implement delete functionality
-          }
-          break;
-      }
-    });
-  });
-
-  // 8. Pagination buttons
-  const paginationBtns = document.querySelectorAll('.btn-page');
-  paginationBtns.forEach((btn) => {
-    if (
-      !btn.disabled &&
-      !btn.classList.contains('btn-prev') &&
-      !btn.classList.contains('btn-next')
-    ) {
-      btn.addEventListener('click', function () {
-        // Remove active class from all buttons
-        paginationBtns.forEach((b) => b.classList.remove('active'));
-        // Add active class to clicked button
-        this.classList.add('active');
-
-        const page = this.textContent;
-        console.log(`Navigate to page: ${page}`);
-        // TODO: Implement pagination
-      });
-    }
-  });
-
-  console.log('Category management initialized successfully');
-});
 //JS for login admin
 document.addEventListener('DOMContentLoaded', function () {
-  const loginForm = document.getElementById('loginForm');
-  const loginAlert = document.getElementById('loginAlert');
-  const alertMessage = document.getElementById('alertMessage');
   const togglePassword = document.getElementById('togglePassword');
   const passwordField = document.getElementById('password');
 
   // Toggle hiển thị mật khẩu
-  togglePassword.addEventListener('click', function () {
-    const type =
-      passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-    passwordField.setAttribute('type', type);
+  if (togglePassword && passwordField) {
+    togglePassword.addEventListener('click', function () {
+      const type =
+        passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordField.setAttribute('type', type);
 
-    const icon = this.querySelector('i');
-    icon.classList.toggle('fa-eye');
-    icon.classList.toggle('fa-eye-slash');
-  });
+      const icon = this.querySelector('i');
+      if (icon) {
+        icon.classList.toggle('fa-eye');
+        icon.classList.toggle('fa-eye-slash');
+      }
+    });
+  }
+});
 
-  // Xử lý form đăng nhập
-  loginForm.addEventListener('submit', function (e) {
-    e.preventDefault();
+//add user
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('addUserForm');
+  const submitBtn = form.querySelector('.btn-submit');
 
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value;
+  // Validation functions
+  function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
 
-    // Validation cơ bản
-    if (!username || !password) {
-      showAlert('Vui lòng nhập đầy đủ thông tin!');
-      return;
+  function validatePhone(phone) {
+    const phoneRegex = /^\d{10}$/;
+    return phoneRegex.test(phone);
+  }
+
+  function validateField(field, errorElement, validator) {
+    const value = field.value.trim();
+    let isValid = true;
+    let errorMessage = '';
+
+    if (field.hasAttribute('required') && !value) {
+      isValid = false;
+      errorMessage = 'Trường này là bắt buộc';
+    } else if (value && validator) {
+      const result = validator(value);
+      if (result !== true) {
+        isValid = false;
+        errorMessage = result;
+      }
     }
 
-    // Giả lập đăng nhập (thay thế bằng API call thực tế)
-    if (username === 'admin' && password === 'admin123') {
-      // Thành công
-      showSuccess('Đăng nhập thành công! Đang chuyển hướng...');
-
-      setTimeout(() => {
-        // Chuyển hướng đến trang dashboard
-        window.location.href = '/admin/dashboard';
-      }, 1500);
+    if (isValid) {
+      field.classList.remove('error');
+      errorElement.textContent = '';
     } else {
-      showAlert('Tên đăng nhập hoặc mật khẩu không chính xác!');
+      field.classList.add('error');
+      errorElement.textContent = errorMessage;
+    }
+
+    return isValid;
+  }
+
+  // Real-time validation
+  document.getElementById('fullName').addEventListener('blur', function () {
+    validateField(
+      this,
+      document.getElementById('fullNameError'),
+      function (value) {
+        if (value.length < 2) return 'Họ tên phải có ít nhất 2 ký tự';
+        if (value.length > 100) return 'Họ tên không được vượt quá 100 ký tự';
+        return true;
+      }
+    );
+  });
+
+  document.getElementById('email').addEventListener('blur', function () {
+    validateField(
+      this,
+      document.getElementById('emailError'),
+      function (value) {
+        if (!validateEmail(value)) return 'Định dạng email không hợp lệ';
+        return true;
+      }
+    );
+  });
+
+  document.getElementById('phone').addEventListener('blur', function () {
+    const value = this.value.trim();
+    if (value) {
+      // Chỉ validate khi có nhập
+      validateField(
+        this,
+        document.getElementById('phoneError'),
+        function (value) {
+          if (!validatePhone(value))
+            return 'Số điện thoại phải có đúng 10 chữ số';
+          return true;
+        }
+      );
+    } else {
+      // Clear error nếu không nhập (vì không bắt buộc)
+      this.classList.remove('error');
+      document.getElementById('phoneError').textContent = '';
     }
   });
 
-  function showAlert(message) {
-    alertMessage.textContent = message;
-    loginAlert.className = 'alert alert-danger';
-    loginAlert.style.display = 'block';
+  // Chỉ cho phép nhập số cho phone
+  document.getElementById('phone').addEventListener('input', function () {
+    this.value = this.value.replace(/[^0-9]/g, '');
+  });
 
-    // Tự động ẩn sau 5 giây
-    setTimeout(() => {
-      loginAlert.style.display = 'none';
-    }, 5000);
-  }
+  document.getElementById('password').addEventListener('blur', function () {
+    validateField(
+      this,
+      document.getElementById('passwordError'),
+      function (value) {
+        if (value.length < 6) return 'Mật khẩu phải có ít nhất 6 ký tự';
+        if (value.length > 50) return 'Mật khẩu không được vượt quá 50 ký tự';
+        return true;
+      }
+    );
 
-  function showSuccess(message) {
-    alertMessage.textContent = message;
-    loginAlert.className = 'alert alert-success';
-    loginAlert.style.display = 'block';
-  }
+    // Revalidate confirm password if it has value
+    const confirmPassword = document.getElementById('confirmPassword');
+    if (confirmPassword.value) {
+      confirmPassword.dispatchEvent(new Event('blur'));
+    }
+  });
 
-  // Ẩn alert khi người dùng bắt đầu nhập
-  document.getElementById('username').addEventListener('input', hideAlert);
-  document.getElementById('password').addEventListener('input', hideAlert);
+  document
+    .getElementById('confirmPassword')
+    .addEventListener('blur', function () {
+      const password = document.getElementById('password').value;
+      validateField(
+        this,
+        document.getElementById('confirmPasswordError'),
+        function (value) {
+          if (value !== password) return 'Mật khẩu xác nhận không khớp';
+          return true;
+        }
+      );
+    });
 
-  function hideAlert() {
-    loginAlert.style.display = 'none';
-  }
+  form.addEventListener('submit', function (e) {
+    const fullName = document.getElementById('fullName');
+    const email = document.getElementById('email');
+    const phone = document.getElementById('phone');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
+
+    let isValid = true;
+
+    isValid &= validateField(
+      fullName,
+      document.getElementById('fullNameError'),
+      function (value) {
+        if (value.length < 2) return 'Họ tên phải có ít nhất 2 ký tự';
+        if (value.length > 100) return 'Họ tên không được vượt quá 100 ký tự';
+        return true;
+      }
+    );
+
+    isValid &= validateField(
+      email,
+      document.getElementById('emailError'),
+      function (value) {
+        if (!validateEmail(value)) return 'Định dạng email không hợp lệ';
+        return true;
+      }
+    );
+
+    // Validate phone nếu có nhập
+    if (phone.value.trim()) {
+      isValid &= validateField(
+        phone,
+        document.getElementById('phoneError'),
+        function (value) {
+          if (!validatePhone(value))
+            return 'Số điện thoại phải có đúng 10 chữ số';
+          return true;
+        }
+      );
+    }
+
+    isValid &= validateField(
+      password,
+      document.getElementById('passwordError'),
+      function (value) {
+        if (value.length < 6) return 'Mật khẩu phải có ít nhất 6 ký tự';
+        if (value.length > 50) return 'Mật khẩu không được vượt quá 50 ký tự';
+        return true;
+      }
+    );
+
+    isValid &= validateField(
+      confirmPassword,
+      document.getElementById('confirmPasswordError'),
+      function (value) {
+        if (value !== password.value) return 'Mật khẩu xác nhận không khớp';
+        return true;
+      }
+    );
+
+    if (!isValid) {
+      e.preventDefault();
+      return false;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML =
+      '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+  });
+});
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('editUserForm');
+  const newPassword = document.getElementById('newPassword');
+  const confirmPassword = document.getElementById('confirmPassword');
+
+  confirmPassword.addEventListener('input', function () {
+    if (newPassword.value !== confirmPassword.value) {
+      confirmPassword.setCustomValidity('Mật khẩu xác nhận không khớp');
+    } else {
+      confirmPassword.setCustomValidity('');
+    }
+  });
 });

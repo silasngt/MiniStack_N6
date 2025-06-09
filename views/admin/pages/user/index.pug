@@ -1,13 +1,11 @@
 extends ../../layouts/default.pug
 
 block main
-  //- User Management Content
   .user-management-content
-    //- Header Section
     .header-section
       h1.page-title Danh sách người dùng
-
-    //- User Table
+      a.add-a(href='/admin/user/add' type="a")
+        | Thêm người dùng mới
     .table-container
       table.user-table
         thead
@@ -15,41 +13,29 @@ block main
             th ID
             th Tên
             th Email
+            th SĐT
             th Ngày tạo
             th Quyền hạn
-            th Mật khẩu
             th Thao tác
         tbody
-          - 
-            var users = [
-              { id: 1, name: 'Nguyễn Văn A', email: 'a@gmail.com', date: '1/1/2025', role: 'user', password: 'abc123' },
-              { id: 2, name: 'Trần Thị B', email: 'b@gmail.com', date: '2/2/2025', role: 'user', password: 'def456' },
-              { id: 3, name: 'Lê Văn C', email: 'c@gmail.com', date: '3/3/2025', role: 'user', password: 'ghi789' },
-              { id: 4, name: 'Phạm Thị D', email: 'd@gmail.com', date: '4/4/2025', role: 'admin', password: 'jkl012' },
-              { id: 5, name: 'Hoàng Văn E', email: 'e@gmail.com', date: '5/5/2025', role: 'user', password: 'mno345' },
-              { id: 6, name: 'Đỗ Thị F', email: 'f@gmail.com', date: '6/6/2025', role: 'admin', password: 'pqr678' }
-            ];
-          
           each user in users
             tr.user-row
               td.user-id= user.id
               td.user-name= user.name
               td.user-email= user.email
+              td.user-phone= user.phone
               td.user-date= user.date
               td.user-role
                 - var roleClass = 'role-badge role-' + user.role
                 span(class=roleClass)= user.role
-              td.user-password= user.password
               td.user-actions
-                .btn-group(role="group")
-                  button.btn.btn-outline-secondary.btn-sm(title="Xem chi tiết")
-                    i.fas.fa-eye
-                  button.btn.btn-outline-primary.btn-sm(title="Chỉnh sửa")
-                    i.fas.fa-edit
-                  button.btn.btn-outline-danger.btn-sm(title="Xóa")
-                    i.fas.fa-trash
+                - var type = 'user';
+                - var id = user.id;
+                - var status = user.status;
+                - var editUrl = `/admin/user/edit/${user.id}`;
+                - var deleteFunc = 'deleteUser';
+                include ../../partials/action.pug
 
     //- Pagination
     include ../../partials/pagination.pug
-    
-    
+

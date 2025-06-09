@@ -1,15 +1,11 @@
 extends ../../layouts/default.pug
 
 block main
-  //- Categories Management Content
   .user-management-content
-    //- Header Section
     .header-section
       h1.page-title Danh sách danh mục
-      button.add-category-btn(type="button" id="showAddCategoryForm")
+      a.add-a(href='/admin/categories/add' type="a")
         | Thêm danh mục mới
-
-    //- Categories Table
     .table-container
       table.user-table
         thead
@@ -17,75 +13,24 @@ block main
             th ID
             th Tên danh mục
             th Loại
-            th Số lượng bài viết
             th Thao tác
         tbody
-          - 
-            var categories = [
-              { id: 1, name: 'Công nghệ', type: 'Bài viết', count: 15 },
-              { id: 2, name: 'Giáo dục', type: 'Tài liệu', count: 8 },
-              { id: 3, name: 'Thể thao', type: 'Diễn đàn', count: 12 },
-              { id: 4, name: 'Du lịch', type: 'Bài viết', count: 6 },
-              { id: 5, name: 'Ẩm thực', type: 'Tài liệu', count: 9 },
-              { id: 6, name: 'Sức khỏe', type: 'Diễn đàn', count: 11 }
-            ];
-          
-          each category in categories
-            tr.user-row
-              td= category.id
-              td= category.name
-              td= category.type
-              td= category.count
-              td
-                .action-buttons
-                  button.btn-action.btn-view(title="Xem chi tiết")
-                    i.fas.fa-eye
-                  button.btn-action.btn-edit(title="Chỉnh sửa")
-                    i.fas.fa-edit
-                  button.btn-action.btn-delete(title="Xóa")
-                    i.fas.fa-trash
-
-    //- Pagination
-    .pagination-container
-      .pagination
-        button.btn-page.btn-prev(disabled)
-          i.icon-prev
-          span Prev
-
-        - var pages = [1, 2, 3, 4, 5]
-        each page in pages
-          - var pageClass = page === 1 ? 'btn-page active' : 'btn-page'
-          button(class=pageClass)= page
-
-        button.btn-page.btn-next
-          span Next
-          i.icon-next
-
-  //- Add Category Form (Hidden by default)
-  .add-category-page(id="addCategoryPage" style="display: none;")
-    .user-management-content
-      .header-section
-        h1.page-title Thêm danh mục mới
-        button.btn.btn-light.btn-sm(id="closeCategoryForm" title="Đóng")
-          i.fas.fa-times
-      
-      .table-container
-        .p-4
-          form(id="categoryForm")
-            .mb-4
-              label.form-label.fw-bold(for="categoryTitle") Tiêu đề
-              input.form-control.form-control-lg(type="text" id="categoryTitle" placeholder="Nhập tiêu đề danh mục")
-            
-            .mb-4
-              label.form-label.fw-bold(for="categoryType") Loại
-              select.form-select.form-select-lg(id="categoryType")
-                option(value="" selected) Chọn loại danh mục
-                option(value="bai-viet") Bài viết
-                option(value="tai-lieu") Tài liệu
-                option(value="dien-dan") Diễn đàn
-            
-            .mt-5.d-flex.justify-content-between
-              button.btn-login.btn-lg.px-4(type="submit") THÊM
-              button.btn.btn-outline-secondary.btn-lg.p-4(type="button" id="cancelCategory") HỦY
-
-  script(src="/admin/js/scriptQ.js")
+          if categories && categories.length
+            each category in categories
+              tr.user-row
+                td= category.CategoryID
+                td= category.Name
+                td
+                  if Array.isArray(category.Type)
+                    = category.Type.join(', ')
+                  else
+                    = category.Type
+                
+                td
+                  .action-buttons
+                    - var type = 'categories';
+                    - var id = category.CategoryID;
+                    - var status = category.status;
+                    - var editUrl = `/admin/categories/edit/${category.CategoryID}`;
+                    - var deleteFunc = 'deleteCategory';
+                    include ../../partials/action.pug

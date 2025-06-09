@@ -15,6 +15,15 @@ const User = sequelize.define(
       unique: true,
     },
     Password: DataTypes.STRING(255),
+    Phone: {
+      type: DataTypes.STRING(10),
+      validate: {
+        is: {
+          args: [/^\d{10}$/],
+          msg: 'Phone must be exactly 11 digits',
+        },
+      },
+    },
     Gender: DataTypes.ENUM('Nam', 'Nữ', 'Khác'),
     Avatar: DataTypes.STRING(255),
     Role: DataTypes.ENUM('User', 'Admin'),
@@ -29,6 +38,11 @@ const User = sequelize.define(
     status: {
       type: DataTypes.ENUM('active', 'inactive'),
       defaultValue: 'active',
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
   },
   {
