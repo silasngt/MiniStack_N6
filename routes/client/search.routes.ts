@@ -1,8 +1,10 @@
 import { Router } from 'express';
-import searchController from '../../controllers/client/search.controller';
+import controller from '../../controllers/client/search.controller';
 
 const router = Router();
 
-router.get('/', searchController.search);
+router.get('/', controller.search);
+
+router.get('/suggestions', controller.searchSuggestions);
 
 export const searchRoute = router;
