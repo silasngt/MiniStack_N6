@@ -243,3 +243,92 @@
   color: #4169e1;
 }
 /*End Search input styles */
+
+/* ===== SEARCH AUTOCOMPLETE STYLES ===== */
+.search-autocomplete {
+  border: 1px solid #e0e0e0;
+  border-top: none;
+  background: white;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.autocomplete-item {
+  padding: 12px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.autocomplete-item:hover {
+  background-color: #f8f9fa;
+}
+
+.autocomplete-item:last-child {
+  border-bottom: none;
+}
+
+/* ===== SEARCH HIGHLIGHTING ===== */
+mark {
+  background: #ffeb3b !important;
+  padding: 1px 2px;
+  border-radius: 2px;
+  font-weight: 500;
+}
+
+/* ===== SEARCH NOTIFICATIONS ===== */
+.search-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  max-width: 300px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ===== SEARCH LOADING STATES ===== */
+.search-loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.pagination .page-link .fa-spinner {
+  font-size: 0.8rem;
+}
+
+/* ===== RESPONSIVE SEARCH ===== */
+@media (max-width: 768px) {
+  .search-autocomplete {
+    left: 0;
+    right: 0;
+    max-height: 200px;
+  }
+
+  .autocomplete-item {
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+
+  .search-notification {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+}
