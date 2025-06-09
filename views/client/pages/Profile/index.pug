@@ -12,43 +12,45 @@ block main
                                 label(for="avatar-upload")
                                     i.fas.fa-pencil-alt
                                 input#avatar-upload(type="file", hidden)
-                        .user-name-title User
+                        .user-name-title #{user.FullName || 'Guest'}
 
                     .profile-tabs
                         .profile-tab.active Thông Tin Cá Nhân
-                        a.profile-tab(href='/Profile/history') Lịch Sử Câu Trả Lời
+                        a.profile-tab(href='/profile/history') Lịch Sử Câu Trả Lời
             .col-md-8
                 .content-card
                     h2.section-title Thông Tin Cá Nhân
 
-                    form.profile-form
+                    form.profile-form(action=`/profile/edit/${user ? user.UserID : 'guest'}?_method=PATCH`, method="POST")
                         .form-section
                            
                             .form-group
                                 label(for="fullName") Name:
-                                input#fullName.form-control(type="text" value="Michael Smith")
+                                input#fullName.form-control(type="text" name="FullName" value=user.FullName)
 
                             .form-group
                                 label(for="phone") SĐT:
-                                input#phone.form-control(type="text" value="+46-7644 394 68")
+                                input#phone.form-control(type="text" name="Phone" value=user.Phone)
 
                             .form-group
-                                button.btn-save Lưu
-
+                                button.btn-save(type="submit") Lưu
+                    form.profile-form(action=`/profile/edit-password/${user ? user.UserID : 'guest'}?_method=PATCH`, method="POST")    
                         .form-section.mt-5
                             h3.form-section-title Security
 
                             .form-group
                                 label(for="email") Email
-                                input#email.form-control(type="email" value="masumrana15@gmail.com", readonly)
+                                input#email.form-control(type="email" value=user.Email, readonly)
 
                             .form-group
-                                label(for="password") Mật Khẩu
-                                input#password.form-control(type="password" value="**********")
-
+                                label(for="password") Mật Khẩu Hiện Tại
+                                input#password.form-control(type="password"  name="CurrentPassword")
+                            .form-group
+                                label(for="newPassword") Mật Khẩu Mới
+                                input#newPassword.form-control(type="password"  name="NewPassword")
                             .form-group
                                 label(for="confirmPassword") Xác Nhận Mật Khẩu
-                                input#confirmPassword.form-control(type="password" value="**********")
+                                input#confirmPassword.form-control(type="password"  name="ConfirmPassword")
 
                             .form-group
-                                button.btn-save Lưu
+                                button.btn-save(type="submit") Lưu

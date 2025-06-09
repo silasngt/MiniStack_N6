@@ -3,7 +3,7 @@ import { miniStackRoute } from './miniStack.route';
 import { forumTopicRoute } from './forumTopic.route';
 import { blogRoute } from './blog.route';
 import authRoute from './auth.route';
-import { ProfileRoute } from './Profile.route';
+import { ProfileRoute } from './profile.route';
 import { DocumentRoute } from './Document.route';
 
 import { forumExchangeRoute } from './forumExchange.route';
@@ -16,7 +16,7 @@ export const routesClient = (app: Express) => {
   app.use('/forum-topic', forumTopicRoute);
   app.use('/blog', requireClientLogin, blogRoute);
   app.use('/auth', authRoute);
-  app.use('/Profile', ProfileRoute);
+  app.use('/profile', ProfileRoute);
   app.use('/forumExchange', forumExchangeRoute);
   app.use('/chatBox', chatBoxRoute);
   app.use('/compile', compileRoute);
