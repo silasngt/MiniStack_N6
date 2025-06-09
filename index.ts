@@ -11,7 +11,8 @@ import { routesClient } from './routes/client/index.routes';
 import { routesAdmin } from './routes/admin/index.routes';
 import { systemConfig } from './config/system';
 import session from 'express-session';
-
+import methodOverride from 'method-override';
+import flash from 'express-flash';
 //Kết nối database
 sequelize;
 
@@ -25,6 +26,9 @@ app.use(express.static(`${__dirname}/public`));
 app.set('views', `${__dirname}/views`);
 app.set('view engine', 'pug');
 
+// Cài đặt method-override để hỗ trợ PUT, PATCH, DELETE
+app.use(methodOverride('_method'));
+
 // Biến toàn cục để sử dụng ở tất cả các file PUG
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
 
@@ -36,6 +40,9 @@ app.use(
     saveUninitialized: false,
   })
 );
+
+// Flash messages cho admin
+app.use(flash());
 
 // QUAN TRỌNG: Parse JSON và cookies PHẢI CÓ TRƯỚC middleware auth
 app.use(express.json({ limit: '50mb' }));
