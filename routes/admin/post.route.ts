@@ -26,6 +26,8 @@ router.post(
   uploadSingle,
   controller.editPost
 );
+
+router.patch('/toggle-status/:id', controller.toggleStatus);
 router.delete('/delete/:id', controller.deletePost);
 
 export const postRoute = router;

@@ -951,3 +951,118 @@ select.multiple-select option:checked {
     flex: none;
   }
 }
+/* ===== POST STATUS STYLES ===== */
+.post-row.post-inactive {
+  background-color: #f8f9fa;
+  opacity: 0.7;
+}
+
+.post-row.post-inactive:hover {
+  background-color: #e9ecef;
+}
+
+.text-muted {
+  color: #6c757d !important;
+}
+
+/* Status toggle button styles */
+.btn-status-active {
+  color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-status-active:hover {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-status-inactive {
+  color: #dc3545;
+  border-color: #dc3545;
+  position: relative;
+}
+
+.btn-status-inactive:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Đường gạch chéo cho button inactive */
+.btn-status-inactive::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 15%;
+  right: 15%;
+  height: 2px;
+  background-color: #dc3545;
+  transform: translateY(-50%) rotate(-45deg);
+  z-index: 2;
+}
+
+.btn-status-inactive:hover::before {
+  background-color: white;
+}
+
+/* Badge styles for status */
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.badge-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+/* Loading state for toggle button */
+.btn-status-loading {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.btn-status-loading i {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Table row striping with status consideration */
+.post-table tbody tr:nth-child(even):not(.post-inactive) {
+  background-color: #f8f9fa;
+}
+
+.post-table tbody tr:nth-child(even).post-inactive {
+  background-color: #e9ecef;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .post-status .badge {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+
+  .btn-group .btn-sm {
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
+  }
+}

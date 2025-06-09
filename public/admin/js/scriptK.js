@@ -399,6 +399,180 @@ document.addEventListener('DOMContentLoaded', function () {
     alert(`📖 Xem chi tiết bài viết #${postId}\n\n(Chức năng đang phát triển)`);
   };
 
+  // ✅ TOGGLE POST STATUS FUNCTION
+  window.togglePostStatus = async function (postId) {
+    console.log('🔄 Toggle post status:', postId);
+
+    // Find toggle button
+    const toggleBtn = document.querySelector(`[data-post-id="${postId}"]`);
+    const currentStatus = toggleBtn?.getAttribute('data-status');
+    const isActive = currentStatus === 'active';
+
+    // Confirm dialog
+    const action = isActive ? 'tạm dừng' : 'kích hoạt';
+    const confirmMessage = `🔄 XÁC NHẬN ${action.toUpperCase()} BÀI VIẾT
+
+📝 Bạn có chắc chắn muốn ${action} bài viết #${postId}?
+
+${
+  isActive
+    ? '⚠️ Bài viết sẽ bị ẩn khỏi website và không thể truy cập được.'
+    : '✅ Bài viết sẽ được hiển thị trở lại trên website.'
+}
+
+Nhấn OK để xác nhận.`;
+
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    const originalContent = toggleBtn.innerHTML;
+    const originalClass = toggleBtn.className;
+
+    try {
+      // Show loading state
+      if (toggleBtn) {
+        toggleBtn.disabled = true;
+        toggleBtn.className = originalClass + ' btn-status-loading';
+        toggleBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      }
+
+      // Call toggle API
+      const response = await fetch(`/admin/posts/toggle-status/${postId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        console.log('✅ Toggle success:', data);
+
+        // Show success notification
+        showNotification(data.message, 'success');
+
+        // Update UI
+        updatePostStatusUI(postId, data.data.status, data.data.isActive);
+      } else {
+        // Server error
+        console.error('❌ Toggle failed:', data);
+        showNotification(
+          data.message || '❌ Có lỗi xảy ra khi thay đổi trạng thái!',
+          'error'
+        );
+        restoreToggleButton(
+          toggleBtn,
+          originalContent,
+          originalClass,
+          originalTitle
+        );
+      }
+    } catch (error) {
+      // Network error
+      console.error('❌ Toggle error:', error);
+      showNotification('❌ Lỗi kết nối! Vui lòng thử lại.', 'error');
+      restoreToggleButton(
+        toggleBtn,
+        originalContent,
+        originalClass,
+        originalTitle
+      );
+    }
+  };
+  // ✅ HELPER: Restore toggle button to original state
+  function restoreToggleButton(
+    toggleBtn,
+    originalContent,
+    originalClass,
+    originalTitle
+  ) {
+    if (toggleBtn) {
+      toggleBtn.disabled = false;
+      toggleBtn.className = originalClass;
+      toggleBtn.innerHTML = originalContent;
+      toggleBtn.title = originalTitle;
+      toggleBtn.style.opacity = '1';
+      toggleBtn.style.pointerEvents = 'auto';
+    }
+  }
+
+  // ✅ UPDATE POST STATUS UI
+  function updatePostStatusUI(postId, newStatus, isActive) {
+    const postRow = document.getElementById(`post-row-${postId}`);
+    const toggleBtn = document.querySelector(`[data-post-id="${postId}"]`);
+    const statusBadge = postRow?.querySelector('.post-status .badge');
+
+    if (!postRow || !toggleBtn) {
+      console.warn('⚠️ Could not find post row or toggle button');
+      return;
+    }
+
+    // Update row styling
+    if (isActive) {
+      postRow.classList.remove('post-inactive');
+      // Remove text-muted from all cells
+      postRow.querySelectorAll('.text-muted').forEach((el) => {
+        el.classList.remove('text-muted');
+      });
+    } else {
+      postRow.classList.add('post-inactive');
+      // Add text-muted to specific cells
+      const cellsToMute = [
+        '.post-title',
+        '.post-content',
+        '.post-author',
+        '.post-category',
+        '.post-date',
+      ];
+      cellsToMute.forEach((selector) => {
+        const cell = postRow.querySelector(selector);
+        if (cell) cell.classList.add('text-muted');
+      });
+    }
+
+    // Update toggle button
+    toggleBtn.setAttribute('data-status', newStatus);
+    toggleBtn.title = isActive ? 'Tạm dừng bài viết' : 'Kích hoạt bài viết';
+
+    // Update button classes
+    toggleBtn.classList.remove(
+      'btn-status-active',
+      'btn-status-inactive',
+      'btn-status-loading'
+    );
+    toggleBtn.classList.add(
+      isActive ? 'btn-status-active' : 'btn-status-inactive'
+    );
+
+    // Update button icon
+    const icon = toggleBtn.querySelector('i');
+    if (icon) {
+      icon.className = '';
+      icon.className = isActive ? 'fas fa-eye' : 'fas fa-eye-slash';
+    }
+
+    // ✅ FORCE: Re-enable button (remove any loading state)
+    toggleBtn.disabled = false;
+    toggleBtn.style.opacity = '1';
+    toggleBtn.style.pointerEvents = 'auto';
+
+    // ✅ SMOOTH: Transition effect
+    postRow.style.transition = 'all 0.3s ease';
+    setTimeout(() => {
+      postRow.style.transition = '';
+    }, 300);
+
+    console.log('✅ UI updated successfully:', {
+      postId,
+      newStatus,
+      isActive,
+      rowClass: postRow.className,
+      buttonClass: toggleBtn.className,
+    });
+  }
+
   // Edit post (index page)
   window.editPost = function (postId) {
     window.location.href = `/admin/posts/edit/${postId}`;

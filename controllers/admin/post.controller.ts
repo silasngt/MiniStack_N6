@@ -65,6 +65,67 @@ export const index = async (req: Request, res: Response) => {
   }
 };
 
+// [PATCH] /admin/posts/toggle-status/:id
+export const toggleStatus = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const postId = parseInt(req.params.id);
+
+    // Tìm post cần toggle
+    const existingPost = await Post.findByPk(postId);
+    if (!existingPost || existingPost.get('deleted')) {
+      res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy bài viết!',
+      });
+      return;
+    }
+
+    // ✅ Kiểm tra quyền toggle (uncomment khi có login)
+    // const currentUserId = req.session?.userId || 1;
+    // const authorId = existingPost.get('AuthorID');
+    // const currentUser = await User.findByPk(currentUserId);
+
+    // if (authorId !== currentUserId && currentUser?.get('Role') !== 'Admin') {
+    //   res.status(403).json({
+    //     success: false,
+    //     message: 'Bạn không có quyền thay đổi trạng thái bài viết này!',
+    //   });
+    //   return;
+    // }
+
+    // Toggle status: active <-> inactive
+    const currentStatus = existingPost.get('status') as string;
+    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+
+    await existingPost.update({
+      status: newStatus,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: `Bài viết đã được ${
+        newStatus === 'active' ? 'kích hoạt' : 'tạm dừng'
+      }!`,
+      data: {
+        postId: postId,
+        status: newStatus,
+        isActive: newStatus === 'active',
+      },
+    });
+    return;
+  } catch (error) {
+    console.error('❌ Error toggling post status:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Có lỗi xảy ra khi thay đổi trạng thái bài viết!',
+    });
+    return;
+  }
+};
+
 // [GET] /admin/posts/create
 export const create = async (req: Request, res: Response) => {
   try {
