@@ -182,6 +182,7 @@ const setLoadingState = (formId, isLoading) => {
 
 document.addEventListener('DOMContentLoaded', function () {
   addNotificationStyles();
+  updateAuthUI();
 
   const loginForm = document.getElementById('loginForm');
   if (loginForm) {
@@ -503,7 +504,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 'Mật khẩu đã được thay đổi. Bạn có muốn đăng nhập lại không?'
               )
             ) {
-              logout();
             }
           }, 2000);
         } else {
@@ -514,6 +514,19 @@ document.addEventListener('DOMContentLoaded', function () {
         showMessage('Có lỗi xảy ra khi đổi mật khẩu', 'error');
       } finally {
         setLoadingState('changePasswordForm', false);
+      }
+    });
+  }
+
+  const logoutBtn = document.getElementById('sidebar-logout');
+  const logoutForm = document.getElementById('sidebar-logout-form');
+  if (logoutBtn && logoutForm) {
+    logoutBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (confirm('Bạn có chắc chắn muốn đăng xuất không?')) {
+        sessionStorage.clear();
+        localStorage.clear();
+        logoutForm.submit();
       }
     });
   }
@@ -567,16 +580,6 @@ const updateAuthUI = () => {
   }
 };
 
-document.addEventListener('DOMContentLoaded', updateAuthUI);
-window.logout = logout;
 window.checkAuthStatus = checkAuthStatus;
 window.requireAuth = requireAuth;
 window.updateAuthUI = updateAuthUI;
-
-//js for logout in sidebar
-document
-  .getElementById('sidebar-logout')
-  ?.addEventListener('click', function (e) {
-    e.preventDefault();
-    document.getElementById('sidebar-logout-form').submit();
-  });

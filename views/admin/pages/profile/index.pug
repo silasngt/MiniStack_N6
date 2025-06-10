@@ -7,12 +7,13 @@ block main
                 .profile-card
                     .profile-header
                         .avatar-container
-                            img.profile-avatar(src="https://e7.pngegg.com/pngimages/349/288/png-clipart-teacher-education-student-course-school-avatar-child-face.png" alt="Admin")
+                            img.profile-avatar(src=profile.avatar alt="Avatar" id="current-avatar")
                             .avatar-edit
                                 label(for="avatar-upload")
                                     i.fas.fa-pencil-alt
-                                input#avatar-upload(type="file", hidden)
-                        .admin-name-title Admin
+                                input#avatar-upload(type="file" accept="image/*" hidden)
+                        .admin-name-title= profile.fullName
+                        .admin-role= profile.role
 
                     .profile-tabs
                         .profile-tab.active Thông Tin Cá Nhân
@@ -20,35 +21,47 @@ block main
             .col-md-8
                 .content-card
                     h2.section-title Thông Tin Cá Nhân
+                    .notification-area#notificationArea
 
-                    form.profile-form
+                    form.profile-form#basicInfoForm
                         .form-section
                             h3.form-section-title Thông tin cơ bản
                             .form-group
-                                label(for="fullName") Name:
-                                input#fullName.form-control(type="text" value="Michael Smith")
+                                label(for="fullName") Họ và tên:
+                                input#fullName.form-control(type="text" name="fullName" value=profile.fullName required)
+
+                            .form-group
+                                label(for="gender") Giới tính:
+                                select#gender.form-control(name="gender" style="padding:0px 16px;")
+                                    option(value="" selected=!profile.gender) Chọn giới tính
+                                    option(value="Nam" selected=profile.gender==="Nam") Nam
+                                    option(value="Nữ" selected=profile.gender==="Nữ") Nữ
+                                    option(value="Khác" selected=profile.gender==="Khác") Khác
 
                             .form-group
                                 label(for="phone") SĐT:
-                                input#phone.form-control(type="text" value="+46-7644 394 68")
+                                input#phone.form-control(type="text" name="phone" value=profile.phone placeholder="Nhập số điện thoại")
 
                             .form-group
-                                button.btn-save Lưu
+                                button.btn-save(type="submit") Lưu
 
-                        .form-section.mt-5
+                    form.profile-form.mt-5#passwordForm
+                        .form-section
                             h3.form-section-title Security
 
                             .form-group
                                 label(for="email") Email
-                                input#email.form-control(type="email" value="masumrana15@gmail.com", readonly)
+                                input#email.form-control(type="email" value=profile.email, readonly)
 
                             .form-group
-                                label(for="password") Mật Khẩu
-                                input#password.form-control(type="password" value="**********")
+                                label(for="newPassword") Mật Khẩu:
+                                input#newPassword.form-control(type="password" name="newPassword" required minlength="6" placeholder="Nhập mật khẩu mới")
 
                             .form-group
-                                label(for="confirmPassword") Xác Nhận Mật Khẩu
-                                input#confirmPassword.form-control(type="password" value="**********")
+                                label(for="confirmPassword") Xác Nhận Mật Khẩu:
+                                input#confirmPassword.form-control(type="password" name="confirmPassword" required minlength="6" placeholder="Nhập lại mật khẩu mới")
 
                             .form-group
-                                button.btn-save Lưu
+                                button.btn-save(type="submit") Lưu
+
+    script(src="/admin/js/scriptK.js") 

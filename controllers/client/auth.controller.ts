@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import md5 from 'md5';
 import * as jwt from 'jsonwebtoken';
 
-import { generateRandomString } from '../../helpers/generate.helper';
 import User from '../../models/user.model';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
@@ -327,22 +326,11 @@ export const loginPost = async (req: Request, res: Response) => {
   }
 };
 
-// Đăng xuất
-export const logout = async (req: Request, res: Response) => {
-  try {
-    // Xóa cookies
-    res.clearCookie('auth_token');
-    res.clearCookie('remember_token');
-
-    // Redirect về trang chủ
+export const logout = (req: Request, res: Response) => {
+  res.clearCookie('auth_token', { path: '/' });
+  req.session.destroy(() => {
     res.redirect('/');
-  } catch (error: any) {
-    console.error('Logout error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Có lỗi xảy ra khi đăng xuất',
-    });
-  }
+  });
 };
 
 // Lấy thông tin user hiện tại
