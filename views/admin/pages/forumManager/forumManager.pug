@@ -13,18 +13,10 @@ block main
             th.forum-th-content Nội dung
             th.forum-th-name Tên người đăng
             th.forum-th-email Email
-            th.forum-th-comments Số lượt bình luận
             th.forum-th-date Ngày tạo
             th.forum-th-actions Thao tác
         tbody
-          - 
-            var questions = [
-              { id: 1, content: 'Làm sao để nuôi chó con khỏe mạnh?', name: 'Nguyễn Văn A', email: 'a@gmail.com', comments: 3, date: '01/01/2025' },
-              { id: 2, content: 'Nên cho mèo ăn thức ăn gì?', name: 'Trần Thị B', email: 'b@gmail.com', comments: 5, date: '02/01/2025' },
-              { id: 3, content: 'Thú cưng có cần tiêm phòng?', name: 'Lê Văn C', email: 'c@gmail.com', comments: 2, date: '03/01/2025' },
-              { id: 4, content: 'Làm thế nào để dạy chó đi vệ sinh đúng chỗ?', name: 'Phạm Thị D', email: 'd@gmail.com', comments: 7, date: '04/01/2025' },
-              { id: 5, content: 'Cách chăm sóc mèo bị bệnh ngoài da?', name: 'Hoàng Văn E', email: 'e@gmail.com', comments: 1, date: '05/01/2025' }
-            ];
+          -
           
           each question in questions
             tr.forum-tr-question
@@ -32,17 +24,17 @@ block main
               td.forum-td-content= question.content
               td.forum-td-name= question.name
               td.forum-td-email= question.email
-              td.forum-td-comments= question.comments
               td.forum-td-date= question.date
               td.forum-td-actions
                 .forum-btn-group(role="group")
-                  button.forum-btn.forum-btn-view(title="Xem chi tiết")
-                    i.fas.fa-eye
-                  button.forum-btn.forum-btn-edit(title="Chỉnh sửa")
-                    i.fas.fa-edit
-                  button.forum-btn.forum-btn-delete(title="Xóa")
-                    i.fas.fa-trash
+                  button.forum-btn.forum-btn-view(data-id=question.id data-status=question.status title="Xem chi tiết")
+                    i.fas(class=question.status === 'inactive' ? 'fa-eye-slash' : 'fa-eye')
 
+                  button.forum-btn.forum-btn-edit(data-id=question.id title="Chỉnh sửa")
+                    i.fas.fa-edit
+
+                  button.forum-btn.forum-btn-delete(data-id=question.id title="Xóa")
+                    i.fas.fa-trash
     .forum-pagination-wrapper
       .forum-pagination
         button.forum-btn-page.forum-btn-prev(disabled)

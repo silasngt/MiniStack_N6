@@ -2,12 +2,6 @@ extends ../../layouts/defaultMenu.pug
 
 block main
   div(class="chat-ui")
-    img(
-      src="https://media.istockphoto.com/id/1515913422/vi/anh/m%E1%BB%99t-nh%C3%A0-ph%C3%A2n-t%C3%ADch-d%E1%BB%AF-li%E1%BB%87u-s%E1%BB%AD-d%E1%BB%A5ng-c%C3%B4ng-ngh%E1%BB%87-ai-cho-c%C3%B4ng-c%E1%BB%A5-l%C3%A0m-vi%E1%BB%87c-%C4%91%E1%BB%83-ph%C3%A2n-t%C3%ADch-d%E1%BB%AF-li%E1%BB%87u.jpg?s=612x612&w=0&k=20&c=RtLq-qf6cfvnAcPZp-W0RI6znWKQxFgOa9l4kJN0QSE="
-      alt="AI Background"
-      class="chat-ui__bg"
-    )
-
     div(class="chat-ui__content")
       div(class="chat-ui__header")
         h1(class="chat-ui__title")
@@ -28,9 +22,12 @@ block main
           name="message"
           placeholder="Type your message..."
           class="chat-ui__input"
+          autocomplete="off"
         )
         button(
           type="submit"
           class="chat-ui__send-btn"
         )
           | Send
+  // Thêm đoạn này để load JS riêng cho chatBox
+  script(src="/js/scriptT.js")

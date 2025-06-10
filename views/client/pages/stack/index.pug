@@ -8,7 +8,7 @@ block main
       .banner-content
         h1 Thảo luận không giới hạn
         h2 Khám phá mọi chủ đề!
-      a.banner-cta.btn(href="/forum-topic") Tham gia tại đây!
+      a.banner-cta.btn(href="/forum") Tham gia tại đây!
   
   // Câu hỏi nổi bật
   .container.mb-5
@@ -22,7 +22,7 @@ block main
               div
                 .error-text #{question.ErrorText}
                 p.mb-0 #{question.Content}
-                a.text-decoration-none(href=`/forum-topic/${question.TopicID}`) Xem chi tiết
+                a.text-decoration-none(href=`/forum/${question.TopicID}`) Xem chi tiết
                 i.fas.fa-arrow-right.arrow-icon
     
     //- // Câu hỏi 1
