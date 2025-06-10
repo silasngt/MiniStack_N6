@@ -1,9 +1,20 @@
 import express from 'express';
+import multer from 'multer';
 const router = express.Router();
 
 import * as controller from '../../controllers/admin/document.controller';
+import { uploadSingle } from '../../middlewares/admin/uploadCloud.middleware';
+
+const upload = multer({
+  storage: multer.memoryStorage()
+});
 
 router.get('/', controller.index);
-router.get('/addDocument',controller.addDocument);
+router.get('/create', controller.addDocument);
+router.post('/create', 
+  upload.single('document'),
+  uploadSingle,
+  controller.create
+);
 
 export const documentRoute = router;
