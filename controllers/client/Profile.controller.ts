@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import User from '../../models/user.model';
 import md5 from 'md5';
+import ForumTopic from '../../models/forum-topic.model';
 
 // Extend Express Request interface to include flash
 declare global {
@@ -27,8 +28,26 @@ export const index = async (req: Request, res: Response) => {
   });
 };
 export const history = async (req: Request, res: Response) => {
+  const userId = req.params.id;
+  const infoHistory = await ForumTopic.findAll({
+    where: {
+      AuthorID: userId,
+      deleted: false,
+      status: 'active',
+    },
+    raw: true,
+  });
+  const totalInfoHistory = await ForumTopic.count({
+    where: {
+      AuthorID: userId,
+      deleted: false,
+      status: 'active',
+    },
+  });
   res.render('client/pages/profile/history.pug', {
     pageTitle: 'Lịch sử ',
+    infoHistory: infoHistory,
+    totalInfoHistory: totalInfoHistory,
   });
 };
 export const editPatch = async (req: Request, res: Response) => {
