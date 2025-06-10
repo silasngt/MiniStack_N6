@@ -12,41 +12,39 @@ block main
                                 label(for="avatar-upload")
                                     i.fas.fa-pencil-alt
                                 input#avatar-upload(type="file", hidden)
-                        .user-name-title User
+                        .user-name-title #{user.FullName || 'Guest'}
 
                     .profile-tabs
-                        a.profile-tab(href="/Profile") Thông Tin Cá Nhân
-                        .profile-tab.active Lịch Sử Câu Trả Lời
+                        a.profile-tab(href=`/profile/${user ? user.UserID : 'guest'}`) Thông Tin Cá Nhân
+                        .profile-tab.active Lịch Sử Câu Hỏi
             .col-md-8
                 .content-card
                     .section-header
-                        h2.section-title Lịch Sử Câu Trả Lời
-                        .question-count Tổng Cộng: 3 Câu Hỏi
-                    
+                        h2.section-title Lịch Sử Câu Hỏi
+                        .question-count Tổng Cộng: #{totalInfoHistory} Câu Hỏi
+
                     .question-history-list
-                        // Question Item 1
-                        .question-item
-                            .question-header
-                                a(href="#").question-title org.hibernate.query.QueryArgumentException: Argument [44]
-                                .question-date 2 giờ trước
-                            .question-content
-                                p I have 2 tables in database "Courses" and "Instructor" with "Instructor" table having one to many relation with "Courses" table and "I...
+                        each question in infoHistory
+                            .question-item
+                                .question-header
+                                    a(href="#").question-title #{question.Title}
+                                .question-content
+                                    p #{question.Content}
+                        //- // Question Item 2
+                        //- .question-item
+                        //-     .question-header
+                        //-         a(href="#").question-title org.hibernate.query.QueryArgumentException: Argument [44]
+                        //-         .question-date 1 ngày trước
+                        //-     .question-content
+                        //-         p I have 2 tables in database "Courses" and "Instructor" with "Instructor" table having one to many relation with "Courses" table and "I...
 
-                        // Question Item 2
-                        .question-item
-                            .question-header
-                                a(href="#").question-title org.hibernate.query.QueryArgumentException: Argument [44]
-                                .question-date 1 ngày trước
-                            .question-content
-                                p I have 2 tables in database "Courses" and "Instructor" with "Instructor" table having one to many relation with "Courses" table and "I...
-
-                        // Question Item 3
-                        .question-item
-                            .question-header
-                                a(href="#").question-title org.hibernate.query.QueryArgumentException: Argument [44]
-                                .question-date 3 ngày trước
-                            .question-content
-                                p I have 2 tables in database "Courses" and "Instructor" with "Instructor" table having one to many relation with "Courses" table and "I...
+                        //- // Question Item 3
+                        //- .question-item
+                        //-     .question-header
+                        //-         a(href="#").question-title org.hibernate.query.QueryArgumentException: Argument [44]
+                        //-         .question-date 3 ngày trước
+                        //-     .question-content
+                        //-         p I have 2 tables in database "Courses" and "Instructor" with "Instructor" table having one to many relation with "Courses" table and "I...
 
                     // Pagination
                     .pagination-container
