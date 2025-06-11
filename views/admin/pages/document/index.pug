@@ -41,8 +41,13 @@ block main
                 td= doc.createdAt
                 td
                   .btn-group
-                    a.btn-action.btn-view(href=doc.filePath target="_blank")
-                      i.fas.fa-eye
+                    // Thay thế nút view bằng nút toggle status
+                    button.btn-action.btn-toggle-status(
+                      data-id=doc.id
+                      data-status=doc.status || 'active'
+                      title=doc.status === 'active' ? 'Click để ẩn tài liệu' : 'Click để hiện tài liệu'
+                    )
+                      i.fas(class=doc.status === 'active' ? 'fa-eye' : 'fa-eye-slash')
                     a.btn-action.btn-edit(href=`/admin/document/edit/${doc.id}`)
                       i.fas.fa-edit   
                     button.btn-action.btn-delete(data-id=doc.id)

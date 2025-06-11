@@ -142,9 +142,24 @@
       transition: all 0.2s;
     }
 
-    .btn-view {
-      color: #2563eb;
-      border: 1px solid #2563eb;
+    .btn-toggle-status {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      color: #666;
+    }
+
+    .btn-toggle-status[data-status="active"] {
+      color: #2196f3;
+    }
+
+    .btn-toggle-status[data-status="inactive"] {
+      color: #999;
+    }
+
+    .btn-toggle-status:hover {
+      transform: scale(1.1);
     }
 
     .btn-edit {

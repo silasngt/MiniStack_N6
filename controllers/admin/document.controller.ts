@@ -258,21 +258,34 @@ export const updateStatus = async (req: Request, res: Response): Promise<void> =
   try {
     const { id } = req.params;
     const { status } = req.body;
+    
+    const document = await Document.findByPk(id);
+    
+    if (!document) {
+      res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy tài liệu'
+      });
+      return;
+    }
 
-    await Document.update(
-      { status },
-      { where: { DocumentID: id, deleted: false }}
-    );
+    // Toggle status
+    const newStatus = status === 'active' ? 'inactive' : 'active';
+    
+    await document.update({
+      status: newStatus
+    });
 
     res.json({
       success: true,
-      message: 'Cập nhật trạng thái thành công'
+      message: `${newStatus === 'active' ? 'Hiện' : 'Ẩn'} tài liệu thành công`
     });
 
   } catch (error) {
+    console.error('Update status error:', error);
     res.status(500).json({
       success: false,
-      message: 'Có lỗi xảy ra'
+      message: 'Có lỗi xảy ra khi cập nhật trạng thái'
     });
   }
 };

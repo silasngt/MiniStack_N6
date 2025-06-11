@@ -305,3 +305,54 @@ document.addEventListener('DOMContentLoaded', function() {
   handleEdit();
   handleStatusUpdate();
 });
+const handleStatusToggle = () => {
+  const toggleButtons = document.querySelectorAll('.btn-toggle-status');
+  
+  toggleButtons.forEach(btn => {
+    btn.addEventListener('click', async function() {
+      const id = this.dataset.id;
+      const currentStatus = this.dataset.status;
+      const icon = this.querySelector('.fas');
+
+      try {
+        const response = await fetch(`/admin/document/status/${id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            status: currentStatus
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          // Cập nhật UI
+          const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+          
+          // Cập nhật data-status
+          this.dataset.status = newStatus;
+          
+          // Cập nhật icon
+          icon.className = `fas ${newStatus === 'active' ? 'fa-eye' : 'fa-eye-slash'}`;
+          
+          // Cập nhật tooltip
+          this.title = newStatus === 'active' ? 'Click để ẩn tài liệu' : 'Click để hiện tài liệu';
+
+          // Thông báo thành công
+          toastr.success(result.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        toastr.error('Có lỗi xảy ra khi cập nhật trạng thái');
+      }
+    });
+  });
+};
+
+// Thêm vào DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+  handleStatusToggle();
+  // ...existing code...
+});
