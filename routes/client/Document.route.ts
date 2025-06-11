@@ -1,8 +1,7 @@
 import express from 'express';
 const router = express.Router();
 
-import * as controller from '../../controllers/client/document.controller';
-
+import * as controller from '../../controllers/client/Document.controller';
 
 router.get('/', controller.index);
 

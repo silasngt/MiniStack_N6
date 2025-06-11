@@ -11,7 +11,7 @@ block main
             span Quay lại
 
         .form-content
-          form.document-form(action="#" method="POST" enctype="multipart/form-data" data-id=document.DocumentID)
+          form.document-form(action=`/${prefixAdmin}/document/edit/${document.DocumentID}?_method=PATCH` method="POST" enctype="multipart/form-data")
             // Tiêu đề
             .form-group
               label.form-label(for="title") Tiêu đề
