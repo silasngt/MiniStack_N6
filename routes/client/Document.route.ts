@@ -1,8 +1,9 @@
 import express from 'express';
 const router = express.Router();
 
-import * as controller from '../../controllers/client/Document.controller';
+import * as controller from '../../controllers/client/document.controller';
+
 
 router.get('/', controller.index);
 
-export const DocumentRoute = router;
+export const documentRoute = router;

@@ -3,9 +3,8 @@ import { miniStackRoute } from './miniStack.route';
 import { forumRoute } from './forum.route';
 import { blogRoute } from './blog.route';
 import authRoute from './auth.route';
+import { documentRoute } from './document.route';
 import { profileRoute } from './Profile.route';
-import { DocumentRoute } from './Document.route';
-
 import { chatBoxRoute } from './chatBox.route';
 import { compileRoute } from './compile.route';
 import { searchRoute } from './search.routes';
@@ -19,5 +18,5 @@ export const routesClient = (app: Express) => {
   app.use('/chatBox', chatBoxRoute);
   app.use('/compile', compileRoute);
   app.use('/search', searchRoute);
-  app.use('/Document', DocumentRoute);
-};
+  app.use('/document', documentRoute);
+

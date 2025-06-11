@@ -1,6 +1,10 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/database';
 
+import User from './user.model';
+
+
+
 const Document = sequelize.define(
   'Document',
   {
@@ -10,7 +14,6 @@ const Document = sequelize.define(
       autoIncrement: true,
     },
     Title: DataTypes.STRING(255),
-    Description: DataTypes.TEXT,
     FilePath: DataTypes.STRING(255),
     UploadDate: DataTypes.DATE,
     UploadBy: {
@@ -20,11 +23,22 @@ const Document = sequelize.define(
         key: 'UserID',
       },
     },
-    CategoryID: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'Category',
-        key: 'CategoryID',
+    Thumbnail: {
+      type: DataTypes.STRING(500),
+      allowNull: false,
+    },
+    Categories: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      get() {
+        const raw = this.getDataValue('Categories');
+        return raw ? JSON.parse(raw) : [];
+      },
+      set(val: number[] | string[]) {
+        const categoryArray = Array.isArray(val)
+          ? val.map((id) => parseInt(id.toString()))
+          : [];
+        this.setDataValue('Categories', JSON.stringify(categoryArray));
       },
     },
     deleted: {
@@ -41,5 +55,6 @@ const Document = sequelize.define(
     timestamps: false,
   }
 );
+
 
 export default Document;

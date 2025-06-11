@@ -2,44 +2,50 @@ extends ../../layouts/defaultMenu.pug
 
 block main
   .container
-    -
-      var titles = [
-        'Tài liệu HTML - Cơ bản đến nâng cao',
-        'CSS Flexbox và Grid Layout', 
-        'JavaScript ES6+ Features',
-        'Node.js và Express Framework',
-        'SQL Database Design'
-      ];
-      var types = ['HTML', 'CSS', 'JavaScript', 'Node.js', 'SQL'];
-      var descriptions = [
-        'Hướng dẫn chi tiết về HTML từ các thẻ cơ bản đến những kỹ thuật nâng cao cho người mới bắt đầu...',
-        'Tài liệu hướng dẫn sử dụng Flexbox và Grid để tạo layout responsive hiện đại...',
-        'Khám phá các tính năng mới của JavaScript ES6 và các phiên bản sau đó...',
-        'Xây dựng ứng dụng web backend với Node.js và Express framework...',
-        'Thiết kế cơ sở dữ liệu SQL hiệu quả và tối ưu hóa truy vấn database...'
-      ];
-      var links = [
-        'https://drive.google.com/file/d/1abc123/view',
-        'https://drive.google.com/file/d/2def456/view', 
-        'https://drive.google.com/file/d/3ghi789/view',
-        'https://drive.google.com/file/d/4jkl012/view',
-        'https://drive.google.com/file/d/5mno345/view'
-      ];
+    if error
+      .error-message= error
+    else
+      .documents-grid
+        each doc in documents
+          .document-card
+            // Phần ảnh đại diện bên trái
+            .document-icon
+              img.thumb-image(
+                src=doc.thumbnail || "/images/doc-thumb.jpg"  
+                alt=doc.title
+              )
 
-    each title, index in titles
-      .post-box
-        img(src="https://www.crowe.com/vn/vi-vn/-/media/crowe/firms/asia-pacific/vn/crowehorwathvn/images/news/notes-on-notice-of-tax-inspection-examination-receiving.jpg?rev=-1&hash=14DA7D689F742216225703372840C717" alt=types[index] + " thumbnail")
-        .post-content
-          .file-type= types[index]
-          h3
-            a(href=links[index] target="_blank")= title
-          p= descriptions[index]
-          
-    .pagination
-      span &lt; Prev
-      each n in [1, 2, 3, 4, 5]
-        if n == 2
-          span.page.active= n
-        else
-          span.page= n
-      span Next &gt;
+            // Phần nội dung bên phải
+            .document-info
+              // Hiển thị nhiều danh mục
+              .categories-list
+                each category in doc.categories
+                  span.category-badge= category.Name
+
+              // Tiêu đề với link
+              h3.document-title
+                .link-wrapper
+                  span.link-label Link: 
+                  a.doc-link(href=doc.filePath target="_blank") Click vào đây để lấy tài liệu
+
+      // Phân trang
+      if pagination && pagination.totalPages > 1
+        .pagination
+          if pagination.hasPrev
+            a.page-btn.prev(href=`?page=${pagination.page - 1}`) 
+              i.fas.fa-chevron-left
+              
+
+          .page-numbers
+            - var i = 1;
+            while i <= pagination.totalPages
+              a.page-btn(
+                class=i === pagination.page ? 'active' : ''
+                href=`?page=${i}`
+              )= i
+              - i++
+
+          if pagination.hasNext
+            a.page-btn.next(href=`?page=${pagination.page + 1}`)
+              
+              i.fas.fa-chevron-right
