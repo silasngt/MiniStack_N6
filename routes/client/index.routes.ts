@@ -4,7 +4,7 @@ import { forumTopicRoute } from './forumTopic.route';
 import { blogRoute } from './blog.route';
 import authRoute from './auth.route';
 import { ProfileRoute } from './Profile.route';
-import { DocumentRoute } from './Document.route';
+import { documentRoute } from './document.route';
 
 import { forumExchangeRoute } from './forumExchange.route';
 import { chatBoxRoute } from './chatBox.route';
@@ -22,5 +22,5 @@ export const routesClient = (app: Express) => {
   app.use('/compile', compileRoute);
   app.use('/search', searchRoute);
 
-  app.use('/Document', DocumentRoute);
+  app.use('/document', documentRoute);
 };

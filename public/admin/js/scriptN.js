@@ -166,4 +166,142 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   }
+
+  // Xử lý các nút pagination
+  const handlePagination = () => {
+    const pagination = document.querySelector('.pagination');
+    if (!pagination) return;
+
+    pagination.addEventListener('click', async (e) => {
+      const target = e.target.closest('button');
+      if (!target) return;
+
+      const currentPage = parseInt(document.querySelector('.btn-page.active')?.textContent || '1');
+      let newPage = currentPage;
+
+      if (target.classList.contains('btn-prev')) {
+        newPage = currentPage - 1;
+      } else if (target.classList.contains('btn-next')) {
+        newPage = currentPage + 1;
+      } else if (target.classList.contains('btn-page')) {
+        newPage = parseInt(target.textContent);
+      }
+
+      if (newPage !== currentPage) {
+        window.location.href = `/admin/document?page=${newPage}`;
+      }
+    });
+  };
+
+  // Xử lý xóa tài liệu
+  const handleDelete = () => {
+    const deleteButtons = document.querySelectorAll('.btn-delete');
+    
+    deleteButtons.forEach(btn => {
+      btn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        
+        if (!confirm('Bạn có chắc muốn xóa tài liệu này?')) return;
+
+        const id = this.dataset.id;
+        try {
+          const response = await fetch(`/admin/document/${id}`, {
+            method: 'DELETE'
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            alert(result.message);
+            window.location.reload();
+          } else {
+            throw new Error(result.message);
+          }
+        } catch (error) {
+          alert('Có lỗi xảy ra: ' + error.message);
+        }
+      });
+    });
+  };
+
+  // Xử lý hover hiển thị tooltip cho categories dài
+  const handleCategoryTooltips = () => {
+    const categorysCells = document.querySelectorAll('.categories-cell');
+    categorysCells.forEach(cell => {
+      if (cell.scrollWidth > cell.clientWidth) {
+        cell.title = cell.textContent;
+      }
+    });
+  };
+
+  // Initialize
+  handlePagination();
+  handleDelete();
+  handleCategoryTooltips();
+});
+// Xử lý sửa tài liệu
+const handleEdit = () => {
+  const editForm = document.querySelector('#edit-document-form');
+  if (!editForm) return;
+
+  editForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(editForm);
+    const id = editForm.dataset.id;
+
+    try {
+      const response = await fetch(`/admin/document/edit/${id}`, {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        alert(result.message);
+        window.location.href = '/admin/document';
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (error) {
+      alert('Có lỗi xảy ra: ' + error.message);
+    }
+  });
+};
+
+// Xử lý cập nhật trạng thái
+const handleStatusUpdate = () => {
+  const statusButtons = document.querySelectorAll('.btn-status');
+  
+  statusButtons.forEach(btn => {
+    btn.addEventListener('click', async function() {
+      const id = this.dataset.id;
+      const newStatus = this.dataset.status === 'active' ? 'inactive' : 'active';
+
+      try {
+        const response = await fetch(`/admin/document/status/${id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ status: newStatus })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          this.dataset.status = newStatus;
+          this.textContent = newStatus === 'active' ? 'Hoạt động' : 'Tạm dừng';
+          alert(result.message);
+        }
+      } catch (error) {
+        alert('Có lỗi xảy ra');
+      }
+    });
+  });
+};
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+  // ...existing code...
+  handleEdit();
+  handleStatusUpdate();
 });

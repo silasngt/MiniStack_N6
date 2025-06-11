@@ -16,5 +16,14 @@ router.post('/create',
   uploadSingle,
   controller.create
 );
+// Thêm routes mới
+router.get('/edit/:id', controller.edit);
+router.post('/edit/:id', 
+  upload.single('thumbnail'),
+  controller.update
+);
+router.delete('/:id', controller.deleteDocument);
+router.patch('/status/:id', controller.updateStatus);
+
 
 export const documentRoute = router;
