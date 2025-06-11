@@ -11,7 +11,7 @@ block main
             // Phần ảnh đại diện bên trái
             .document-icon
               img.thumb-image(
-                src="/images/doc-thumb.jpg" 
+                src=doc.thumbnail || "/images/doc-thumb.jpg"  
                 alt=doc.title
               )
 
@@ -26,7 +26,7 @@ block main
               h3.document-title
                 .link-wrapper
                   span.link-label Link: 
-                  a.doc-link(href=doc.filePath target="_blank")= doc.title
+                  a.doc-link(href=doc.filePath target="_blank") Click vào đây để lấy tài liệu
 
       // Phân trang
       if pagination && pagination.totalPages > 1
@@ -34,7 +34,7 @@ block main
           if pagination.hasPrev
             a.page-btn.prev(href=`?page=${pagination.page - 1}`) 
               i.fas.fa-chevron-left
-              span Trang trước
+              
 
           .page-numbers
             - var i = 1;
@@ -47,5 +47,5 @@ block main
 
           if pagination.hasNext
             a.page-btn.next(href=`?page=${pagination.page + 1}`)
-              span Trang sau
+              
               i.fas.fa-chevron-right

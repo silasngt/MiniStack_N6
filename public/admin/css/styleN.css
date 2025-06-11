@@ -151,11 +151,11 @@
     }
 
     .btn-toggle-status[data-status="active"] {
-      color: #2196f3;
+      color:rgb(40, 167, 69);
     }
 
     .btn-toggle-status[data-status="inactive"] {
-      color: #999;
+      color: rgb(220, 53, 69);
     }
 
     .btn-toggle-status:hover {
@@ -163,8 +163,8 @@
     }
 
     .btn-edit {
-      color: #059669;
-      border: 1px solid #059669;
+      color: rgb(37, 99, 235);
+      border: 1px solid rgb(37, 99, 235);
     }
 
     .btn-delete {
@@ -299,7 +299,8 @@
 
   /* Form Groups */
   .form-group {
-    margin-bottom: 1rem;
+    margin-top: 2rem; /* cách phần tử phía trên */
+    margin-bottom: 0;
   }
 
   .content-group {
@@ -677,7 +678,7 @@
   color: #6b7280;
 }
 /*edit*/
-/* Edit Document Styles */
+
 .edit-document-container {
   max-width: 800px;
   margin: 2rem auto;
@@ -712,7 +713,7 @@
 }
 
 .form-group {
-  margin-top: -15px;
+  margin-top: 10px;
   
 }
 

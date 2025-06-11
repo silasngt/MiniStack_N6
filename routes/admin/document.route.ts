@@ -10,11 +10,11 @@ const upload = multer({
 });
 
 router.get('/', controller.index);
-router.get('/create', controller.addDocument);
+router.get('/create', controller.create);
 router.post('/create', 
-  upload.single('document'),
+  upload.single('thumbnail'),
   uploadSingle,
-  controller.create
+  controller.createPost
 );
 // Thêm routes mới
 router.get('/edit/:id', controller.edit);

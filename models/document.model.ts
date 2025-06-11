@@ -23,6 +23,10 @@ const Document = sequelize.define(
         key: 'UserID',
       },
     },
+    Thumbnail: {
+      type: DataTypes.STRING(500),
+      allowNull: false,
+    },
     Categories: {
       type: DataTypes.TEXT,
       allowNull: true,

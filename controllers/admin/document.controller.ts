@@ -48,7 +48,7 @@ export const index = async (req: Request, res: Response): Promise<void> => {
             id: cat.get('CategoryID'),
             name: cat.get('Name')
           }));
-          console.log(categoryList);
+          // console.log(categoryList);
         }
         // Lấy thông tin người upload
         let uploaderName = 'N/A';
@@ -94,7 +94,7 @@ export const index = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const addDocument = async (req: Request, res: Response) => {
+export const create = async (req: Request, res: Response) => {
   try {
     // Lấy tất cả categories có status active
     const categories = await Category.findAll({
@@ -116,17 +116,12 @@ export const addDocument = async (req: Request, res: Response) => {
     });
   }
 };
-export const create = async (req: Request, res: Response) => {
+export const createPost = async (req: Request, res: Response) => {
+  // console.log(req.body);
   try {
-    const { title, description, category } = req.body;
+    const { title, description, category,thumbnail } = req.body;
     
-    // Log data nhận được
-    console.log('Create document data:', {
-      title,
-      description,
-      category,
-      file: req.file
-    });
+    
         // Lấy user từ session
     const adminUser = (req.session as any).adminUser;
     if (!adminUser) {
@@ -147,9 +142,9 @@ export const create = async (req: Request, res: Response) => {
       UploadDate: new Date(),
       UploadBy: adminUser.id,// Thay đổi tùy vào cách lưu user của bạn
       Categories: category, // Categories sẽ tự động được xử lý bởi setter trong model
-      status: 'active'
+      status: 'active',
+      Thumbnail: thumbnail || null, // Nếu có thumbnail thì lưu, nếu không thì để null
     });
-    console.log('Created document:', document);
 
     res.json({
       success: true,

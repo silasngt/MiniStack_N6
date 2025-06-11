@@ -19,11 +19,13 @@ export const index = async (req: Request, res: Response) => {
       limit,
       offset
     });
-
+    // console.log(documents);
     // Xử lý dữ liệu trước khi gửi đến view
      const formattedDocs = await Promise.all(
       documents.map(async (doc) => {
         const document = doc.get({ plain: true });
+
+        
         
         // Lấy tất cả danh mục của tài liệu
         const categoryIds = document.Categories || [];
@@ -34,11 +36,11 @@ export const index = async (req: Request, res: Response) => {
           },
           attributes: ['CategoryID', 'Name']
         });
-
+        // console.log(document);
         return {
           id: document.DocumentID,
           title: document.Title,
-          thumbnail: document.Thumbnail || '/images/default.jpg',
+          thumbnail: document.Thumbnail ,
           filePath: document.FilePath,
           categories: categories
         };
@@ -46,7 +48,7 @@ export const index = async (req: Request, res: Response) => {
     );
 
     // Debug log để kiểm tra đường dẫn ảnh
-    console.log('Formatted Docs:', formattedDocs);
+    // console.log('Formatted Docs:', formattedDocs);
     // Đếm tổng số tài liệu để phân trang
     const totalDocs = await Document.count({
       where: {
