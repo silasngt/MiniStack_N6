@@ -3,7 +3,7 @@ import { miniStackRoute } from './miniStack.route';
 import { forumRoute } from './forum.route';
 import { blogRoute } from './blog.route';
 import authRoute from './auth.route';
-import { documentRoute } from './document.route';
+import { documentRoute } from './Document.route';
 import { profileRoute } from './Profile.route';
 import { chatBoxRoute } from './chatBox.route';
 import { compileRoute } from './compile.route';
@@ -19,4 +19,4 @@ export const routesClient = (app: Express) => {
   app.use('/compile', compileRoute);
   app.use('/search', searchRoute);
   app.use('/document', documentRoute);
-
+};

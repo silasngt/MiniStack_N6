@@ -11,7 +11,7 @@ export const index = async (req: Request, res: Response): Promise<void> => {
 
     // Lấy tổng số documents
     const totalDocs = await Document.count({
-      where: { deleted: false }
+      where: { deleted: false },
     });
 
     // Lấy documents với phân trang
@@ -19,7 +19,7 @@ export const index = async (req: Request, res: Response): Promise<void> => {
       where: { deleted: false },
       order: [['DocumentID', 'DESC']],
       limit,
-      offset
+      offset,
     });
 
     // Xử lý data để hiển thị categories và user
@@ -31,22 +31,21 @@ export const index = async (req: Request, res: Response): Promise<void> => {
         const categoryIds = document.Categories || [];
         let categoryNames = [];
         let categoryList = [];
-    
-        
+
         if (categoryIds.length > 0) {
           const categories = await Category.findAll({
             where: {
               CategoryID: categoryIds,
               deleted: false,
-              status: 'active'
+              status: 'active',
             },
-            attributes: ['CategoryID', 'Name', 'Type'] // Lấy thêm thông tin cần thiết
+            attributes: ['CategoryID', 'Name', 'Type'], // Lấy thêm thông tin cần thiết
           });
-          
-          categoryNames = categories.map(cat => cat.get('Name'));
-          categoryList = categories.map(cat => ({
+
+          categoryNames = categories.map((cat) => cat.get('Name'));
+          categoryList = categories.map((cat) => ({
             id: cat.get('CategoryID'),
-            name: cat.get('Name')
+            name: cat.get('Name'),
           }));
           // console.log(categoryList);
         }
@@ -62,16 +61,15 @@ export const index = async (req: Request, res: Response): Promise<void> => {
         return {
           id: document.DocumentID,
           title: document.Title,
-          categories: categoryList,// Trả về mảng categories đầy đủ
+          categories: categoryList, // Trả về mảng categories đầy đủ
           categoryNames: categoryNames.join(', '),
           author: uploaderName,
           createdAt: new Date(document.UploadDate).toLocaleDateString('vi-VN'),
           filePath: document.FilePath,
-          status: document.status || 'active'
+          status: document.status || 'active',
         };
       })
     );
-    
 
     res.render('admin/pages/document/index', {
       pageTitle: 'Danh sách tài liệu',
@@ -80,16 +78,15 @@ export const index = async (req: Request, res: Response): Promise<void> => {
         page,
         totalPages: Math.ceil(totalDocs / limit),
         totalItems: totalDocs,
-        limit
-      }
+        limit,
+      },
     });
-
   } catch (error) {
     console.error('Error:', error);
     res.render('admin/pages/document/index', {
-      pageTitle: 'Danh sách tài liệu', 
+      pageTitle: 'Danh sách tài liệu',
       documents: [],
-      error: 'Có lỗi xảy ra khi tải dữ liệu'
+      error: 'Có lỗi xảy ra khi tải dữ liệu',
     });
   }
 };
@@ -99,48 +96,47 @@ export const create = async (req: Request, res: Response) => {
     // Lấy tất cả categories có status active
     const categories = await Category.findAll({
       where: {
-        Status: 'active'
+        Status: 'active',
       },
-      attributes: ['CategoryID', 'Name']
+      attributes: ['CategoryID', 'Name'],
     });
 
     res.render('admin/pages/document/create.pug', {
       pageTitle: 'Thêm tài liệu',
-      categories: categories
+      categories: categories,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: 'Có lỗi xảy ra khi lấy danh mục',
-      error: error.message  
+      error: error.message,
     });
   }
 };
 export const createPost = async (req: Request, res: Response) => {
   // console.log(req.body);
   try {
-    const { title, description, category,thumbnail } = req.body;
-    
-    
-        // Lấy user từ session
+    const { title, description, category, thumbnail } = req.body;
+
+    // Lấy user từ session
     const adminUser = (req.session as any).adminUser;
     if (!adminUser) {
       res.status(401).json({
         success: false,
-        message: 'Unauthorized - Vui lòng đăng nhập'
+        message: 'Unauthorized - Vui lòng đăng nhập',
       });
       return;
     }
 
     // Lấy file path từ middleware upload
     const filePath = req.body.document || '';
-    
+
     const document = await Document.create({
       Title: title,
       Description: description,
       FilePath: filePath,
       UploadDate: new Date(),
-      UploadBy: adminUser.id,// Thay đổi tùy vào cách lưu user của bạn
+      UploadBy: adminUser.id, // Thay đổi tùy vào cách lưu user của bạn
       Categories: category, // Categories sẽ tự động được xử lý bởi setter trong model
       status: 'active',
       Thumbnail: thumbnail || null, // Nếu có thumbnail thì lưu, nếu không thì để null
@@ -149,13 +145,13 @@ export const createPost = async (req: Request, res: Response) => {
     res.json({
       success: true,
       message: 'Thêm tài liệu thành công',
-      document
+      document,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: 'Có lỗi xảy ra',
-      error: error.message
+      error: error.message,
     });
   }
 };
@@ -163,32 +159,31 @@ export const createPost = async (req: Request, res: Response) => {
 export const edit = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    
+
     const document = await Document.findOne({
-      where: { DocumentID: id, deleted: false }
+      where: { DocumentID: id, deleted: false },
     });
 
     if (!document) {
       res.render('admin/error', {
-        message: 'Không tìm thấy tài liệu'
+        message: 'Không tìm thấy tài liệu',
       });
       return;
     }
 
     const categories = await Category.findAll({
-      where: { status: 'active' }
+      where: { status: 'active' },
     });
 
     res.render('admin/pages/document/edit', {
       pageTitle: 'Sửa tài liệu',
       document,
-      categories
+      categories,
     });
-
   } catch (error) {
     console.error('Error:', error);
     res.render('admin/error', {
-      message: 'Có lỗi xảy ra'
+      message: 'Có lỗi xảy ra',
     });
   }
 };
@@ -198,16 +193,16 @@ export const update = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
     const { title, description, category, link } = req.body;
-    const file = req.file;
+    const file = req['file'];
 
     const document = await Document.findOne({
-      where: { DocumentID: id, deleted: false }
+      where: { DocumentID: id, deleted: false },
     });
 
     if (!document) {
       res.status(404).json({
         success: false,
-        message: 'Không tìm thấy tài liệu'
+        message: 'Không tìm thấy tài liệu',
       });
       return;
     }
@@ -216,7 +211,7 @@ export const update = async (req: Request, res: Response): Promise<void> => {
     const updateData: any = {
       Title: title,
       Description: description,
-      Categories: category
+      Categories: category,
     };
 
     // Cập nhật link nếu có
@@ -235,57 +230,60 @@ export const update = async (req: Request, res: Response): Promise<void> => {
 
     res.json({
       success: true,
-      message: 'Cập nhật tài liệu thành công'
-      
+      message: 'Cập nhật tài liệu thành công',
     });
-
   } catch (error) {
     console.error('Update error:', error);
     res.status(500).json({
       success: false,
-      message: 'Có lỗi xảy ra khi cập nhật'
+      message: 'Có lỗi xảy ra khi cập nhật',
     });
   }
 };
 
 // Cập nhật trạng thái
-export const updateStatus = async (req: Request, res: Response): Promise<void> => {
+export const updateStatus = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { id } = req.params;
     const { status } = req.body;
-    
+
     const document = await Document.findByPk(id);
-    
+
     if (!document) {
       res.status(404).json({
         success: false,
-        message: 'Không tìm thấy tài liệu'
+        message: 'Không tìm thấy tài liệu',
       });
       return;
     }
 
     // Toggle status
     const newStatus = status === 'active' ? 'inactive' : 'active';
-    
+
     await document.update({
-      status: newStatus
+      status: newStatus,
     });
 
     res.json({
       success: true,
-      message: `${newStatus === 'active' ? 'Hiện' : 'Ẩn'} tài liệu thành công`
+      message: `${newStatus === 'active' ? 'Hiện' : 'Ẩn'} tài liệu thành công`,
     });
-
   } catch (error) {
     console.error('Update status error:', error);
     res.status(500).json({
       success: false,
-      message: 'Có lỗi xảy ra khi cập nhật trạng thái'
+      message: 'Có lỗi xảy ra khi cập nhật trạng thái',
     });
   }
 };
 // Thêm chức năng xóa tài liệu
-export const deleteDocument = async (req: Request, res: Response): Promise<void> => {
+export const deleteDocument = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { id } = req.params;
     const adminUser = (req.session as any).adminUser;
@@ -293,27 +291,23 @@ export const deleteDocument = async (req: Request, res: Response): Promise<void>
     if (!adminUser) {
       res.status(401).json({
         success: false,
-        message: 'Unauthorized - Vui lòng đăng nhập'
+        message: 'Unauthorized - Vui lòng đăng nhập',
       });
       return;
     }
 
     // Soft delete - cập nhật trường deleted thành true
-    await Document.update(
-      { deleted: true },
-      { where: { DocumentID: id }}
-    );
+    await Document.update({ deleted: true }, { where: { DocumentID: id } });
 
     res.json({
       success: true,
-      message: 'Xóa tài liệu thành công'
+      message: 'Xóa tài liệu thành công',
     });
-
   } catch (error) {
     console.error('Delete document error:', error);
     res.status(500).json({
       success: false,
-      message: 'Có lỗi xảy ra khi xóa tài liệu'
+      message: 'Có lỗi xảy ra khi xóa tài liệu',
     });
   }
 };
