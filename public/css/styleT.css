@@ -25,7 +25,6 @@
   background-color: #2563EB;
   color: white;
   font-weight: 500;
-  padding: 0.5rem 1rem;
   border-radius: 1.75rem;
   display: flex;
   align-items: center;
@@ -129,73 +128,115 @@
   background-color: #F3F4F6;
 }
 
-/* QUESTION DETAIL */
-.question-detail {
-  background-color: #fff;
+/* QUESTION FORM */
+.question-form {
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  max-width: 700px;
+  margin: 2rem auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: 'Inter', sans-serif;
+}
+
+.question-form__error {
+  background-color: #fee2e2;
+  color: #dc2626;
+  padding: 0.75rem 1rem;
   border-radius: 0.5rem;
-  padding: 1rem;
-  margin-bottom: 2rem;
-}
-
-.question-detail__header {
-  background-color: #D9D9D9;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.question-detail__heading {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1F2937;
-}
-
-.question-detail__add-btn {
-  background-color: #2563EB;
-  color: white;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
   font-weight: 500;
-  padding: 0.5rem 1rem;
-  border-radius: 1.75rem;
+  text-align: center;
+}
+
+.question-form__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.question-form__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.question-form__label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.question-form__input,
+.question-form__textarea,
+.question-form__select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  color: #111827;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.question-form__input:focus,
+.question-form__textarea:focus,
+.question-form__select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.question-form__textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.question-form__select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.5rem;
+}
+
+.question-form__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.question-form__button {
+  background-color: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
   border: none;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, transform 0.1s;
 }
 
-.question-detail__add-btn:hover {
-  background-color: #1E40AF;
+.question-form__button:hover {
+  background-color: #1e40af;
+  transform: translateY(-1px);
 }
 
-.question-detail__title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
+.question-form__button:active {
+  transform: translateY(0);
 }
 
-.question-detail__meta {
-  display: flex;
-  justify-content: flex-start;
-  gap: 1rem;
-  color: #6B7280;
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
-}
+/* Responsive Design */
+@media (max-width: 640px) {
+  .question-form {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
 
-.question-detail__description {
-  line-height: 1.5;
-  font-family: 'Inter', sans-serif;
-  color: #111827;
-  font-size: 1rem;
-}
-
-.question-detail__code-placeholder {
-  background-color: #F3F4F6;
-  border: 1px dashed #D1D5DB;
-  height: 150px;
-  border-radius: 0.5rem;
-  margin-top: 1.5rem;
+  .question-form__button {
+    width: 100%;
+    text-align: center;
+  }
 }
 
 /* COMMENT SECTION */
@@ -316,35 +357,21 @@
 /* chatui */
 .chat-ui {
   position: relative;
-  min-height: 100vh;
-  background: linear-gradient(to bottom, #1f2937, #1e3a8a);
-  overflow: hidden;
+  min-height: 100vh; /* Giữ nguyên */
+   /* Giữ nguyên */ 
 }
 
-.chat-ui__bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: blur(40px);
-  opacity: 0.2;
-  pointer-events: none;
-  user-select: none;
-  z-index: 0;
-}
-
+/* THAY absolute -> relative */
 .chat-ui__content {
-  position: absolute;
-  inset: 0;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
   z-index: 1;
   padding-top: 2rem;
   padding-bottom: 6rem;
 }
+
 
 .chat-ui__header {
   text-align: center;
@@ -377,6 +404,11 @@
   margin-bottom: 1rem;
 }
 
+.chat-ui__message-group.has-user-message .chat-ui__message--left {
+  max-width: 100%;
+  margin-bottom: 70px;
+}
+
 .chat-ui__message-group--right {
   justify-content: flex-end;
 }
@@ -386,6 +418,10 @@
   border-radius: 0.75rem;
   max-width: 75%;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.chat-ui__message--right.extra-margin {
+  margin-bottom: 70px; /* Áp dụng cho câu hỏi thứ hai trở đi */
 }
 
 .chat-ui__message--left {
@@ -584,7 +620,6 @@
   position: relative;
   min-height: 100vh;
   width: 100%;
-  background: linear-gradient(to bottom, #111827, #1e3a8a); /* from-gray-900 to-blue-950 */
 }
 
 .chat-ui__bg {
@@ -731,4 +766,95 @@
 
 .chat-ui__send-btn:active {
   transform: scale(0.95);
+}
+
+
+/*.question */
+.question-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.question-form__error {
+  color: #d32f2f;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.question-form__form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.question-form__group {
+  display: flex;
+  flex-direction: column;
+}
+
+.question-form__label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.question-form__input,
+.question-form__textarea,
+.question-form__select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.question-form__textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.question-form__select {
+  appearance: none;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="%23333" d="M6 9l4-4H2z"/></svg>') no-repeat right 10px center;
+  background-size: 12px;
+}
+
+.question-form__button {
+  background-color: #1976d2;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.question-form__button:hover {
+  background-color: #1565c0;
+}
+.question-detail__add-btn:hover {
+  color: white ;
+  text-decoration: none ; /* nếu có hover màu nền thì giữ nguyên */
+}
+.question-detail__add-btn {
+  color: white !important;
+  text-decoration: none !important;
+  padding: 6px; /* nếu có hover màu nền thì giữ nguyên */
+}
+@media (max-width: 600px) {
+  .question-form {
+    padding: 10px;
+  }
+
+  .question-form__input,
+  .question-form__textarea,
+  .question-form__select {
+    font-size: 14px;
+  }
+
+  .question-form__button {
+    font-size: 14px;
+    padding: 10px;
+  }
 }

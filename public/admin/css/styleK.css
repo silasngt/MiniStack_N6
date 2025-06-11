@@ -18,9 +18,9 @@
 
 .avatar-container {
   position: relative;
-  width: 120px;
-  height: 120px;
-  margin: 0 auto 15px;
+  height: 200px;
+  width: 200px;
+  margin: 0 auto;
 }
 
 .profile-avatar {
@@ -29,6 +29,20 @@
   object-fit: cover;
   border-radius: 50%;
   border: 4px solid #f8f9fa;
+}
+.avatar-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
 }
 
 .avatar-edit {
@@ -43,6 +57,30 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+}
+
+.avatar-edit[data-uploading='true'] {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.avatar-edit i.fa-spinner {
+  color: #007bff;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Disable click during upload */
+input[data-uploading='true'] {
+  pointer-events: none;
 }
 
 .admin-name-title {
@@ -106,7 +144,7 @@
 
 .form-control {
   width: 100%;
-  padding: 10px 15px;
+  padding: 0px 15px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
@@ -130,7 +168,7 @@
 
 /* CSS for Post Management Page */
 .post-management-content {
-  padding: 24px;
+  padding: 0 16px;
   background-color: #f8fafc;
   min-height: 100vh;
 }
@@ -411,17 +449,51 @@ select.form-control option {
   white-space: normal;
 }
 
-/* Fix cho các trình duyệt khác nhau */
-@-moz-document url-prefix() {
-  select.form-control option {
-    padding: 12px;
-  }
+/* CSS cho select multiple */
+.category-select-wrapper {
+  position: relative;
 }
 
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  select.form-control option {
-    padding: 12px;
-  }
+.multiple-select {
+  min-height: 120px !important;
+  padding: 8px 12px;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  background-color: #fff;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.multiple-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+.multiple-select option {
+  padding: 8px 12px;
+  margin: 2px 0;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.multiple-select option:hover {
+  background-color: #f8f9fa;
+}
+
+.multiple-select option:checked {
+  background-color: #007bff;
+  color: white;
+  font-weight: 500;
+}
+
+.select-hint {
+  margin-top: 5px;
+}
+
+.select-hint small {
+  color: #6c757d;
+  font-size: 12px;
 }
 
 /* Xóa bỏ các CSS dư thừa không cần thiết */
@@ -430,10 +502,10 @@ select.form-control option {
   display: none;
 }
 
-.content-area {
+/* .content-area {
   min-height: 200px;
   resize: vertical;
-}
+} */
 
 .attachment-label {
   display: flex;
@@ -450,37 +522,137 @@ select.form-control option {
   margin-top: 10px;
 }
 
-.image-preview,
-.image-upload-box {
-  width: 100px;
-  height: 80px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+.image-preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
+  min-height: 60px;
+  width: 100%;
+}
+
+.image-preview {
+  position: relative;
+  border-radius: 8px;
   overflow: hidden;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e1e5e9;
+  width: 120px; /* Fixed width cho consistent layout */
+  flex-shrink: 0; /* Không cho shrink */
 }
 
 .image-preview img {
   width: 100%;
-  height: 100%;
+  height: 80px;
   object-fit: cover;
+  display: block; /* Tránh whitespace */
 }
 
-.image-upload-box {
+.remove-image {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(255, 0, 0, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f9f9f9;
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+
+.remove-image:hover {
+  background: rgba(255, 0, 0, 1);
+  transform: scale(1.1);
+}
+
+.image-name {
+  padding: 8px;
+  font-size: 11px;
+  text-align: center;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.image-upload-box {
+  border: 2px dashed #007bff;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
 }
 
 .image-upload-box:hover {
-  background-color: #f0f0f0;
+  background-color: #e3f2fd;
+  border-color: #0056b3;
+}
+
+.image-upload-box label {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
 }
 
 .image-upload-box i {
-  font-size: 24px;
-  color: #4169e1;
+  font-size: 1.5rem;
+  color: #007bff;
+}
+
+.image-upload-box span {
+  font-size: 12px;
+  color: #007bff;
+  font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .image-preview-container {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  .image-preview {
+    width: 100px;
+  }
+
+  .image-preview img {
+    height: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  .image-preview-container {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+
+  .image-preview {
+    width: 80px;
+  }
+
+  .image-preview img {
+    height: 60px;
+  }
+
+  .image-attachments {
+    padding: 15px;
+  }
 }
 
 .form-buttons {
@@ -503,22 +675,394 @@ select.form-control option {
 .btn-submit {
   background-color: #4169e1;
   color: white;
-  flex: 1;
-  margin-right: 15px;
 }
 
 .btn-submit:hover {
   background-color: #3451b2;
 }
 
+/* Loading state */
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .btn-cancel {
-  background-color: #f5f5f5;
-  color: #555;
-  flex: 1;
-  margin-left: 15px;
+  background-color: #6c757d;
+  color: white;
 }
 
 .btn-cancel:hover {
-  background-color: #e5e5e5;
+  background-color: #5a6268;
+}
+
+/* Success message */
+.alert-success {
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  color: #155724;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 20px;
 }
 /* End Create Post Page Styles */
+
+/* Badge styles */
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.badge-info {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.badge-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+/* Alert styles */
+.alert {
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  transition: opacity 0.3s ease;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  color: #155724;
+}
+
+/* Empty state */
+.text-muted {
+  color: #6c757d !important;
+}
+
+/* Truncate improvements */
+.truncate {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.post-title.truncate {
+  max-width: 250px;
+  font-weight: 500;
+}
+
+.post-content.truncate {
+  max-width: 300px;
+  color: #666;
+}
+
+/* Table improvements */
+.post-table th {
+  background-color: #f8fafc;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.post-table td {
+  vertical-align: middle;
+}
+
+.post-actions .btn-group {
+  display: flex;
+  gap: 4px;
+}
+
+/* Edit Post Specific Styles */
+.current-image {
+  border: 2px solid #4169e1 !important;
+}
+
+.new-image {
+  border: 2px solid #007bff !important;
+}
+
+.btn-change-image {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(65, 105, 225, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.btn-change-image:hover {
+  background: rgba(65, 105, 225, 1);
+  transform: scale(1.1);
+}
+
+.image-status {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 123, 255, 0.9);
+  color: white;
+  padding: 4px 8px;
+  font-size: 10px;
+  text-align: center;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.current-image .image-status {
+  background: rgba(40, 167, 69, 0.9);
+}
+
+/* Form buttons for edit */
+.form-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.btn-submit,
+.btn-cancel,
+.btn-delete {
+  padding: 12px 24px;
+  border-radius: 4px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  flex: 1;
+}
+
+.btn-submit {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-submit:hover {
+  background-color: #218838;
+}
+
+.btn-cancel {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-cancel:hover {
+  background-color: #5a6268;
+}
+
+.btn-delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #c82333;
+}
+
+/* Loading states */
+.btn-submit:disabled,
+.btn-delete:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Edit form specific */
+.create-post-container .create-title {
+  color: #4169e1;
+}
+
+/* Selected categories in edit mode */
+select.multiple-select option:checked {
+  background-color: #4169e1 !important;
+  color: white;
+}
+
+/* Current image indicator */
+.current-image::before {
+  content: '✓';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  background: #4169e1;
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 15;
+}
+
+.new-image::before {
+  content: 'NEW';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  background: #007bff;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 8px;
+  font-weight: bold;
+  z-index: 15;
+  letter-spacing: 1px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .form-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-submit,
+  .btn-cancel,
+  .btn-delete {
+    flex: none;
+  }
+}
+/* ===== POST STATUS STYLES ===== */
+.post-row.post-inactive {
+  background-color: #f8f9fa;
+  opacity: 0.7;
+}
+
+.post-row.post-inactive:hover {
+  background-color: #e9ecef;
+}
+
+.text-muted {
+  color: #6c757d !important;
+}
+
+/* Status toggle button styles */
+.btn-status-active {
+  color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-status-active:hover {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-status-inactive {
+  color: #dc3545;
+  border-color: #dc3545;
+  position: relative;
+}
+
+.btn-status-inactive:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Đường gạch chéo cho button inactive */
+.btn-status-inactive::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 15%;
+  right: 15%;
+  height: 2px;
+  background-color: #dc3545;
+  transform: translateY(-50%) rotate(-45deg);
+  z-index: 2;
+}
+
+.btn-status-inactive:hover::before {
+  background-color: white;
+}
+
+/* Badge styles for status */
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.badge-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+/* Loading state for toggle button */
+.btn-status-loading {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.btn-status-loading i {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Table row striping with status consideration */
+.post-table tbody tr:nth-child(even):not(.post-inactive) {
+  background-color: #f8f9fa;
+}
+
+.post-table tbody tr:nth-child(even).post-inactive {
+  background-color: #e9ecef;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .post-status .badge {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+
+  .btn-group .btn-sm {
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
+  }
+}

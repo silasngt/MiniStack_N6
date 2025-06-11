@@ -10,12 +10,22 @@ html
         //- File CSS
         link(rel="stylesheet" href="/css/styleK.css")
         link(rel="stylesheet" href="/css/styleMenu.css")
-        link(rel="stylesheet" href="/css/forumTopic.css")
+        link(rel="stylesheet" href="/css/styleT.css")
         link(rel="stylesheet", href="/css/styleN.css")
 
 
 
     body
+        - if (messages.success)
+            div(
+                class="alert alert-success alert-message"
+                alert-message
+            ) #{messages.success}
+        - if (messages.error)
+            div(
+                class="alert alert-danger alert-message"
+                alert-message
+            ) #{messages.error}
         include ../partials/header.pug
 
         include ../partials/sider-bar.pug
@@ -30,4 +40,5 @@ html
         script(src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js")
         //- File JS
         script(src="/js/script.js")
+        
         

@@ -8,19 +8,17 @@ block main
             each blog in posts
                 // Bài viết 1
                 .col-md-4
-                    .card.blog-card
-                        img.blog-img(src=blog.Image alt="Mountain landscape")
-                        .card-body
-                            .blog-date #{blog.AuthorName} • #{blog.FormattedCreatedAt}
-                            h5.blog-title= blog.Title
-                            p.blog-desc= blog.Content
-                            .d-flex.justify-content-between.align-items-center
-                                div
-                                    each category in blog.CategoryNames
-                                        span.blog-tag= category
-                                a.text-decoration-none(href=`/blog/${blog.PostID}`) Read more
-                                    i.fas.fa-arrow-right.arrow-icon
-            
+                    a.text-decoration-none(href=`/blog/${blog.PostID}`)
+                        .card.blog-card
+                            img.blog-img(src=blog.Image alt="Mountain landscape")
+                            .card-body
+                                .blog-date #{blog.AuthorName} • #{blog.FormattedCreatedAt}
+                                h5.blog-title= blog.Title
+                                p.blog-desc= blog.Content
+                                .d-flex.justify-content-between.align-items-center
+                                    div
+                                        each category in blog.CategoryNames
+                                            span.blog-tag= category
             //- // Bài viết 2
             //- .col-md-4
             //-     .card.blog-card

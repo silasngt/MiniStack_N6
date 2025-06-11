@@ -8,7 +8,7 @@ block main
       .banner-content
         h1 Thảo luận không giới hạn
         h2 Khám phá mọi chủ đề!
-      a.banner-cta.btn(href="/forum-topic") Tham gia tại đây!
+      a.banner-cta.btn(href="/forum") Tham gia tại đây!
   
   // Câu hỏi nổi bật
   .container.mb-5
@@ -20,10 +20,10 @@ block main
             .d-flex.align-items-start
               .question-number #{idx + 1}
               div
-                .error-text #{question.ErrorText}
-                p.mb-0 #{question.Content}
-                a.text-decoration-none(href=`/forum-topic/${question.TopicID}`) Xem chi tiết
-                i.fas.fa-arrow-right.arrow-icon
+                a.text-decoration-none(href=`/forum/exchange/${question.TopicID}`) 
+                  .error-text #{question.Title}
+                  p.mb-0 #{question.Content}
+                
     
     //- // Câu hỏi 1
     //- .question-card
@@ -85,16 +85,15 @@ block main
     .row.g-4
       each blog , idx in posts.slice(0, 3)
         .col-md-4
-          .card.blog-card
-            img.blog-img(src=blog.Image alt=blog.Title)
-            .card-body
-              .blog-date #{blog.AuthorName} • #{blog.FormattedCreatedAt}
-              h5.blog-title #{blog.Title}
-              p.blog-desc #{blog.Content}
-              .d-flex.justify-content-between.align-items-center
-                div
-                  each category in blog.CategoryNames
-                    span.blog-tag= category
-                a.text-decoration-none(href=`/blog/${blog.PostID}`) Read more
-                  i.fas.fa-arrow-right.arrow-icon
+          a.text-decoration-none(href=`/blog/${blog.PostID}`)
+            .card.blog-card
+              img.blog-img(src=blog.Image alt=blog.Title)
+              .card-body
+                .blog-date #{blog.AuthorName} • #{blog.FormattedCreatedAt}
+                h5.blog-title #{blog.Title}
+                p.blog-desc #{blog.Content}
+                .d-flex.justify-content-between.align-items-center
+                  div
+                    each category in blog.CategoryNames
+                      span.blog-tag= category
   
