@@ -16,25 +16,43 @@ block main
             th.forum-th-date Ngày tạo
             th.forum-th-actions Thao tác
         tbody
-          -
-          
           each question in questions
             tr.forum-tr-question
-              td.forum-td-id= question.id
-              td.forum-td-content= question.content
-              td.forum-td-name= question.name
-              td.forum-td-email= question.email
-              td.forum-td-date= question.date
+              td.forum-td-id #{question.id}
+              td.forum-td-content
+                span.content-text #{question.content}
+                textarea.content-edit(style="display:none") #{question.content}
+              td.forum-td-name #{question.name}
+              td.forum-td-email #{question.email}
+              td.forum-td-date #{question.date}
               td.forum-td-actions
                 .forum-btn-group(role="group")
-                  button.forum-btn.forum-btn-view(data-id=question.id data-status=question.status title="Xem chi tiết")
+                  button.forum-btn.forum-btn-view(
+                    data-id=question.id,
+                    data-status=question.status,
+                    title="Ẩn/Hiện bài viết"
+                  )
                     i.fas(class=question.status === 'inactive' ? 'fa-eye-slash' : 'fa-eye')
 
-                  button.forum-btn.forum-btn-edit(data-id=question.id title="Chỉnh sửa")
+                  button.forum-btn.forum-btn-edit(
+                    data-id=question.id,
+                    title="Chỉnh sửa"
+                  )
                     i.fas.fa-edit
 
-                  button.forum-btn.forum-btn-delete(data-id=question.id title="Xóa")
+                  button.forum-btn.forum-btn-save(
+                    data-id=question.id,
+                    style="display:none",
+                    title="Lưu"
+                  )
+                    i.fas.fa-save
+
+                  button.forum-btn.forum-btn-delete(
+                    data-id=question.id,
+                    title="Xóa"
+                  )
                     i.fas.fa-trash
+
     .forum-pagination-wrapper
       .forum-pagination
         button.forum-btn-page.forum-btn-prev(disabled)

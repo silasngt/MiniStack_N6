@@ -10,13 +10,21 @@ block main
           a.question-detail__add-btn(href="/forum/question") Thêm câu hỏi
 
     // Danh sách kết quả
-    each topic in topics
-      div(class="forum__item")
-        div(class="forum__stats")
-        div(class="forum__content")
-          h2(class="forum__question")
-            a(href=`/forum/exchange/${topic.TopicID}`) #{topic.Title}
-          p(class="forum__description") #{topic.Content}
+    if topics && topics.length > 0
+      each topic in topics
+        div(class="forum__item")
+          div(class="forum__stats")
+            div(class="forum__stat-item")
+              span(class="forum__stat-number") #{topic.CommentCount || 0}
+              span(class="forum__stat-label") #{parseInt(topic.CommentCount) === 1 ? 'answer' : 'answers'}
+          div(class="forum__content")
+            h2(class="forum__question")
+              a(href=`/forum/exchange/${topic.TopicID}`) #{topic.Title}
+            p(class="forum__description") #{topic.Content}
+
+    else
+      div(class="forum__empty")
+        p Chưa có câu hỏi nào. Hãy là người đầu tiên đặt câu hỏi!
 
     // Phân trang
     include ../../partials/pagination.pug

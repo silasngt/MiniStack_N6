@@ -1,5 +1,4 @@
 extends ../../layouts/defaultMenu.pug
-
 block main
   div(class="container")
     div(class="question-detail")
@@ -7,11 +6,9 @@ block main
         h1.question-detail__heading Câu hỏi
         div(class="question-detail__actions")
           a.question-detail__add-btn(href="/forum/question") Thêm câu hỏi
-
       div(class="question-detail__content")
         // Hiển thị Title từ database
         h2(class="question-detail__title") #{topic.Title}
-
         div(class="question-detail__meta")
           div(class="question-detail__author")
             i(class="fas fa-user")
@@ -19,40 +16,27 @@ block main
           div(class="question-detail__date")
             i(class="fas fa-calendar-alt")
             span #{topic.CreatedAt ? new Date(topic.CreatedAt).toLocaleDateString('vi-VN') : ''}
-
         // Hiển thị Content từ database
         p(class="question-detail__description") #{topic.Content}
-
+    
     div(class="comment")
       h3.comment__title Bình luận
       
-      // Phần comment giữ nguyên như cũ
-      div(class="comment__item")
-        div(class="comment__avatar")
-          img(src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVNthwpFXoDvKWRGLPkXwIn4dRWmeJ0dDm3w&s" alt="Avatar")
-        div(class="comment__content")
-          div(class="comment__meta")
-            span(class="comment__author") Rohit Jaiswal
-            span(class="comment__time") 09:30 AM
-            span(class="comment__reply") Trả lời
-          p(class="comment__text")
-            | I think the problem might be with the HQL syntax...
-            br
-            | If your Course entity has a field like instructor...
-
-      div(class="comment__item")
-        div(class="comment__avatar")
-          img(src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVNthwpFXoDvKWRGLPkXwIn4dRWmeJ0dDm3w&s" alt="Avatar")
-        div(class="comment__content")
-          div(class="comment__meta")
-            span(class="comment__author") Rohit Jaiswal
-            span(class="comment__time") 09:31 AM
-            span(class="comment__reply") Trả lời
-          p(class="comment__text")
-            | Also, make sure the parameter type matches...
-            br
-            | Let me know if this helps...
-
+      // Hiển thị danh sách bình luận từ database
+      if comments && comments.length > 0
+        each comment in comments
+          div(class="comment__item")
+            div(class="comment__avatar")
+              img(src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVNthwpFXoDvKWRGLPkXwIn4dRWmeJ0dDm3w&s" alt="Avatar")
+            div(class="comment__content")
+              div(class="comment__meta")
+                span(class="comment__author") #{comment.AuthorName || 'Ẩn danh'}
+                span(class="comment__time") #{comment.CreatedAt ? new Date(comment.CreatedAt).toLocaleString('vi-VN') : ''}
+              p(class="comment__text") #{comment.Content}
+      else
+        p(class="comment__empty") Chưa có bình luận nào. Hãy là người đầu tiên bình luận!
+      
+      // Form thêm bình luận
       form.comment__input(method="POST", action=`/forum/exchange/${topic.TopicID}/add-comment`)
         h3.comment__input-title Thêm bình luận
         div.comment__input-box

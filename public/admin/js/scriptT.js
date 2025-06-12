@@ -22,29 +22,36 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ✏️ Edit title
-  document.querySelectorAll('.forum-btn-edit').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const tr = btn.closest('tr');
-      const tdContent = tr.querySelector('.forum-td-content');
-      const topicId = btn.dataset.id;
+document.querySelectorAll('.forum-btn-edit').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tr = btn.closest('tr');
+    const tdContent = tr.querySelector('.forum-td-content');
+    const topicId = btn.dataset.id;
 
-      const currentText = tdContent.textContent;
-      tdContent.innerHTML = `
-      <input type="text" value="${currentText}" class="forum-input-edit" />`
-      button.class="forum-btn-save">Lưu
+    const currentText = tdContent.textContent.trim();
 
-      tdContent.querySelector('.btn-save').addEventListener('click', async () => {
-        const newText = tdContent.querySelector('.edit-input').value;
-        const res = await fetch(`/admin/forumManager/update-title/${topicId}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ Title: newText }),
-        });
+    tdContent.innerHTML = `
+      <input type="text" value="${currentText}" class="forum-input-edit" />
+      <button class="forum-btn-save">Lưu</button>
+    `;
 
-        if (res.ok) tdContent.textContent = newText;
+    tdContent.querySelector('.forum-btn-save').addEventListener('click', async () => {
+      const newText = tdContent.querySelector('.forum-input-edit').value.trim();
+
+      const res = await fetch(`/admin/forumManager/update-title/${topicId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ Title: newText }),
       });
+
+      if (res.ok) {
+        tdContent.textContent = newText;
+      } else {
+        alert("Cập nhật thất bại. Vui lòng thử lại.");
+      }
     });
   });
+});
 
   // 🗑 Xóa bài
   document.querySelectorAll('.forum-btn-delete').forEach(btn => {

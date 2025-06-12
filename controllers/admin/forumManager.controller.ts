@@ -4,22 +4,21 @@ import { ForumTopic, User } from '../../models/index.model';
 export const index = async (req: Request, res: Response) => {
   try {
     const topics = await ForumTopic.findAll({
+  where: {
+    deleted: false, // ❗️Vẫn giữ để lọc bài đã xoá
+  },
+  include: [
+    {
+      model: User,
+      attributes: ['FullName', 'Email'],
       where: {
         deleted: false,
         status: 'active',
       },
-      include: [
-        {
-          model: User,
-          attributes: ['FullName', 'Email'],
-          where: {
-            deleted: false,
-            status: 'active',
-          },
-        },
-      ],
-      order: [['CreatedAt', 'DESC']],
-    });
+    },
+  ],
+  order: [['CreatedAt', 'DESC']],
+});
 
     // Chuyển định dạng ngày
 const formattedTopics = topics.map((topicInstance) => {
@@ -33,6 +32,7 @@ const formattedTopics = topics.map((topicInstance) => {
     date: topic.CreatedAt
       ? new Date(topic.CreatedAt).toLocaleDateString('vi-VN')
       : '',
+    status: topic.status,
   };
 });
 
