@@ -44,7 +44,6 @@
   text-align: left;
   font-weight: 600;
   color: #374151;
-  border-bottom: 1px solid #e5e7eb;
 }
 
 .forum-table td {
@@ -52,7 +51,9 @@
   color: #6b7280;
   border-bottom: 1px solid #f3f4f6;
 }
-
+.forum-td-replies{
+  color: #6b7280;
+}
 .forum-tr-question:hover {
   background-color: #f9fafb;
 }

@@ -10,21 +10,23 @@ block main
         thead
           tr
             th.forum-th-id ID câu hỏi
-            th.forum-th-content Nội dung
+            th.forum-th-content Tiêu đề
             th.forum-th-name Tên người đăng
             th.forum-th-email Email
             th.forum-th-date Ngày tạo
+            th.forum-th-replies Lượt trả lời
             th.forum-th-actions Thao tác
         tbody
           each question in questions
             tr.forum-tr-question
               td.forum-td-id #{question.id}
-              td.forum-td-content
-                span.content-text #{question.content}
-                textarea.content-edit(style="display:none") #{question.content}
+              td.forum-td-content #{question.content}
               td.forum-td-name #{question.name}
               td.forum-td-email #{question.email}
               td.forum-td-date #{question.date}
+              td.forum-td-replies
+                span.reply-count #{question.commentCount}
+                span.reply-label #{question.commentCount === 1 ? '' : ''}
               td.forum-td-actions
                 .forum-btn-group(role="group")
                   button.forum-btn.forum-btn-view(

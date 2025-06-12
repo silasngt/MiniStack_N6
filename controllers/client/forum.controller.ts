@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { QueryTypes } from 'sequelize';
 import ForumTopic from '../../models/forum-topic.model';
 import Category from '../../models/category.model';
 import Comment from '../../models/comment.model';
@@ -6,7 +7,7 @@ import sequelize from '../../config/database';
 
 export const index = async (req: Request, res: Response) => {
   try {
-    // Sử dụng raw query để lấy topics với comment count
+    // Sử dụng raw query an toàn hơn với prepared statement
     const topicsWithComments: any = await sequelize.query(`
       SELECT 
         ft.TopicID,
@@ -27,7 +28,7 @@ export const index = async (req: Request, res: Response) => {
       LIMIT 10
     `);
 
-    const topics = topicsWithComments[0]; // Sequelize raw query returns array with results at index 0
+    const topics = topicsWithComments[0];
     
     console.log('=== DEBUG TOPICS WITH COMMENTS ===');
     console.log('Topics data:', JSON.stringify(topics, null, 2));
@@ -96,10 +97,24 @@ export const createQuestion = async (req: Request, res: Response) => {
       });
     }
 
+    // Thống nhất cách lấy user ID
+    const userId = req.user?.UserID || (req.session as any)?.user?.UserID;
+    
+    if (!userId) {
+      return res.status(401).render('client/pages/forumTopic/question.pug', {
+        pageTitle: 'Thêm câu hỏi',
+        error: 'Bạn cần đăng nhập để tạo câu hỏi.',
+        categories: await Category.findAll({
+          where: { deleted: false, status: 'active' },
+          attributes: ['CategoryID', 'Name'],
+        }),
+      });
+    }
+
     await ForumTopic.create({
       Title,
       Content,
-      AuthorID: req.user?.UserID,
+      AuthorID: userId,
       CategoryID,
       CreatedAt: new Date(),
       deleted: false,
@@ -121,53 +136,61 @@ export const createQuestion = async (req: Request, res: Response) => {
 };
 
 export const exchangeDetail = async (req: Request, res: Response): Promise<void> => {
-  const topicId = req.params.topicId;
+  const topicId = parseInt(req.params.topicId, 10);
+  
+  // Validate topicId
+  if (isNaN(topicId)) {
+    res.status(400).send('ID topic không hợp lệ');
+    return;
+  }
   
   try {
-    // Lấy thông tin topic
+    // Sử dụng prepared statement để tránh SQL injection
     const topicResults: any = await sequelize.query(`
       SELECT 
         ft.*,
         u.FullName as AuthorName
       FROM ForumTopic ft
       LEFT JOIN User u ON ft.AuthorID = u.UserID
-      WHERE ft.TopicID = ${topicId}
+      WHERE ft.TopicID = :topicId
         AND ft.deleted = false 
         AND ft.status = 'active'
-    `);
+    `, {
+      replacements: { topicId },
+      type: QueryTypes.SELECT
+    });
     
-    const topicData = topicResults[0];
-    
-    if (!topicData || topicData.length === 0) {
+    if (!topicResults || topicResults.length === 0) {
       res.status(404).send('Không tìm thấy bài viết');
       return;
     }
     
-    const topic = topicData[0];
+    const topic = topicResults[0];
     
-    // Lấy danh sách bình luận
-    const commentResults: any = await sequelize.query(`
+    // Lấy danh sách bình luận với prepared statement
+    const comments: any = await sequelize.query(`
       SELECT 
         c.*,
         u.FullName as AuthorName
       FROM Comment c
       LEFT JOIN User u ON c.AuthorID = u.UserID
-      WHERE c.TopicID = ${topicId}
+      WHERE c.TopicID = :topicId
         AND c.deleted = false 
         AND c.status = 'active'
       ORDER BY c.CreatedAt ASC
-    `);
+    `, {
+      replacements: { topicId },
+      type: QueryTypes.SELECT
+    });
     
-    const commentData = commentResults[0];
-    const comments = commentData || [];
-    
-    console.log('=== DEBUG COMMENTS ===');
-    console.log('Comment results:', JSON.stringify(comments, null, 2));
-    console.log('======================');
+    console.log('=== DEBUG TOPIC & COMMENTS ===');
+    console.log('Topic:', JSON.stringify(topic, null, 2));
+    console.log('Comments:', JSON.stringify(comments, null, 2));
+    console.log('===============================');
     
     res.render('client/pages/forumTopic/forumExchange', {
       topic: topic,
-      comments: comments
+      comments: comments || []
     });
     
   } catch (error: any) {
@@ -176,32 +199,65 @@ export const exchangeDetail = async (req: Request, res: Response): Promise<void>
   }
 };
 
-export const addComment = async (req, res) => {
+export const addComment = async (req: Request, res: Response): Promise<void> => {
   const topicId = parseInt(req.params.topicId, 10);
   const { Content } = req.body;
   
+  // Validate input
+  if (isNaN(topicId)) {
+    res.status(400).send('ID topic không hợp lệ');
+    return;
+  }
+  
+  if (!Content || Content.trim() === '') {
+    res.status(400).send('Nội dung bình luận không được để trống');
+    return;
+  }
+  
   console.log('=== DEBUG ADD COMMENT ===');
   console.log('Session:', req.session);
-  console.log('User in session:', req.session?.user);
+  console.log('User from req.user:', req.user);
+  console.log('User from session:', (req.session as any)?.user);
 
-  const user = (req.session as { user?: { UserID: number } }).user;
-  const AuthorID = user?.UserID || null;
-  console.log('AuthorID:', AuthorID);
+  // Thống nhất cách lấy user ID - ưu tiên req.user trước
+  const userId = req.user?.UserID || (req.session as any)?.user?.UserID;
+  
+  console.log('Final userId:', userId);
   console.log('========================');
 
-  if (!Content || !topicId) {
-    return res.status(400).send('Thiếu dữ liệu');
+  if (!userId) {
+    res.status(401).send('Bạn cần đăng nhập để bình luận');
+    return;
   }
 
   try {
-    await Comment.create({
-      Content,
+    // Kiểm tra topic có tồn tại không
+    const topicExists = await ForumTopic.findOne({
+      where: {
+        TopicID: topicId,
+        deleted: false,
+        status: 'active'
+      }
+    });
+
+    if (!topicExists) {
+      res.status(404).send('Không tìm thấy bài viết');
+      return;
+    }
+
+    // Tạo comment mới
+    const newComment = await Comment.create({
+      Content: Content.trim(),
       CreatedAt: new Date(),
-      AuthorID,
+      AuthorID: userId,
       TopicID: topicId,
       deleted: false,
       status: 'active',
     });
+
+    console.log('=== COMMENT CREATED ===');
+    console.log('New comment:', JSON.stringify(newComment, null, 2));
+    console.log('=======================');
 
     res.redirect(`/forum/exchange/${topicId}`);
   } catch (error) {

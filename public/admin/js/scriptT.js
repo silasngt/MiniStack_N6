@@ -21,37 +21,51 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ✏️ Edit title
-document.querySelectorAll('.forum-btn-edit').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const tr = btn.closest('tr');
-    const tdContent = tr.querySelector('.forum-td-content');
-    const topicId = btn.dataset.id;
+  // ✏️ Edit title - FIXED VERSION
+  document.querySelectorAll('.forum-btn-edit').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tr = btn.closest('tr');
+      const tdContent = tr.querySelector('.forum-td-content');
+      const topicId = btn.dataset.id;
 
-    const currentText = tdContent.textContent.trim();
+      // Kiểm tra xem đã đang trong chế độ chỉnh sửa chưa
+      if (tdContent.querySelector('.forum-input-edit')) {
+        return; // Đã đang chỉnh sửa, không làm gì cả
+      }
 
-    tdContent.innerHTML = `
-      <input type="text" value="${currentText}" class="forum-input-edit" />
-      <button class="forum-btn-save">Lưu</button>
-    `;
+      // Lấy nội dung hiện tại (chỉ text, không có thẻ HTML)
+      const currentText = tdContent.textContent.trim();
 
-    tdContent.querySelector('.forum-btn-save').addEventListener('click', async () => {
-      const newText = tdContent.querySelector('.forum-input-edit').value.trim();
+      // Tạo input và nút lưu
+      tdContent.innerHTML = `
+        <input type="text" value="${currentText}" class="forum-input-edit" />
+        <button class="forum-btn-save">Lưu</button>
+      `;
 
-      const res = await fetch(`/admin/forumManager/update-title/${topicId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ Title: newText }),
+      // Xử lý nút Lưu
+      tdContent.querySelector('.forum-btn-save').addEventListener('click', async () => {
+        const newText = tdContent.querySelector('.forum-input-edit').value.trim();
+
+        const res = await fetch(`/admin/forumManager/update-title/${topicId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ Title: newText }),
+        });
+
+        if (res.ok) {
+          // Cập nhật nội dung hiển thị
+          tdContent.textContent = newText;
+        } else {
+          alert("Cập nhật thất bại. Vui lòng thử lại.");
+          // Khôi phục nội dung gốc
+          tdContent.textContent = currentText;
+        }
       });
 
-      if (res.ok) {
-        tdContent.textContent = newText;
-      } else {
-        alert("Cập nhật thất bại. Vui lòng thử lại.");
-      }
+      // Focus vào input
+      tdContent.querySelector('.forum-input-edit').focus();
     });
   });
-});
 
   // 🗑 Xóa bài
   document.querySelectorAll('.forum-btn-delete').forEach(btn => {
