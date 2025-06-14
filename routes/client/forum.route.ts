@@ -9,5 +9,7 @@ router.get('/exchange', controller.exchangeIndex);
 router.get('/exchange/:topicId', controller.exchangeDetail); // Thêm dòng này
 router.get('/question', requireClientLogin, controller.question);
 router.post('/question', controller.createQuestion);
+router.post('/exchange/:topicId/add-comment', controller.addComment);
 
 export const forumRoute = router;
+

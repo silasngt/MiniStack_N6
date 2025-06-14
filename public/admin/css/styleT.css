@@ -44,7 +44,6 @@
   text-align: left;
   font-weight: 600;
   color: #374151;
-  border-bottom: 1px solid #e5e7eb;
 }
 
 .forum-table td {
@@ -52,7 +51,9 @@
   color: #6b7280;
   border-bottom: 1px solid #f3f4f6;
 }
-
+.forum-td-replies{
+  color: #6b7280;
+}
 .forum-tr-question:hover {
   background-color: #f9fafb;
 }
@@ -147,24 +148,26 @@
 }
 
 .forum-input-edit {
-  width: 100%;
-  padding: 6px 12px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  width: 80%;
+  padding: 4px;
+  margin-bottom: 5px;
 }
 
 .forum-btn-save {
-  padding: 4px 10px;
-  font-size: 0.875rem;
-  margin-left: 8px;
-  background-color: #28a745;
-  color: #fff;
+  padding: 4px 8px;
+  margin-left: 6px;
+  background-color: blue;
+  color: white;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
 }
 
 .forum-btn-save:hover {
-  background-color: #218838;
+  background-color: blue;
+}
+.forum-inactive-row {
+  opacity: 0.6;
+}
+.forum-inactive-row .forum-td-content s {
+  color: #999;
 }

@@ -1,3 +1,26 @@
+/* Thêm vào CSS hiện có của bạn */
+
+.forum__stat-item {
+  text-align: center;
+}
+
+.forum__stat-number {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1F2937;
+  line-height: 1;
+  margin-bottom: 0.125rem;
+}
+
+.forum__stat-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #6B7280;
+  font-weight: 500;
+  text-transform: lowercase;
+}
+
 .forum {
   padding: 1.5rem;
 }

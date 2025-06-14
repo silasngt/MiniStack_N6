@@ -210,7 +210,6 @@ export const update = async (req: Request, res: Response): Promise<void> => {
     // Cập nhật thông tin cơ bản
     const updateData: any = {
       Title: title,
-      Description: description,
       Categories: category,
     };
 
