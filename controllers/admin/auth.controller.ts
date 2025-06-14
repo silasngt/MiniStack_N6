@@ -11,7 +11,6 @@ export const index = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  console.log('email:', email, 'password:', password);
   const user = await User.findOne({
     where: { Email: email, Role: 'Admin', deleted: false },
   });

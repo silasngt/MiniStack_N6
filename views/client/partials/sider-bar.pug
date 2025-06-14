@@ -22,14 +22,16 @@
             span Tài liệu
 
     .sidebar-footer
-        a.sidebar-item(href=`/profile/${user ? user.UserID : 'guest'}`)
-            i.fas.fa-cog.sidebar-icon
-            span Cài đặt
-        a.sidebar-item(href="javascript:void(0)" id="sidebar-logout")
-            i.fas.fa-sign-out-alt.sidebar-icon
-            span Đăng xuất
-    .user-profile
-        if user
+    if user
+        .sidebar-footer
+            a.sidebar-item(href=`/profile/${user ? user.UserID : 'guest'}`)
+                i.fas.fa-cog.sidebar-icon
+                span Cài đặt
+            a.sidebar-item(href="javascript:void(0)" id="sidebar-logout")
+                i.fas.fa-sign-out-alt.sidebar-icon
+                span Đăng xuất
+        .user-profile
+            
             if user.Avatar
                 img.user-avatar(src=user.Avatar alt="User Avatar")
             else
@@ -37,11 +39,11 @@
             .user-info
                 .user-name= user.FullName || user.Email
                 .user-email= user.Email
-        else
-            img.user-avatar(src="https://i.pravatar.cc/100" alt="User Avatar")
-            .user-info
-                .user-name Guest
-                .user-email ""
+    else
+        img.user-avatar(src="https://i.pravatar.cc/100" alt="User Avatar")
+        .user-info
+            .user-name Guest
+            .user-email ""
 
 form#sidebar-logout-form(action="/auth/logout" method="POST" style="display:none")
 script(src="/js/scriptQ.js")

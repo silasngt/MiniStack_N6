@@ -25,12 +25,12 @@ block main
                     = category.Type.join(', ')
                   else
                     = category.Type
-                
-                td
-                  .action-buttons
-                    - var type = 'categories';
-                    - var id = category.CategoryID;
-                    - var status = category.status;
-                    - var editUrl = `/admin/categories/edit/${category.CategoryID}`;
-                    - var deleteFunc = 'deleteCategory';
-                    include ../../partials/action.pug
+                td.action-buttons
+                  - var type = 'categories';
+                  - var id = category.CategoryID;
+                  - var status = category.status;
+                  - var editUrl = `/admin/categories/edit/${category.CategoryID}`;
+                  - var deleteFunc = 'deleteCategory';
+                  include ../../partials/action.pug
+                  
+    include ../../partials/pagination.pug

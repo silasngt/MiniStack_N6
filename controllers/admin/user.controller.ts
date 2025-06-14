@@ -85,8 +85,6 @@ export const add = async (req: Request, res: Response): Promise<void> => {
 // Function để xử lý việc tạo user mới
 export const create = async (req: Request, res: Response): Promise<void> => {
   try {
-    console.log('Received form data:', req.body); // Debug log
-
     const {
       fullName,
       email,
@@ -100,7 +98,6 @@ export const create = async (req: Request, res: Response): Promise<void> => {
 
     // Validation cơ bản
     if (!fullName || !email || !password || !confirmPassword) {
-      console.log('Missing required fields'); // Debug log
       res.render('admin/pages/user/add.pug', {
         pageTitle: 'Thêm người dùng mới',
         errorMessage: 'Vui lòng điền đầy đủ các trường bắt buộc',
@@ -111,7 +108,6 @@ export const create = async (req: Request, res: Response): Promise<void> => {
 
     // Kiểm tra mật khẩu xác nhận
     if (password !== confirmPassword) {
-      console.log('Password mismatch'); // Debug log
       res.render('admin/pages/user/add.pug', {
         pageTitle: 'Thêm người dùng mới',
         errorMessage: 'Mật khẩu xác nhận không khớp',
@@ -122,7 +118,6 @@ export const create = async (req: Request, res: Response): Promise<void> => {
 
     // Kiểm tra độ dài mật khẩu
     if (password.length < 6) {
-      console.log('Password too short'); // Debug log
       res.render('admin/pages/user/add.pug', {
         pageTitle: 'Thêm người dùng mới',
         errorMessage: 'Mật khẩu phải có ít nhất 6 ký tự',
@@ -135,7 +130,6 @@ export const create = async (req: Request, res: Response): Promise<void> => {
     if (phone && phone.trim() !== '') {
       const phoneRegex = /^\d{10}$/;
       if (!phoneRegex.test(phone.trim())) {
-        console.log('Invalid phone number'); // Debug log
         res.render('admin/pages/user/add.pug', {
           pageTitle: 'Thêm người dùng mới',
           errorMessage: 'Số điện thoại phải có đúng 10 chữ số',
@@ -151,7 +145,6 @@ export const create = async (req: Request, res: Response): Promise<void> => {
     });
 
     if (existingUser) {
-      console.log('Email already exists'); // Debug log
       res.render('admin/pages/user/add.pug', {
         pageTitle: 'Thêm người dùng mới',
         errorMessage: 'Email này đã được sử dụng',
@@ -183,12 +176,8 @@ export const create = async (req: Request, res: Response): Promise<void> => {
       userData.Gender = gender;
     }
 
-    console.log('Creating user with data:', userData); // Debug log
-
     // Tạo user mới
     const newUser = await User.create(userData);
-
-    console.log('User created successfully:', newUser.get('UserID'));
 
     // Redirect về trang danh sách user với thông báo thành công
     res.redirect('/admin/user?success=Thêm người dùng thành công');
@@ -323,6 +312,47 @@ export const update = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+// Xóa người dùng
+export const deleteUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      res
+        .status(400)
+        .json({ success: false, message: 'ID người dùng không hợp lệ' });
+      return;
+    }
+
+    const user = await User.findOne({
+      where: {
+        UserID: id,
+        deleted: false,
+      },
+    });
+
+    if (!user) {
+      res
+        .status(404)
+        .json({ success: false, message: 'Không tìm thấy người dùng' });
+      return;
+    }
+
+    // Soft delete
+    await user.update({
+      deleted: true,
+      deletedAt: new Date(),
+    });
+
+    res.json({ success: true, message: 'Xóa người dùng thành công' });
+  } catch (error) {
+    console.error('Lỗi khi xóa người dùng:', error);
+    res.status(500).json({ success: false, message: 'Lỗi server' });
+  }
+};
 export const toggleStatus = async (
   req: Request,
   res: Response

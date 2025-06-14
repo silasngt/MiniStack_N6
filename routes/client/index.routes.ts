@@ -8,11 +8,10 @@ import { profileRoute } from './Profile.route';
 import { chatBoxRoute } from './chatBox.route';
 import { compileRoute } from './compile.route';
 import { searchRoute } from './search.routes';
-import { requireClientLogin } from '../../middlewares/client/auth.middleware';
 export const routesClient = (app: Express) => {
   app.use('/', miniStackRoute);
   app.use('/forum', forumRoute);
-  app.use('/blog', requireClientLogin, blogRoute);
+  app.use('/blog', blogRoute);
   app.use('/auth', authRoute);
   app.use('/profile', profileRoute);
   app.use('/chatBox', chatBoxRoute);
