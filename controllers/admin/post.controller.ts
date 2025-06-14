@@ -22,8 +22,6 @@ export const index = async (req: Request, res: Response) => {
       return;
     }
 
-    console.log('📋 Loading posts for user:', currentUser.id);
-
     const posts = await Post.findAll({
       where: { deleted: false },
       order: [['CreatedAt', 'DESC']],
@@ -76,7 +74,6 @@ export const index = async (req: Request, res: Response) => {
     });
     return;
   } catch (error) {
-    console.error('Error fetching posts:', error);
     res.render('admin/pages/post/index.pug', {
       pageTitle: 'Quản lý bài viết',
       posts: [],
@@ -102,11 +99,6 @@ export const toggleStatus = async (
     }
 
     const postId = parseInt(req.params.id);
-
-    console.log('🔄 Toggle status request:', {
-      postId,
-      userId: currentUser.id,
-    });
 
     // Tìm post cần toggle
     const existingPost = await Post.findByPk(postId);
@@ -136,13 +128,6 @@ export const toggleStatus = async (
       status: newStatus,
     });
 
-    console.log('✅ Post status toggled:', {
-      postId,
-      oldStatus: currentStatus,
-      newStatus,
-      byUser: currentUser.id,
-    });
-
     res.status(200).json({
       success: true,
       message: `Bài viết đã được ${
@@ -156,7 +141,6 @@ export const toggleStatus = async (
     });
     return;
   } catch (error) {
-    console.error('❌ Error toggling post status:', error);
     res.status(500).json({
       success: false,
       message: 'Có lỗi xảy ra khi thay đổi trạng thái bài viết!',
@@ -194,7 +178,6 @@ export const create = async (req: Request, res: Response) => {
     });
     return;
   } catch (error) {
-    console.error('Error loading create page:', error);
     res.redirect('/admin/posts');
     return;
   }
@@ -214,8 +197,6 @@ export const createPost = async (req: Request, res: Response) => {
     }
 
     const { title, content, category } = req.body;
-
-    console.log('📝 Creating post by user:', currentUser.id);
 
     // Validate required fields
     if (!title || !content) {
@@ -279,14 +260,6 @@ export const createPost = async (req: Request, res: Response) => {
       CreatedAt: new Date(),
       deleted: false,
       status: 'active',
-    });
-
-    console.log('✅ Post created successfully:', {
-      postId: newPost.get('PostID'),
-      title: title,
-      authorId: currentUser.id,
-      categories: categoryIds,
-      hasImage: !!imageUrl,
     });
 
     res.redirect('/admin/posts?success=created');
@@ -374,8 +347,6 @@ export const editPost = async (req: Request, res: Response): Promise<void> => {
 
     const postId = parseInt(req.params.id);
     const { title, content, category, currentImage } = req.body;
-
-    console.log('✏️ Editing post:', { postId, userId: currentUser.id });
 
     // Validate required fields
     if (!title || !content) {
@@ -494,8 +465,6 @@ export const deletePost = async (
 
     const postId = parseInt(req.params.id);
 
-    console.log('🗑️ Delete Post Request:', { postId, userId: currentUser.id });
-
     // Tìm post cần xóa
     const existingPost = await Post.findByPk(postId);
     if (!existingPost || existingPost.get('deleted')) {
@@ -519,12 +488,6 @@ export const deletePost = async (
     // Soft delete
     await existingPost.update({
       deleted: true,
-    });
-
-    console.log('✅ Post deleted successfully:', {
-      postId: postId,
-      title: existingPost.get('Title'),
-      byUser: currentUser.id,
     });
 
     res.status(200).json({

@@ -43,25 +43,72 @@ block main
                                 input#phone.form-control(type="text" name="phone" value=profile.phone placeholder="Nhập số điện thoại")
 
                             .form-group
-                                button.btn-save(type="submit") Lưu
+                                button.btn-save(type="submit") 
+                                    i.fas.fa-save
+                                    span Lưu thông tin
 
                     form.profile-form.mt-5#passwordForm
                         .form-section
-                            h3.form-section-title Security
+                            h3.form-section-title 
+                                i.fas.fa-shield-alt
+                                span Đổi mật khẩu
 
                             .form-group
                                 label(for="email") Email
                                 input#email.form-control(type="email" value=profile.email, readonly)
 
+                            //- ✅ THÊM: Ô nhập mật khẩu hiện tại
                             .form-group
-                                label(for="newPassword") Mật Khẩu:
-                                input#newPassword.form-control(type="password" name="newPassword" required minlength="6" placeholder="Nhập mật khẩu mới")
+                                label(for="currentPassword") 
+                                    i.fas.fa-key
+                                    span Mật khẩu hiện tại:
+                                    span.required *
+                                input#currentPassword.form-control(
+                                    type="password" 
+                                    name="currentPassword" 
+                                    required 
+                                    placeholder="Nhập mật khẩu hiện tại để xác thực"
+                                    autocomplete="current-password"
+                                )
+                                small.form-text.text-muted Vui lòng nhập mật khẩu hiện tại để xác nhận danh tính
 
                             .form-group
-                                label(for="confirmPassword") Xác Nhận Mật Khẩu:
-                                input#confirmPassword.form-control(type="password" name="confirmPassword" required minlength="6" placeholder="Nhập lại mật khẩu mới")
+                                label(for="newPassword") 
+                                    i.fas.fa-lock
+                                    span Mật khẩu mới:
+                                    span.required *
+                                input#newPassword.form-control(
+                                    type="password" 
+                                    name="newPassword" 
+                                    required 
+                                    minlength="6" 
+                                    placeholder="Nhập mật khẩu mới (tối thiểu 6 ký tự)"
+                                    autocomplete="new-password"
+                                )
 
                             .form-group
-                                button.btn-save(type="submit") Lưu
+                                label(for="confirmPassword") 
+                                    i.fas.fa-lock
+                                    span Xác nhận mật khẩu mới:
+                                    span.required *
+                                input#confirmPassword.form-control(
+                                    type="password" 
+                                    name="confirmPassword" 
+                                    required 
+                                    minlength="6" 
+                                    placeholder="Nhập lại mật khẩu mới"
+                                    autocomplete="new-password"
+                                )
 
-    script(src="/admin/js/scriptK.js") 
+                            .password-strength-indicator#passwordStrengthIndicator(style="display: none;")
+                                .strength-bar
+                                    .strength-fill
+                                .strength-text Độ mạnh mật khẩu: 
+                                    span.strength-level Yếu
+
+                            .form-group
+                                button.btn-save(type="submit") 
+                                    i.fas.fa-shield-alt
+                                    span Đổi mật khẩu
+
+    script(src="/admin/js/scriptK.js")
