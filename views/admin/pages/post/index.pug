@@ -1,5 +1,5 @@
 extends ../../layouts/default.pug
-
+include ../../mixins/pagination.pug
 block main
     .post-management-content
         //- Header Section
@@ -65,18 +65,20 @@ block main
                                 a.btn-add-post(href="/admin/posts/create" style="margin-top: 15px; display: inline-block;") Thêm bài viết đầu tiên
 
         //- Pagination (simple version)
-        if posts && posts.length > 5
-            .pagination-container
-                .pagination
-                    button.btn-page.btn-prev(disabled)
-                        i.fas.fa-chevron-left
-                        span Prev
+        //- if posts && posts.length > 5
+        //-     .pagination-container
+        //-         .pagination
+        //-             button.btn-page.btn-prev(disabled)
+        //-                 i.fas.fa-chevron-left
+        //-                 span Prev
 
-                    button.btn-page.active 1
+        //-             button.btn-page.active 1
 
-                    button.btn-page.btn-next
-                        span Next
-                        i.fas.fa-chevron-right
+        //-             button.btn-page.btn-next
+        //-                 span Next
+        //-                 i.fas.fa-chevron-right
+        +pagination(currentPage, totalPages)
+
 
     //- JavaScript functions
 

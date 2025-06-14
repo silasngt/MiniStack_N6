@@ -54,11 +54,34 @@ export const index = async (req: Request, res: Response) => {
         };
       })
     );
+    // Phân trang
+    let limit = 4;
+    let page = 1;
 
+    if (req.query.limit) {
+      limit = parseInt(`${req.query.limit}`);
+    }
+    if (req.query.page) {
+      page = parseInt(`${req.query.page}`);
+    }
+
+    const skip = (page - 1) * limit;
+
+    const totalPosts = await Post.count({
+      where: {
+        deleted: false,
+        status: 'active',
+      },
+    });
+    const totalPages = Math.ceil(totalPosts / limit);
+
+    // Hết Phân trang
     // console.log(postsWithDetails);
     res.render('client/pages/blog/index.pug', {
       pageTitle: 'Bài viết',
       posts: postsWithDetails,
+      currentPage: page,
+      totalPages: totalPages,
     });
   } catch (error) {
     console.error('Error in blog controller:', error);

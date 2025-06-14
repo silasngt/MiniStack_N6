@@ -66,11 +66,34 @@ export const index = async (req: Request, res: Response) => {
         };
       })
     );
+    // Phân trang
+    let limit = 4;
+    let page = 1;
 
+    if (req.query.limit) {
+      limit = parseInt(`${req.query.limit}`);
+    }
+    if (req.query.page) {
+      page = parseInt(`${req.query.page}`);
+    }
+
+    const skip = (page - 1) * limit;
+
+    const totalPosts = await Post.count({
+      where: {
+        deleted: false,
+        status: 'active',
+      },
+    });
+    const totalPages = Math.ceil(totalPosts / limit);
+
+    // Hết Phân trang
     res.render('admin/pages/post/index.pug', {
       pageTitle: 'Quản lý bài viết',
       posts: postsWithCategories,
       success: req.query.success,
+      currentPage: page,
+      totalPages: totalPages,
     });
     return;
   } catch (error) {

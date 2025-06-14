@@ -1,5 +1,5 @@
 extends ../../layouts/defaultMenu.pug
-
+include ../../mixins/pagination.pug
 
 block main
     h4.mb-6 Tất cả Bài Viết 
@@ -19,71 +19,6 @@ block main
                                     div
                                         each category in blog.CategoryNames
                                             span.blog-tag= category
-            //- // Bài viết 2
-            //- .col-md-4
-            //-     .card.blog-card
-            //-         img.blog-img(src="https://images.unsplash.com/photo-1553877522-43269d4ea984" alt="Team collaboration")
-            //-         .card-body
-            //-             .blog-date David Miller • 5 Jan 2023
-            //-             h5.blog-title Cyber Security: Best Practices
-            //-             p.blog-desc   In an increasingly digital world, cyber security is more important than ever. Here are some best practices to keep your data safe and secure...
-            //-             .d-flex.justify-content-between.align-items-center
-            //-                 div
-            //-                     span.blog-tag Cyber Security
-            //-                 a.text-decoration-none(href="#") Read more
-            //-                     i.fas.fa-arrow-right.arrow-icon
-            
-            //- // Bài viết 3
-            //- .col-md-4
-            //-     .card.blog-card
-            //-         img.blog-img(src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4" alt="Computer setup")
-            //-         .card-body
-            //-             .blog-date Sarah Lee • 7 Apr 2023
-            //-             h5.blog-title The Importance of UI/UX Design
-            //-             p.blog-desc UI/UX design is crucial for creating user-friendly applications. It enhances user experience and increases engagement. Here are some tips to improve your UI/UX design...
-            //-             .d-flex.justify-content-between.align-items-center
-            //-                 div
-            //-                     span.blog-tag UI/UX
-            //-                 a.text-decoration-none(href="#") Read more
-            //-                     i.fas.fa-arrow-right.arrow-icon
-            //- // Bài viết 4
-            //- .col-md-4
-            //-     .card.blog-card
-            //-         img.blog-img(src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4" alt="Computer setup")
-            //-         .card-body
-            //-             .blog-date Sarah Lee • 7 Apr 2023
-            //-             h5.blog-title The Importance of UI/UX Design
-            //-             p.blog-desc UI/UX design is crucial for creating user-friendly applications. It enhances user experience and increases engagement. Here are some tips to improve your UI/UX design...
-            //-             .d-flex.justify-content-between.align-items-center
-            //-                 div
-            //-                     span.blog-tag UI/UX
-            //-                 a.text-decoration-none(href="#") Read more
-            //-                     i.fas.fa-arrow-right.arrow-icon
-            //- // Bài viết 5
-            //- .col-md-4
-            //-     .card.blog-card
-            //-         img.blog-img(src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4" alt="Computer setup")
-            //-         .card-body
-            //-             .blog-date Sarah Lee • 7 Apr 2023
-            //-             h5.blog-title The Importance of UI/UX Design
-            //-             p.blog-desc UI/UX design is crucial for creating user-friendly applications. It enhances user experience and increases engagement. Here are some tips to improve your UI/UX design...
-            //-             .d-flex.justify-content-between.align-items-center
-            //-                 div
-            //-                     span.blog-tag UI/UX
-            //-                 a.text-decoration-none(href="#") Read more
-            //-                     i.fas.fa-arrow-right.arrow-icon
-            //- // Bài viết 6
-            //- .col-md-4
-            //-     .card.blog-card
-            //-         img.blog-img(src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4" alt="Computer setup")
-            //-         .card-body
-            //-             .blog-date Sarah Lee • 7 Apr 2023
-            //-             h5.blog-title The Importance of UI/UX Design
-            //-             p.blog-desc UI/UX design is crucial for creating user-friendly applications. It enhances user experience and increases engagement. Here are some tips to improve your UI/UX design...
-            //-             .d-flex.justify-content-between.align-items-center
-            //-                 div
-            //-                     span.blog-tag UI/UX
-            //-                 a.text-decoration-none(href="#") Read more
-            //-                     i.fas.fa-arrow-right.arrow-icon
+
         // Pagination
-        include ../../partials/pagination.pug
+        +pagination(currentPage, totalPages)
