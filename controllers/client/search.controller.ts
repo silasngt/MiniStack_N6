@@ -123,9 +123,6 @@ const searchSuggestions = async (
 ): Promise<void> => {
   try {
     const query = (req.query.q as string) || '';
-
-    console.log('🔍 Search suggestions request:', { query });
-
     if (!query.trim() || query.length < 2) {
       res.json({ suggestions: [] });
       return;
@@ -149,8 +146,6 @@ const searchSuggestions = async (
       id: topic.TopicID,
       title: topic.Title,
     }));
-
-    console.log(`✅ Found ${formattedSuggestions.length} suggestions`);
 
     res.json({ suggestions: formattedSuggestions });
   } catch (error) {

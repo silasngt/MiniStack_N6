@@ -1,7 +1,5 @@
 // File: public/admin/js/scriptK.js
 document.addEventListener('DOMContentLoaded', function () {
-  console.log('🔍 ScriptK.js loaded');
-
   // ===== ELEMENTS =====
   const imageUpload = document.getElementById('image-upload');
   const previewContainer = document.getElementById('imagePreviewContainer');
@@ -16,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const isIndexPage =
     window.location.pathname.includes('/admin/posts') && !isEditPage;
   const isProfilePage = window.location.pathname.includes('/admin/profile');
-  console.log('🔍 Page detection:', { isEditPage, isIndexPage, isProfilePage });
 
   // ===== PROFILE PAGE LOGIC =====
   if (isProfilePage) {
@@ -68,8 +65,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const submitBtn = this.querySelector('.btn-save');
         const originalContent = submitBtn.innerHTML;
 
-        console.log('📝 Submitting basic info form...');
-
         // Show loading
         submitBtn.disabled = true;
         submitBtn.innerHTML =
@@ -78,8 +73,6 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
           const formData = new FormData(this);
           const data = Object.fromEntries(formData);
-
-          console.log('📤 Sending basic info data:', data);
 
           const response = await fetch('/admin/profile/update-basic', {
             method: 'POST',
@@ -90,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function () {
           });
 
           const result = await response.json();
-          console.log('📥 Basic info response:', result);
 
           if (result.success) {
             showProfileNotification(result.message, 'success');
@@ -118,6 +110,48 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ===== PASSWORD FORM HANDLER =====
     if (passwordForm) {
+      // ✅ THÊM: Password strength checker
+      const newPasswordInput = document.getElementById('newPassword');
+      const strengthIndicator = document.getElementById(
+        'passwordStrengthIndicator'
+      );
+
+      if (newPasswordInput && strengthIndicator) {
+        newPasswordInput.addEventListener('input', function () {
+          const password = this.value;
+          const strength = checkPasswordStrength(password);
+
+          if (password.length > 0) {
+            strengthIndicator.style.display = 'block';
+            updatePasswordStrengthUI(strength);
+          } else {
+            strengthIndicator.style.display = 'none';
+          }
+        });
+      }
+
+      // ✅ THÊM: Real-time password match validation
+      const confirmPasswordInput = document.getElementById('confirmPassword');
+      if (newPasswordInput && confirmPasswordInput) {
+        confirmPasswordInput.addEventListener('input', function () {
+          const newPassword = newPasswordInput.value;
+          const confirmPassword = this.value;
+
+          if (confirmPassword.length > 0) {
+            if (newPassword === confirmPassword) {
+              this.style.borderColor = '#28a745';
+              this.style.backgroundColor = '#f8fff9';
+            } else {
+              this.style.borderColor = '#dc3545';
+              this.style.backgroundColor = '#fff8f8';
+            }
+          } else {
+            this.style.borderColor = '';
+            this.style.backgroundColor = '';
+          }
+        });
+      }
+
       passwordForm.addEventListener('submit', async function (e) {
         e.preventDefault();
 
@@ -125,9 +159,17 @@ document.addEventListener('DOMContentLoaded', function () {
         const originalContent = submitBtn.innerHTML;
 
         // Validate password match
+        const currentPassword =
+          document.getElementById('currentPassword').value;
         const newPassword = document.getElementById('newPassword').value;
         const confirmPassword =
           document.getElementById('confirmPassword').value;
+
+        if (!currentPassword) {
+          showProfileNotification('Vui lòng nhập mật khẩu hiện tại!', 'error');
+          document.getElementById('currentPassword').focus();
+          return;
+        }
 
         if (newPassword !== confirmPassword) {
           showProfileNotification(
@@ -142,8 +184,6 @@ document.addEventListener('DOMContentLoaded', function () {
           return;
         }
 
-        console.log('🔐 Submitting password form...');
-
         // Show loading
         submitBtn.disabled = true;
         submitBtn.innerHTML =
@@ -156,6 +196,7 @@ document.addEventListener('DOMContentLoaded', function () {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
+              currentPassword: currentPassword,
               newPassword: newPassword,
               confirmPassword: confirmPassword,
             }),
@@ -394,15 +435,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // View post (index page)
   window.viewPost = function (postId) {
-    console.log('👁️ View post:', postId);
     // TODO: Implement view post detail modal or page
     alert(`📖 Xem chi tiết bài viết #${postId}\n\n(Chức năng đang phát triển)`);
   };
 
   // ✅ TOGGLE POST STATUS FUNCTION
   window.togglePostStatus = async function (postId) {
-    console.log('🔄 Toggle post status:', postId);
-
     // Find toggle button
     const toggleBtn = document.querySelector(`[data-post-id="${postId}"]`);
     const currentStatus = toggleBtn?.getAttribute('data-status');
@@ -448,8 +486,6 @@ Nhấn OK để xác nhận.`;
       const data = await response.json();
 
       if (response.ok && data.success) {
-        console.log('✅ Toggle success:', data);
-
         // Show success notification
         showNotification(data.message, 'success');
 
@@ -563,14 +599,6 @@ Nhấn OK để xác nhận.`;
     setTimeout(() => {
       postRow.style.transition = '';
     }, 300);
-
-    console.log('✅ UI updated successfully:', {
-      postId,
-      newStatus,
-      isActive,
-      rowClass: postRow.className,
-      buttonClass: toggleBtn.className,
-    });
   }
 
   // Edit post (index page)
@@ -613,8 +641,6 @@ Nhấn OK để xác nhận xóa.`;
           const data = await response.json();
 
           if (response.ok && data.success) {
-            console.log('✅ Delete success:', data);
-
             // Show success notification
             showNotification('✅ Xóa bài viết thành công!', 'success');
 
@@ -765,6 +791,57 @@ Nhấn OK để xác nhận xóa.`;
       }, 3000);
     }
   }
-
-  console.log('✅ ScriptK.js initialization complete');
 });
+
+// ✅ HELPER: Password strength checker
+function checkPasswordStrength(password) {
+  let score = 0;
+  let suggestions = [];
+
+  // Length check
+  if (password.length >= 8) score += 1;
+  else suggestions.push('• Sử dụng ít nhất 8 ký tự');
+
+  // Character variety checks
+  if (/[a-z]/.test(password)) score += 1;
+  else suggestions.push('• Thêm chữ cái thường (a-z)');
+
+  if (/[A-Z]/.test(password)) score += 1;
+  else suggestions.push('• Thêm chữ cái hoa (A-Z)');
+
+  if (/[0-9]/.test(password)) score += 1;
+  else suggestions.push('• Thêm số (0-9)');
+
+  if (/[^A-Za-z0-9]/.test(password)) score += 1;
+  else suggestions.push('• Thêm ký tự đặc biệt (!@#$%^&*)');
+
+  // Determine level
+  const levels = ['Rất yếu', 'Yếu', 'Trung bình', 'Mạnh', 'Rất mạnh'];
+  const colors = ['#dc3545', '#fd7e14', '#ffc107', '#28a745', '#20c997'];
+
+  return {
+    score: score,
+    level: levels[score] || 'Rất yếu',
+    color: colors[score] || '#dc3545',
+    suggestions: suggestions,
+    percentage: (score / 5) * 100,
+  };
+}
+
+// ✅ HELPER: Update password strength UI
+function updatePasswordStrengthUI(strength) {
+  const strengthFill = document.querySelector('.strength-fill');
+  const strengthLevel = document.querySelector('.strength-level');
+
+  if (strengthFill) {
+    strengthFill.style.width = strength.percentage + '%';
+    strengthFill.style.backgroundColor = strength.color;
+    strengthFill.style.transition = 'all 0.3s ease';
+  }
+
+  if (strengthLevel) {
+    strengthLevel.textContent = strength.level;
+    strengthLevel.style.color = strength.color;
+    strengthLevel.style.fontWeight = 'bold';
+  }
+}
