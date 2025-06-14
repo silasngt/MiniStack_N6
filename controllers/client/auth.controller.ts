@@ -52,16 +52,6 @@ export const registerPost = async (req: Request, res: Response) => {
     const { email, fullname, phone, gender, password, confirmPassword } =
       req.body;
 
-    // Debug từng field
-    console.log('Extracted fields:', {
-      email: email || 'MISSING',
-      fullname: fullname || 'MISSING',
-      phone: phone || 'MISSING',
-      gender: gender || 'MISSING',
-      password: password ? 'PROVIDED' : 'MISSING',
-      confirmPassword: confirmPassword ? 'PROVIDED' : 'MISSING',
-    });
-
     // Kiểm tra các trường bắt buộc
     const requiredFields = {
       email,
@@ -79,7 +69,6 @@ export const registerPost = async (req: Request, res: Response) => {
       .map(([key]) => key);
 
     if (missingFields.length > 0) {
-      console.log('Missing fields:', missingFields);
       return res.status(400).json({
         success: false,
         message: 'Vui lòng điền đầy đủ thông tin',
@@ -130,7 +119,6 @@ export const registerPost = async (req: Request, res: Response) => {
     });
 
     if (existingUser) {
-      console.log('User already exists');
       return res.status(400).json({
         success: false,
         message: 'Email đã được sử dụng',
@@ -139,17 +127,9 @@ export const registerPost = async (req: Request, res: Response) => {
 
     // Mã hóa mật khẩu bằng MD5
     const hashedPassword = md5(password);
-    console.log('Password hashed successfully with MD5');
 
     // Format số điện thoại
     const phoneDigits = phone.replace(/\D/g, '');
-
-    console.log('Creating new user with data:', {
-      FullName: fullname.trim(),
-      Email: email.toLowerCase().trim(),
-      Phone: phoneDigits,
-      Gender: gender,
-    });
 
     // Tạo user mới
     const newUserInstance = await User.create({
@@ -162,8 +142,6 @@ export const registerPost = async (req: Request, res: Response) => {
       deleted: false,
       status: 'active',
     });
-
-    console.log('User created successfully:', newUserInstance.get('UserID'));
 
     const newUser = newUserInstance.get({ plain: true });
 
@@ -178,8 +156,6 @@ export const registerPost = async (req: Request, res: Response) => {
       { expiresIn: '24h' }
     );
 
-    console.log('JWT token generated');
-
     const userResponse = {
       UserID: newUser.UserID,
       FullName: newUser.FullName,
@@ -190,8 +166,6 @@ export const registerPost = async (req: Request, res: Response) => {
       status: newUser.status,
       token: token,
     };
-
-    console.log('Registration successful for user:', newUser.Email);
 
     res.status(201).json({
       success: true,
@@ -284,9 +258,6 @@ export const loginPost = async (req: Request, res: Response) => {
       });
     }
 
-    // === ĐÃ XÁC THỰC THÀNH CÔNG ===
-    console.log('User authenticated successfully:', user.Email);
-
     // Tạo JWT token
     const tokenExpiry = rememberMe ? '30d' : '24h';
     const token = jwt.sign(
@@ -298,8 +269,6 @@ export const loginPost = async (req: Request, res: Response) => {
       JWT_SECRET,
       { expiresIn: tokenExpiry }
     );
-
-    console.log('JWT token created successfully');
 
     // Set cookie với các options phù hợp
     const cookieMaxAge = rememberMe
@@ -313,8 +282,6 @@ export const loginPost = async (req: Request, res: Response) => {
       sameSite: 'lax',
       path: '/',
     });
-
-    console.log('Cookie set successfully, redirecting to home');
 
     return res.redirect('/');
   } catch (error: any) {

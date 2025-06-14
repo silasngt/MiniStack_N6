@@ -73,48 +73,16 @@
   color: #d97706;
 }
 
+.user-table th:last-child,
+.user-table td.action-buttons {
+  width: 140px;
+  min-width: 140px;
+}
 .action-buttons {
   display: flex;
   gap: 8px;
-}
-
-.btn-action {
-  width: 32px;
-  height: 32px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  display: flex;
+  justify-content: flex-start;
   align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-}
-
-.btn-view {
-  background-color: #e0f2fe;
-  color: #0277bd;
-}
-
-.btn-view:hover {
-  background-color: #b3e5fc;
-}
-
-.btn-edit {
-  background-color: #fff3e0;
-  color: #f57c00;
-}
-
-.btn-edit:hover {
-  background-color: #ffe0b2;
-}
-
-.btn-delete {
-  background-color: #ffebee;
-  color: #d32f2f;
-}
-
-.btn-delete:hover {
-  background-color: #ffcdd2;
 }
 
 .pagination-container {
@@ -147,7 +115,7 @@
 
 .btn-page.active {
   background-color: #3b82f6;
-  color: white;
+  color: rgb(70, 139, 250);
   border-color: #3b82f6;
 }
 
