@@ -8,6 +8,7 @@ import { profileRoute } from './Profile.route';
 import { chatBoxRoute } from './chatBox.route';
 import { compileRoute } from './compile.route';
 import { searchRoute } from './search.routes';
+import contactRoute from './contact.route';
 export const routesClient = (app: Express) => {
   app.use('/', miniStackRoute);
   app.use('/forum', forumRoute);
@@ -18,4 +19,6 @@ export const routesClient = (app: Express) => {
   app.use('/compile', compileRoute);
   app.use('/search', searchRoute);
   app.use('/document', documentRoute);
+  app.use('/contact', contactRoute);
+
 };

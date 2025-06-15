@@ -20,7 +20,7 @@ block main
                 id="title"
                 name="title"
                 value=document.Title
-                placeholder="Nhập tiêu đề tài liệu"
+                
                 required
               )
 
@@ -28,29 +28,29 @@ block main
             .form-group
               label(for="category") Danh mục
               .category-select-wrapper
-                select#category.form-control.multiple-select(
+                select.form-control.multiple-select(
                   name="category[]"
                   multiple
                   size="4"
-                  required
                 )
-                  each cat in categories
+                  each category in categories
                     option(
-                      value=cat.CategoryID
-                      selected=document.Categories.includes(cat.CategoryID)
-                    )= cat.Name
+                      value=category.CategoryID
+                      selected=document.Categories && document.Categories.includes(category.CategoryID)
+                    )= category.Name
                 .select-hint
                   small.text-muted Giữ Ctrl + Click để chọn nhiều danh mục
 
             // Link
             .form-group
-              label.form-label(for="link") Link
+              label.form-label(for="link") Link tài liệu
               input.form-input(
                 type="url"
-                id="link"
+                id="link" 
                 name="link"
-                value=document.FilePath
+                value=document.FilePath 
                 placeholder="https://example.com"
+                required
               )
 
             // Attach Image và Action buttons

@@ -13,9 +13,9 @@ block main
 
         // Form content
         .form-content
-          form.document-form(action="#" method="POST" enctype="multipart/form-data")
+          form.document-form(action="/admin/document/create" method="POST" enctype="multipart/form-data")
             // Tiêu đề
-            .form-group
+            .form-group 
               label.form-label(for="title") Tiêu đề
               input.form-input(
                 type="text"
@@ -76,6 +76,6 @@ block main
 
                   // Action buttons bên phải
                   .action-buttons
-                    button.btn-cancel(type="submit") THÊM
-                    button.btn-submit(type="submit") HỦY
+                    button.btn-submit(type="submit") THÊM
+                    button.btn-cancel(type="button" onclick="window.location.href='/admin/document'") HỦY
   script(src="/admin/js/scriptN.js")
