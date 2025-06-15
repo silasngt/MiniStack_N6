@@ -19,7 +19,7 @@ router.post(
 );
 // Thêm routes mới
 router.get('/edit/:id', controller.edit);
-router.patch('/edit/:id', upload.single('thumbnail'), controller.update);
+router.patch('/edit/:id', upload.single('thumbnail'), uploadSingle, controller.update);
 router.delete('/:id', controller.deleteDocument);
 router.patch('/status/:id', controller.updateStatus);
 

@@ -6,35 +6,39 @@ const createFormData = (form) => {
   formData.append('title', form.querySelector('#title').value);
   formData.append('link', form.querySelector('#link').value);
 
-  // Handle categories
-  // const categorySelect = form.querySelector('select[name="category[]"]');
-  // if (categorySelect) {
-  //   Array.from(categorySelect.options)
-  //     .filter(option => option.selected)
-  //     .forEach(option => formData.append('category[]', option.value));
-  // }
+  // Xử lý categories an toàn
+  const categorySelect = form.querySelector('select[name="category[]"]');
+  if (categorySelect) {
+    const selectedCategories = Array.from(categorySelect.options)
+      .filter(option => option.selected)
+      .map(option => option.value);
+      
+    selectedCategories.forEach(cat => {
+      formData.append('category[]', cat);
+    });
+  }
 
-          // Lấy các category được chọn và thêm vào formData
-        const categorySelect = document.getElementById('category');
-        const selectedCategories = Array.from(categorySelect.selectedOptions)
-          .map(option => option.value);
+        //   // Lấy các category được chọn và thêm vào formData
+        // const categorySelect = document.getElementById('category');
+        // const selectedCategories = Array.from(categorySelect.selectedOptions)
+        //   .map(option => option.value);
         
-        // Xóa categories cũ và thêm mảng mới
-        formData.delete('category');
-        selectedCategories.forEach(cat => {
-          formData.append('category', cat);
-        });
+        // // Xóa categories cũ và thêm mảng mới
+        // formData.delete('category');
+        // selectedCategories.forEach(cat => {
+        //   formData.append('category', cat);
+        // });
 
   // Handle image
   const imageInput = form.querySelector('#image-upload');
-  if (imageInput?.files[0]) {
+  if (imageInput && imageInput.files && imageInput.files[0]) {
     formData.append('thumbnail', imageInput.files[0]);
   }
 
   // Handle current thumbnail if exists
   const currentImage = form.querySelector('.preview-image');
-  if (currentImage) {
-    formData.append('currentThumbnail', currentImage.src);
+  if (currentImage && currentImage.src) {
+    formData.append('currentThumbnail', currentImage.getAttribute('src'));
   }
 
   return formData;
