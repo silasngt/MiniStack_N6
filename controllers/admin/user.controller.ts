@@ -18,22 +18,35 @@ interface UserAttributes {
 
 export const index = async (req: Request, res: Response) => {
   try {
-    const page = parseInt(req.query.page as string, 10) || 1;
-    const limit = 5;
-    const offset = (page - 1) * limit;
+    // Phân trang
+    let limit = 4;
+    let page = 1;
 
-    // Lấy tổng số user (chưa bị xóa)
+    if (req.query.limit) {
+      limit = parseInt(`${req.query.limit}`);
+    }
+    if (req.query.page) {
+      page = parseInt(`${req.query.page}`);
+    }
+
+    const skip = (page - 1) * limit;
+
     const totalUsers = await User.count({
-      where: { deleted: false },
+      where: {
+        deleted: false,
+      },
     });
+    const totalPages = Math.ceil(totalUsers / limit);
+
+    // Hết Phân trang
 
     // Lấy user theo trang
     const usersFromDB = await User.findAll({
       where: { deleted: false },
       order: [['UserID', 'ASC']],
       attributes: { exclude: ['Password'] },
-      limit,
-      offset,
+      limit: limit,
+      offset: skip,
     });
 
     const users = usersFromDB.map((user) => {
@@ -51,13 +64,11 @@ export const index = async (req: Request, res: Response) => {
       };
     });
 
-    const totalPages = Math.ceil(totalUsers / limit);
-
     res.render('admin/pages/user/index.pug', {
       pageTitle: 'Quản lý người dùng',
       users,
       currentPage: page,
-      totalPages,
+      totalPages: totalPages,
     });
   } catch (error) {
     console.error('Error fetching users:', error);
