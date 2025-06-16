@@ -49,9 +49,10 @@ export const index = async (req: Request, res: Response) => {
       offset: skip,
     });
 
-    const users = usersFromDB.map((user) => {
+    const users = usersFromDB.map((user, index) => {
       const userData = user.get({ plain: true }) as UserAttributes;
       return {
+        stt: skip + index + 1,
         id: userData.UserID,
         name: userData.FullName,
         email: userData.Email,

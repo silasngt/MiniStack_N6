@@ -17,7 +17,11 @@ export function addAdminUserToViews(
   next: NextFunction
 ) {
   if ((req as any).session && (req as any).session.adminUser) {
-    res.locals.user = (req as any).session.adminUser;
+    const adminUser = (req as any).session.adminUser;
+
+    res.locals.currentUser = adminUser;
+  } else {
+    res.locals.currentUser = null;
   }
   next();
 }
