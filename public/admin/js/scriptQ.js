@@ -29,20 +29,24 @@ function toggleStatus(type, id, btn) {
     .then((res) => res.json())
     .then((data) => {
       if (data.success) {
-        const icon = btn.querySelector('i');
-        if (data.newStatus === 'active') {
-          icon.className = 'fas fa-eye';
-          btn.style.color = '#28a745';
-          btn.title = 'Tắt hoạt động';
-        } else {
-          icon.className = 'fas fa-eye-slash';
-          btn.style.color = '#dc3545';
-          btn.title = 'Bật hoạt động';
+        // Hiện thông báo xác nhận
+        const msg =
+          'Bạn có muốn chuyển trạng thái thành: ' +
+          (data.newStatus === 'active' ? 'Hoạt động' : 'Không hoạt động');
+        if (confirm(msg)) {
+          const icon = btn.querySelector('i');
+          if (data.newStatus === 'active') {
+            icon.className = 'fas fa-eye';
+            btn.style.color = '#28a745';
+            btn.title = 'Tắt hoạt động';
+            btn.closest('tr').classList.remove('inactive-row');
+          } else {
+            icon.className = 'fas fa-eye-slash';
+            btn.style.color = '#dc3545';
+            btn.title = 'Bật hoạt động';
+            btn.closest('tr').classList.add('inactive-row');
+          }
         }
-        alert(
-          'Đã chuyển trạng thái thành: ' +
-            (data.newStatus === 'active' ? 'Hoạt động' : 'Không hoạt động')
-        );
       } else {
         alert(data.message || 'Chuyển trạng thái thất bại');
       }

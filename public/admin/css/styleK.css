@@ -164,6 +164,130 @@ input[data-uploading='true'] {
 .btn-save:hover {
   background-color: #333;
 }
+
+.password-strength-indicator {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.strength-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.strength-fill {
+  height: 100%;
+  width: 0%;
+  background-color: #dc3545;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.strength-text {
+  font-size: 12px;
+  color: #6c757d;
+  margin: 0;
+}
+
+.strength-level {
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+/* ===== FORM ENHANCEMENTS ===== */
+.required {
+  color: #dc3545;
+  margin-left: 3px;
+  font-weight: bold;
+}
+
+.form-group label i {
+  margin-right: 8px;
+  width: 16px;
+  color: #6c757d;
+}
+
+.form-section h3 {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  color: #495057;
+  font-size: 18px;
+}
+
+.form-section h3 i {
+  margin-right: 10px;
+  color: #007bff;
+}
+
+.btn-save {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-save:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+}
+
+.btn-save:disabled {
+  transform: none;
+  box-shadow: none;
+  opacity: 0.6;
+}
+
+/* Password input styling */
+input[type='password']:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Success state */
+input.is-valid {
+  border-color: #28a745 !important;
+  background-color: #f8fff9 !important;
+}
+
+/* Error state */
+input.is-invalid {
+  border-color: #dc3545 !important;
+  background-color: #fff8f8 !important;
+}
+
+/* Form text enhancements */
+.form-text {
+  font-size: 11px;
+  margin-top: 5px;
+  color: #6c757d;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .form-section h3 {
+    font-size: 16px;
+  }
+
+  .btn-save {
+    width: 100%;
+    padding: 14px 20px;
+  }
+
+  .password-strength-indicator {
+    padding: 8px;
+  }
+}
 /*end  admin profile */
 
 /* CSS for Post Management Page */
@@ -462,6 +586,16 @@ select.form-control option {
   background-color: #fff;
   font-size: 14px;
   transition: border-color 0.3s ease;
+
+  /* ✅ XÓA: Mũi tên xuống cho select multiple */
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-image: none !important;
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 0; /* Set size to 0 to hide */
+  padding-right: 15px; /* Giảm padding vì không cần chỗ cho mũi tên */
 }
 
 .multiple-select:focus {

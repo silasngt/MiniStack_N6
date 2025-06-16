@@ -20,8 +20,6 @@ export const index = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    console.log('👤 Loading profile for user ID:', currentUserId);
-
     // Lấy thông tin user hiện tại
     const currentUser = await User.findByPk(currentUserId);
 
@@ -54,7 +52,6 @@ export const index = async (req: Request, res: Response): Promise<void> => {
     });
     return;
   } catch (error) {
-    console.error('❌ Error loading profile:', error);
     res.status(500).render('admin/pages/500', {
       pageTitle: 'Lỗi hệ thống',
     });
@@ -80,8 +77,6 @@ export const updateBasicInfo = async (
     }
 
     const { fullName, gender, phone } = req.body;
-
-    console.log('📝 Updating basic info for user:', currentUserId);
 
     if (!fullName || fullName.trim().length === 0) {
       res.status(400).json({
@@ -137,7 +132,6 @@ export const updateBasicInfo = async (
     });
     return;
   } catch (error) {
-    console.error('❌ Error updating basic info:', error);
     res.status(500).json({
       success: false,
       message: 'Có lỗi xảy ra khi cập nhật thông tin!',
@@ -164,15 +158,18 @@ export const changePassword = async (
     }
 
     // Chỉ nhận newPassword và confirmPassword
-    const { newPassword, confirmPassword } = req.body;
+    const { currentPassword, newPassword, confirmPassword } = req.body;
 
-    console.log('🔑 Change password request for user:', currentUserId);
-
-    // Validation
-    if (!newPassword || !confirmPassword) {
+    // ✅ VALIDATION: Check all required fields
+    if (!currentPassword || !newPassword || !confirmPassword) {
       res.status(400).json({
         success: false,
         message: 'Vui lòng điền đầy đủ thông tin!',
+        missingFields: {
+          currentPassword: !currentPassword,
+          newPassword: !newPassword,
+          confirmPassword: !confirmPassword,
+        },
       });
       return;
     }
@@ -193,6 +190,17 @@ export const changePassword = async (
       return;
     }
 
+    const currentPasswordMD5 = md5(currentPassword);
+    const newPasswordMD5 = md5(newPassword);
+
+    if (currentPasswordMD5 === newPasswordMD5) {
+      res.status(400).json({
+        success: false,
+        message: 'Mật khẩu mới phải khác mật khẩu hiện tại!',
+      });
+      return;
+    }
+
     // Tìm user hiện tại
     const currentUser = await User.findByPk(currentUserId);
     if (!currentUser || currentUser.get('deleted')) {
@@ -203,8 +211,17 @@ export const changePassword = async (
       return;
     }
 
-    // Hash mật khẩu mới với MD5
-    const newPasswordMD5 = md5(newPassword);
+    // ✅ VERIFY: Current password
+    const storedPassword = currentUser.get('Password') as string;
+
+    if (storedPassword !== currentPasswordMD5) {
+      res.status(400).json({
+        success: false,
+        message: 'Mật khẩu hiện tại không chính xác!',
+        code: 'INVALID_CURRENT_PASSWORD',
+      });
+      return;
+    }
 
     // Cập nhật mật khẩu mới
     await currentUser.update({
@@ -217,7 +234,6 @@ export const changePassword = async (
     });
     return;
   } catch (error) {
-    console.error('❌ Error changing password:', error);
     res.status(500).json({
       success: false,
       message: 'Có lỗi xảy ra khi đổi mật khẩu!',
@@ -245,8 +261,6 @@ export const uploadAvatar = async (
 
     // Avatar URL sẽ được xử lý bởi uploadCloud middleware
     const avatarUrl = req.body.avatar;
-
-    console.log('📸 Uploading avatar for user:', currentUserId);
 
     if (!avatarUrl) {
       res.status(400).json({
@@ -287,7 +301,6 @@ export const uploadAvatar = async (
     });
     return;
   } catch (error) {
-    console.error('❌ Error uploading avatar:', error);
     res.status(500).json({
       success: false,
       message: 'Có lỗi xảy ra khi tải ảnh lên!',

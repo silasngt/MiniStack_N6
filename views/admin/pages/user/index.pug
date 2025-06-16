@@ -1,4 +1,6 @@
 extends ../../layouts/default.pug
+include ../../mixins/pagination.pug
+
 
 block main
   .user-management-content
@@ -19,8 +21,8 @@ block main
             th Thao tác
         tbody
           each user in users
-            tr.user-row
-              td.user-id= user.id
+            tr.user-row(class=user.status === 'inactive' ? 'inactive-row' : '')
+              td.user-id= user.stt
               td.user-name= user.name
               td.user-email= user.email
               td.user-phone= user.phone
@@ -35,7 +37,8 @@ block main
                 - var editUrl = `/admin/user/edit/${user.id}`;
                 - var deleteFunc = 'deleteUser';
                 include ../../partials/action.pug
+              
+    +pagination(currentPage, totalPages)
 
   
-    include ../../partials/pagination.pug
 

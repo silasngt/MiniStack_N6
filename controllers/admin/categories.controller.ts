@@ -1,28 +1,43 @@
 import { Request, Response } from 'express';
 import Category from '../../models/category.model';
 
-// Hiển thị danh sách
+// hiển thị danh sách
 export const index = async (req: Request, res: Response): Promise<void> => {
   try {
-    const page = parseInt(req.query.page as string, 10) || 1;
-    const limit = 5;
-    const offset = (page - 1) * limit;
+    // Phân trang
+    let limit = 4;
+    let page = 1;
 
-    const totalCategories = await Category.count({ where: { deleted: false } });
+    if (req.query.limit) {
+      limit = parseInt(`${req.query.limit}`);
+    }
+    if (req.query.page) {
+      page = parseInt(`${req.query.page}`);
+    }
+
+    const skip = (page - 1) * limit;
+
+    const totalCategories = await Category.count({
+      where: {
+        deleted: false,
+      },
+    });
+    const totalPages = Math.ceil(totalCategories / limit);
+
+    // Lấy categories theo trang với limit và offset
     const categories = await Category.findAll({
       where: { deleted: false },
       order: [['CategoryID', 'ASC']],
-      limit,
-      offset,
+      limit: limit,
+      offset: skip,
     });
-
-    const totalPages = Math.ceil(totalCategories / limit);
 
     res.render('admin/pages/categories/index.pug', {
       pageTitle: 'Quản lý danh mục',
       categories,
       currentPage: page,
-      totalPages,
+      totalPages: totalPages,
+      skip,
     });
   } catch (error) {
     console.error('Lỗi khi lấy danh sách categories:', error);
@@ -30,17 +45,18 @@ export const index = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Hiển thị form thêm mới
+// hiển thị form thêm mới
 export const addForm = async (req: Request, res: Response): Promise<void> => {
   res.render('admin/pages/categories/add.pug', {
     pageTitle: 'Thêm danh mục mới',
   });
 };
 
+//thêm danh mục
 export const add = async (req: Request, res: Response): Promise<void> => {
   try {
     const { name, type, status } = req.body;
-   
+
     const types = Array.isArray(type) ? type : [type];
 
     if (!name || !types.length) {
@@ -50,7 +66,7 @@ export const add = async (req: Request, res: Response): Promise<void> => {
 
     await Category.create({
       Name: name.trim(),
-      Type: types, 
+      Type: types,
       status: status || 'active',
       deleted: false,
     });
@@ -62,7 +78,7 @@ export const add = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Hiển thị form chỉnh sửa
+// hiển thị form chỉnh sửa
 export const editForm = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
@@ -90,7 +106,7 @@ export const editForm = async (req: Request, res: Response): Promise<void> => {
     const categoryData = {
       _id: cat.CategoryID,
       name: cat.Name,
-      type: cat.Type, 
+      type: cat.Type,
       status: cat.status || 'active',
     };
 
@@ -104,7 +120,7 @@ export const editForm = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Cập nhật danh mục
+// cập nhật danh mục
 export const edit = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
@@ -115,7 +131,6 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    
     const types = Array.isArray(type) ? type : [type];
 
     if (!name || !types.length) {
@@ -126,7 +141,7 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
     // Tìm danh mục cần cập nhật
     const category = await Category.findOne({
       where: {
-        CategoryID: id, 
+        CategoryID: id,
         deleted: false,
       },
     });
@@ -139,7 +154,7 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
     // Cập nhật thông tin
     await category.update({
       Name: name.trim(),
-      Type: types, 
+      Type: types,
       status: status || 'active',
     });
 
@@ -152,7 +167,7 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Xóa danh mục
+// xóa danh mục
 export const deleteCategory = async (
   req: Request,
   res: Response
@@ -169,7 +184,7 @@ export const deleteCategory = async (
 
     const category = await Category.findOne({
       where: {
-        CategoryID: id, 
+        CategoryID: id,
         deleted: false,
       },
     });
@@ -194,6 +209,7 @@ export const deleteCategory = async (
   }
 };
 
+//thay đổi trạng thái
 export const toggleStatus = async (
   req: Request,
   res: Response
@@ -239,4 +255,3 @@ export const toggleStatus = async (
     res.status(500).json({ success: false, message: 'Lỗi server' });
   }
 };
-

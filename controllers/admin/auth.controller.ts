@@ -25,14 +25,18 @@ export const login = async (req: Request, res: Response) => {
   // Lấy object thuần từ instance Sequelize
   const userData = user.get({ plain: true });
 
-  (req.session as any).adminUser = {
-    id: userData.UserID,
-    name: userData.FullName,
-    email: userData.Email,
-    role: userData.Role,
-    Avatar: userData.Avatar,
-  };
-  res.redirect('/admin/dashboard');
+  // Sau khi kiểm tra đăng nhập thành công:
+  const adminUser = await User.findOne({ where: { Email: req.body.email } });
+  if (adminUser) {
+    const userData = adminUser.get({ plain: true });
+    (req.session as any).adminUser = {
+      id: userData.UserID,
+      name: userData.FullName,
+      avatar: userData.Avatar,
+      email: userData.Email,
+    };
+    res.redirect('/admin/dashboard');
+  }
 };
 
 export const logout = (req: Request, res: Response) => {

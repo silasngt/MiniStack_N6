@@ -171,3 +171,8 @@
 .forum-inactive-row .forum-td-content s {
   color: #999;
 }
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}

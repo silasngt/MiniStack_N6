@@ -1,4 +1,6 @@
 extends ../../layouts/default.pug
+include ../../mixins/pagination.pug
+
 
 block main
   .user-management-content
@@ -16,9 +18,9 @@ block main
             th Thao tác
         tbody
           if categories && categories.length
-            each category in categories
-              tr.user-row
-                td= category.CategoryID
+            each category,index in categories
+              tr.user-row(class=category.status === 'inactive' ? 'inactive-row' : '')
+                td= skip+index+1
                 td= category.Name
                 td
                   if Array.isArray(category.Type)
@@ -32,5 +34,5 @@ block main
                   - var editUrl = `/admin/categories/edit/${category.CategoryID}`;
                   - var deleteFunc = 'deleteCategory';
                   include ../../partials/action.pug
+    +pagination(currentPage, totalPages)
                   
-    include ../../partials/pagination.pug
