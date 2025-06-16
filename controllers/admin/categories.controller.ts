@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import Category from '../../models/category.model';
 
-// Hiển thị danh sách
+// hiển thị danh sách
 export const index = async (req: Request, res: Response): Promise<void> => {
   try {
     // Phân trang
@@ -37,6 +37,7 @@ export const index = async (req: Request, res: Response): Promise<void> => {
       categories,
       currentPage: page,
       totalPages: totalPages,
+      skip,
     });
   } catch (error) {
     console.error('Lỗi khi lấy danh sách categories:', error);
@@ -44,13 +45,14 @@ export const index = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Hiển thị form thêm mới
+// hiển thị form thêm mới
 export const addForm = async (req: Request, res: Response): Promise<void> => {
   res.render('admin/pages/categories/add.pug', {
     pageTitle: 'Thêm danh mục mới',
   });
 };
 
+//thêm danh mục
 export const add = async (req: Request, res: Response): Promise<void> => {
   try {
     const { name, type, status } = req.body;
@@ -76,7 +78,7 @@ export const add = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Hiển thị form chỉnh sửa
+// hiển thị form chỉnh sửa
 export const editForm = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
@@ -118,7 +120,7 @@ export const editForm = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Cập nhật danh mục
+// cập nhật danh mục
 export const edit = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
@@ -165,7 +167,7 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Xóa danh mục
+// xóa danh mục
 export const deleteCategory = async (
   req: Request,
   res: Response
@@ -207,6 +209,7 @@ export const deleteCategory = async (
   }
 };
 
+//thay đổi trạng thái
 export const toggleStatus = async (
   req: Request,
   res: Response

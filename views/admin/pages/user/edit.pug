@@ -3,13 +3,10 @@ extends ../../layouts/default.pug
 block main
   .edit-user-content
     .header-section
-      .row
-        .col
-          h1.page-title.mb-0 Chỉnh sửa người dùng
-        .col-auto
-          a.btn.btn-light(href="/admin/user")
-            i.fas.fa-arrow-left.me-2
-            | Quay lại danh sách
+      h1.page-title Chỉnh sửa người dùng
+      a.btn.btn-light.btn-sm#closeCategoryForm(href='/admin/user/' title="Đóng")
+                    i.fas.fa-times
+
     .form-container
       .card
         .card-header

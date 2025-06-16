@@ -22,7 +22,7 @@ block main
         tbody
           each user in users
             tr.user-row(class=user.status === 'inactive' ? 'inactive-row' : '')
-              td.user-id= user.id
+              td.user-id= user.stt
               td.user-name= user.name
               td.user-email= user.email
               td.user-phone= user.phone

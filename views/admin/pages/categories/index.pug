@@ -18,9 +18,9 @@ block main
             th Thao tác
         tbody
           if categories && categories.length
-            each category in categories
+            each category,index in categories
               tr.user-row(class=category.status === 'inactive' ? 'inactive-row' : '')
-                td= category.CategoryID
+                td= skip+index+1
                 td= category.Name
                 td
                   if Array.isArray(category.Type)
