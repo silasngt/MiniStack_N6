@@ -133,15 +133,15 @@ export const toggleStatus = async (
       return;
     }
 
-    // ✅ CHECK: Quyền toggle - chỉ Author hoặc Admin
-    const authorId = existingPost.get('AuthorID');
-    if (authorId !== currentUser.id && currentUser.role !== 'Admin') {
-      res.status(403).json({
-        success: false,
-        message: 'Bạn không có quyền thay đổi trạng thái bài viết này!',
-      });
-      return;
-    }
+    // // ✅ CHECK: Quyền toggle - chỉ Author hoặc Admin
+    // const authorId = existingPost.get('AuthorID');
+    // if (authorId !== currentUser.id && currentUser.role !== 'Admin') {
+    //   res.status(403).json({
+    //     success: false,
+    //     message: 'Bạn không có quyền thay đổi trạng thái bài viết này!',
+    //   });
+    //   return;
+    // }
 
     // Toggle status: active <-> inactive
     const currentStatus = existingPost.get('status') as string;
