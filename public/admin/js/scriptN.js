@@ -1,42 +1,45 @@
-// Xử lý form submit
-document.addEventListener('DOMContentLoaded', function() {
-  const documentForm = document.querySelector('.document-form');
-  if (documentForm) {
-    documentForm.addEventListener('submit', async function(e) {
-      e.preventDefault();
+
+
+// Utility functions
+const createFormData = (form) => {
+  const formData = new FormData();
+  
+  // Add basic fields
+  formData.append('title', form.querySelector('#title').value);
+  formData.append('link', form.querySelector('#link').value);
+
+  // Xử lý categories an toàn
+  const categorySelect = form.querySelector('select[name="category[]"]');
+  if (categorySelect) {
+    const selectedCategories = Array.from(categorySelect.options)
+      .filter(option => option.selected)
+      .map(option => option.value);
       
-      try {
-        const formData = new FormData(this);
-        
-        // Lấy các category được chọn và thêm vào formData
-        const categorySelect = document.getElementById('category');
-        const selectedCategories = Array.from(categorySelect.selectedOptions)
-          .map(option => option.value);
-        
-        // Xóa categories cũ và thêm mảng mới
-        formData.delete('category');
-        selectedCategories.forEach(cat => {
-          formData.append('category', cat);
-        });
-
-        const response = await fetch('/admin/document/create', {
-          method: 'POST',
-          body: formData
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-          alert(result.message);
-          window.location.href = '/admin/document';
-        } else {
-          throw new Error(result.message);
-        }
-      } catch (error) {
-        alert('Có lỗi xảy ra: ' + error.message);
-      }
+    selectedCategories.forEach(cat => {
+      formData.append('category[]', cat);
     });
   }
+
+      
+
+  // Handle image
+  const imageInput = form.querySelector('#image-upload');
+  if (imageInput && imageInput.files && imageInput.files[0]) {
+    formData.append('thumbnail', imageInput.files[0]);
+  }
+
+  // Handle current thumbnail if exists
+  const currentImage = form.querySelector('.preview-image');
+  if (currentImage && currentImage.src) {
+    formData.append('currentThumbnail', currentImage.getAttribute('src'));
+  }
+
+  return formData;
+};
+
+// Main document ready handler
+
+
 
    // Xử lý preview ảnh khi upload
   const handleImagePreview = () => {
@@ -145,128 +148,71 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   };
 
-  // Khởi tạo các handlers
-  handleImagePreview();
-  handleDragAndDrop();
-
-  // Xử lý multiple select
-  const categorySelect = document.getElementById('category');
-  if (categorySelect) {
-    // Thêm tooltip khi hover
-    categorySelect.title = "Giữ Ctrl + Click để chọn nhiều danh mục";
-    
-    // Thêm style cho selected options
-    categorySelect.addEventListener('change', function() {
-      Array.from(this.options).forEach(option => {
-        if (option.selected) {
-          option.classList.add('selected');
-        } else {
-          option.classList.remove('selected');
-        }
-      });
-    });
-  }
-
-  // Xử lý các nút pagination
-  const handlePagination = () => {
-    const pagination = document.querySelector('.pagination');
-    if (!pagination) return;
-
-    pagination.addEventListener('click', async (e) => {
-      const target = e.target.closest('button');
-      if (!target) return;
-
-      const currentPage = parseInt(document.querySelector('.btn-page.active')?.textContent || '1');
-      let newPage = currentPage;
-
-      if (target.classList.contains('btn-prev')) {
-        newPage = currentPage - 1;
-      } else if (target.classList.contains('btn-next')) {
-        newPage = currentPage + 1;
-      } else if (target.classList.contains('btn-page')) {
-        newPage = parseInt(target.textContent);
-      }
-
-      if (newPage !== currentPage) {
-        window.location.href = `/admin/document?page=${newPage}`;
-      }
-    });
-  };
-
-  // Xử lý xóa tài liệu
-  const handleDelete = () => {
-    const deleteButtons = document.querySelectorAll('.btn-delete');
-    
-    deleteButtons.forEach(btn => {
-      btn.addEventListener('click', async function(e) {
-        e.preventDefault();
-        
-        if (!confirm('Bạn có chắc muốn xóa tài liệu này?')) return;
-
-        const id = this.dataset.id;
-        try {
-          const response = await fetch(`/admin/document/${id}`, {
-            method: 'DELETE'
-          });
-
-          const result = await response.json();
-
-          if (result.success) {
-            alert(result.message);
-            window.location.reload();
-          } else {
-            throw new Error(result.message);
-          }
-        } catch (error) {
-          alert('Có lỗi xảy ra: ' + error.message);
-        }
-      });
-    });
-  };
-
-  // Xử lý hover hiển thị tooltip cho categories dài
-  const handleCategoryTooltips = () => {
-    const categorysCells = document.querySelectorAll('.categories-cell');
-    categorysCells.forEach(cell => {
-      if (cell.scrollWidth > cell.clientWidth) {
-        cell.title = cell.textContent;
-      }
-    });
-  };
-
-  // Initialize
-  handlePagination();
-  handleDelete();
-  handleCategoryTooltips();
-});
 // Xử lý sửa tài liệu
-const handleEdit = () => {
-  const editForm = document.querySelector('#edit-document-form');
-  if (!editForm) return;
+// Tìm hàm handleEdit và thay thế bằng code sau
+// const handleEdit = () => {
+//   const form = document.querySelector('.document-form');
+//   if (!form) return;
 
-  editForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData(editForm);
-    const id = editForm.dataset.id;
+//   form.addEventListener('submit', async (e) => {
+//     e.preventDefault();
 
-    try {
-      const response = await fetch(`/admin/document/edit/${id}`, {
-        method: 'POST',
-        body: formData
-      });
+//     const formData = new FormData();
+//     const id = form.getAttribute('action').split('/').pop().split('?')[0];
 
-      const result = await response.json();
-      if (result.success) {
-        alert(result.message);
-        window.location.href = '/admin/document';
-      } else {
-        throw new Error(result.message);
-      }
-    } catch (error) {
-      alert('Có lỗi xảy ra: ' + error.message);
-    }
-  });
-};
+//     // Lấy dữ liệu form
+//     formData.append('title', document.getElementById('title').value);
+//     formData.append('link', document.getElementById('link').value);
+
+//     // Xử lý categories an toàn
+//     const categorySelect = document.querySelector('select[name="category[]"]');
+//     if (categorySelect) {
+//       const selectedCategories = [];
+//       Array.from(categorySelect.options).forEach(option => {
+//         if (option.selected) {
+//           selectedCategories.push(option.value);
+//         }
+//       });
+//       selectedCategories.forEach(cat => {
+//         formData.append('category[]', cat);
+//       });
+//     }
+
+//     // Xử lý file ảnh
+//     const imageInput = document.getElementById('image-upload');
+//     if (imageInput && imageInput.files[0]) {
+//       formData.append('thumbnail', imageInput.files[0]);
+//     }
+
+//     // Thêm thumbnail hiện tại nếu có
+//     const currentImage = document.querySelector('.preview-image');
+//     if (currentImage) {
+//       formData.append('currentThumbnail', currentImage.src);
+//     }
+
+//     try {
+//       const response = await fetch(`/admin/document/edit/${id}`, {
+//         method: 'PATCH',
+//         body: formData // Gửi form data thay vì JSON
+//       });
+
+//       if (!response.ok) {
+//         throw new Error('Network response was not ok');
+//       }
+
+//       const result = await response.json();
+//       if (result.success) {
+//         alert('Cập nhật thành công!');
+//         window.location.href = '/admin/document';
+//       } else {
+//         throw new Error(result.message);
+//       }
+//     } catch (error) {
+//       console.error('Error:', error);
+//       alert('Có lỗi xảy ra: ' + error.message);
+//     }
+//   });
+// };
 
 // Xử lý cập nhật trạng thái
 const handleStatusUpdate = () => {
@@ -353,6 +299,10 @@ const handleStatusToggle = () => {
 
 // Thêm vào DOMContentLoaded
 document.addEventListener('DOMContentLoaded', function() {
+     handleImagePreview();
+   handleDragAndDrop()
   handleStatusToggle();
+  handleEdit();
   // ...existing code...
+
 });

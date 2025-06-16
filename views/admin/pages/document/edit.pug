@@ -20,7 +20,7 @@ block main
                 id="title"
                 name="title"
                 value=document.Title
-                placeholder="Nhập tiêu đề tài liệu"
+                
                 required
               )
 
@@ -28,35 +28,35 @@ block main
             .form-group
               label(for="category") Danh mục
               .category-select-wrapper
-                select#category.form-control.multiple-select(
+                select.form-control.multiple-select(
                   name="category[]"
                   multiple
                   size="4"
-                  required
                 )
-                  each cat in categories
+                  each category in categories
                     option(
-                      value=cat.CategoryID
-                      selected=document.Categories.includes(cat.CategoryID)
-                    )= cat.Name
+                      value=category.CategoryID
+                      selected=document.Categories && document.Categories.includes(category.CategoryID)
+                    )= category.Name
                 .select-hint
                   small.text-muted Giữ Ctrl + Click để chọn nhiều danh mục
 
             // Link
             .form-group
-              label.form-label(for="link") Link
+              label.form-label(for="link") Link tài liệu
               input.form-input(
                 type="url"
-                id="link"
+                id="link" 
                 name="link"
-                value=document.FilePath
+                value=document.FilePath 
                 placeholder="https://example.com"
+                required
               )
 
             // Attach Image và Action buttons
             .form-footer
               .image-section
-                label.image-label Ảnh đại diện (1/1)
+                label.image-label Attach Image (1/1)
                 
                 .image-actions-wrapper
                   .image-grid
@@ -64,7 +64,7 @@ block main
                     #preview-container.image-preview-container
                       if document.Thumbnail
                         .preview-item
-                          img.preview-image(src=document.Thumbnail alt="Current thumbnail")
+                          img.preview-image(src=document.Thumbnail name="thumbnail" alt="Current thumbnail")
                     
                     // Upload button
                     label.upload-area(for="image-upload")
@@ -78,11 +78,11 @@ block main
                         name="thumbnail"
                       )
 
-                    // Action buttons
-                    .form-actions
-                      a.btn-cancel(href="/admin/document") Hủy
-                      button.btn-submit(type="submit" data-redirect="/admin/document") 
-                        i.fas.fa-save
-                        span Cập nhật
-  script(src="/admin/js/scriptN.js")                      
+            // Action buttons
+            .form-actions
+              button.btn-submit(type="submit" data-redirect="/admin/document") Cập nhật
+              a.btn-cancel(href="/admin/document") Hủy
+                      
+        
+             
                         

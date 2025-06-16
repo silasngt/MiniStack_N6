@@ -1,0 +1,37 @@
+extends ../../layouts/default.pug
+
+block main
+  .container.mt-5
+    .row.justify-content-center
+      .col-md-12
+        .row.align-items-stretch(style="min-height: 80vh;")
+          // Cột bản đồ
+          .col-md-6.d-flex
+            a(href="https://maps.google.com/?q=Trường+ĐH+GTVT+TPHCM" target="_blank" class="d-block w-100")
+              img(
+                src="https://i.postimg.cc/FHBN5cPf/maputh1.jpg",
+                alt="Bản đồ UTH",
+                class="img-fluid rounded shadow w-100 h-100 object-cover"
+              )
+
+          // Cột thông tin
+          .col-md-6.d-flex.flex-column
+            img(
+              src="https://courses.ut.edu.vn/pluginfile.php/1/theme_edly/main_logo/1749934807/logo_uth.png",
+              alt="Logo Trường",
+              class="img-fluid d-block mx-auto mb-3",
+              style="max-height: 100px;"
+            )
+
+            .custom-box.bg-light.text-dark.p-3.mb-3.rounded.shadow.flex-fill
+              h5.font-weight-bold MiniStack
+              p.mb-0 Hệ thống MiniStack là một nền tảng quản lý tài liệu nội bộ, hỗ trợ nhóm phát triển lưu trữ, phân loại và truy xuất thông tin một cách dễ dàng và hiệu quả. Dự án được xây dựng dựa trên mô hình MVC, sử dụng công nghệ Node.js, Express, Sequelize và Pug để đảm bảo hiệu năng và tính mở rộng.
+
+            .custom-box.bg-light.text-dark.p-3.rounded.shadow
+              h5.font-weight-bold.mb-2 Chuyên đề thực tế 2 – Nhóm 6
+              .indent-names
+                p 2251120049-Nguyễn Giang Thành Tài 
+                p 2251120182-Nguyễn Ngọc Quận
+                p 2251120165-Nguyễn Khao
+                p 2251120098-Trịnh Thị Nghĩa 
+                p 2251120186-Phùng Thuận

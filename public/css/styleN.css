@@ -490,3 +490,24 @@
   }
 }
 /*end userDocument */
+/* contact */
+.custom-box {
+  border-radius: 12px;
+  transition: 0.3s ease;
+  height: 100%;
+}
+
+.custom-box:hover {
+  box-shadow: 0 4px 0px rgba(0, 0, 0, 0.1);
+}
+
+.indent-names {
+  margin-left: 1.5rem;
+}
+
+.object-cover {
+  object-fit: cover;
+}
+
+
+/*end contact */

@@ -3,6 +3,14 @@ import Document from '../../models/document.model';
 import Category from '../../models/category.model';
 import User from '../../models/user.model';
 import { Op } from 'sequelize';
+// Thêm interface cho Request với file
+interface RequestWithFile extends Request {
+  file?: {
+    path: string;
+    filename: string;
+  }
+}
+
 export const index = async (req: Request, res: Response): Promise<void> => {
   try {
     const page = parseInt(req.query.page as string) || 1;
@@ -47,7 +55,6 @@ export const index = async (req: Request, res: Response): Promise<void> => {
             id: cat.get('CategoryID'),
             name: cat.get('Name'),
           }));
-          // console.log(categoryList);
         }
         // Lấy thông tin người upload
         let uploaderName = 'N/A';
@@ -96,7 +103,8 @@ export const create = async (req: Request, res: Response) => {
     // Lấy tất cả categories có status active
     const categories = await Category.findAll({
       where: {
-        Status: 'active',
+        status: 'active',
+        deleted: false,
       },
       attributes: ['CategoryID', 'Name'],
     });
@@ -113,45 +121,49 @@ export const create = async (req: Request, res: Response) => {
     });
   }
 };
-export const createPost = async (req: Request, res: Response) => {
-  // console.log(req.body);
+export const createPost = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { title, description, category, thumbnail } = req.body;
+    console.log(req.body);
+    // Lấy dữ liệu từ form
+    const { title, category, link, description } = req.body;
+    
+       const categories = Array.isArray(category) ? category : [category];
 
-    // Lấy user từ session
-    const adminUser = (req.session as any).adminUser;
-    if (!adminUser) {
-      res.status(401).json({
+
+    // Validate dữ liệu
+    if (!title || !category) {
+      res.status(400).json({
         success: false,
-        message: 'Unauthorized - Vui lòng đăng nhập',
+        message: 'Thiếu thông tin bắt buộc'
       });
       return;
     }
 
-    // Lấy file path từ middleware upload
-    const filePath = req.body.document || '';
-
-    const document = await Document.create({
+    // Tạo document mới
+    const newDocument = await Document.create({
       Title: title,
-      Description: description,
-      FilePath: filePath,
+      Description: description || '',
+      FilePath: link || '',
       UploadDate: new Date(),
-      UploadBy: adminUser.id, // Thay đổi tùy vào cách lưu user của bạn
-      Categories: category, // Categories sẽ tự động được xử lý bởi setter trong model
+      UploadBy: (req.session as any).adminUser.id,
+      Categories: categories,
       status: 'active',
-      Thumbnail: thumbnail || null, // Nếu có thumbnail thì lưu, nếu không thì để null
+      Thumbnail: req.body.thumbnail || null
     });
+    console.log(newDocument.toJSON());
+    res.redirect('/admin/document');
+    // res.status(200).json({
+    //   success: true,
+    //   message: 'Thêm tài liệu thành công',
+    //   document: newDocument
+    // });
+    // res.redirect('/admin/document');
 
-    res.json({
-      success: true,
-      message: 'Thêm tài liệu thành công',
-      document,
-    });
   } catch (error) {
+    console.error('Lỗi:', error);
     res.status(500).json({
       success: false,
-      message: 'Có lỗi xảy ra',
-      error: error.message,
+      message: 'Có lỗi xảy ra khi thêm tài liệu'
     });
   }
 };
@@ -172,12 +184,15 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
     }
 
     const categories = await Category.findAll({
-      where: { status: 'active' },
+      where: {deleted: false, status: 'active' },
     });
+    // Convert to plain object to make sure all properties are accessible
+    const documentData = document.get({ plain: true });
+    
 
     res.render('admin/pages/document/edit', {
       pageTitle: 'Sửa tài liệu',
-      document,
+      document: documentData,
       categories,
     });
   } catch (error) {
@@ -189,124 +204,223 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
 };
 
 // Cập nhật tài liệu
-export const update = async (req: Request, res: Response): Promise<void> => {
+export const update = async (req: RequestWithFile, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const { title, description, category, link } = req.body;
-    const file = req['file'];
+    const { title, category, link, currentThumbnail } = req.body;
+
+ 
 
     const document = await Document.findOne({
-      where: { DocumentID: id, deleted: false },
+      where: { 
+        DocumentID: id,
+        deleted: false 
+      }
     });
 
     if (!document) {
       res.status(404).json({
         success: false,
-        message: 'Không tìm thấy tài liệu',
+        message: 'Không tìm thấy tài liệu'
       });
       return;
     }
 
-    // Cập nhật thông tin cơ bản
-    const updateData: any = {
-      Title: title,
-      Categories: category,
+    const currentDoc = document.get({ plain: true });
+
+    // Xử lý categories an toàn
+    let categories = [];
+    if (Array.isArray(category)) {
+      categories = category;
+    } else if (category) {
+      categories = [category];
+    } else {
+      categories = currentDoc.Categories || [];
+    }
+
+    // Xử lý thumbnail
+    let thumbnailPath = currentDoc.Thumbnail; // Giữ ảnh cũ làm default
+
+    if (req.file) {
+      // Nếu có file upload mới
+      thumbnailPath = req.file.path;
+    } else if (currentThumbnail && currentThumbnail !== currentDoc.Thumbnail) {
+      // Nếu có currentThumbnail mới khác với ảnh cũ
+      thumbnailPath = currentThumbnail;
+    }
+
+    // Tạo object update với thumbnail đã xử lý
+    const updateData = {
+      Title: title || currentDoc.Title,
+      Categories: categories,
+      FilePath: link || currentDoc.FilePath,
+      Thumbnail: req.body.thumbnail
     };
 
-    // Cập nhật link nếu có
-    if (link) {
-      updateData.FilePath = link;
-    }
-
-    // Cập nhật thumbnail nếu có file upload mới
-    if (file) {
-      // Xử lý upload file và lấy đường dẫn
-      const thumbnailPath = file.path; // Hoặc xử lý upload của bạn
-      updateData.Thumbnail = thumbnailPath;
-    }
 
     await document.update(updateData);
+    res.redirect('/admin/document');
+    // res.status(200).json({
+    //   success: true,
+    //   message: 'Cập nhật tài liệu thành công',
+    //   document: {
+    //     ...updateData,
+    //     DocumentID: id
+    //   }
+    // });
 
-    res.json({
-      success: true,
-      message: 'Cập nhật tài liệu thành công',
-    });
   } catch (error) {
     console.error('Update error:', error);
     res.status(500).json({
       success: false,
-      message: 'Có lỗi xảy ra khi cập nhật',
+      message: 'Có lỗi xảy ra khi cập nhật tài liệu',
+      error: error.message
     });
   }
 };
 
 // Cập nhật trạng thái
-export const updateStatus = async (
+// export const updateStatus = async (
+//   req: Request,
+//   res: Response
+// ): Promise<void> => {
+//   try {
+//     const { id } = req.params;
+//     const { status } = req.body;
+
+//     const document = await Document.findByPk(id);
+
+//     if (!document) {
+//       res.status(404).json({
+//         success: false,
+//         message: 'Không tìm thấy tài liệu',
+//       });
+//       return;
+//     }
+
+//     // Toggle status
+//     const newStatus = status === 'active' ? 'inactive' : 'active';
+
+//     await document.update({
+//       status: newStatus,
+//     });
+
+//     res.json({
+//       success: true,
+//       message: `${newStatus === 'active' ? 'Hiện' : 'Ẩn'} tài liệu thành công`,
+//     });
+//   } catch (error) {
+//     console.error('Update status error:', error);
+//     res.status(500).json({
+//       success: false,
+//       message: 'Có lỗi xảy ra khi cập nhật trạng thái',
+//     });
+//   }
+// };
+
+export const toggleStatus = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
-
-    const document = await Document.findByPk(id);
+    const document = await Document.findOne({
+      where: { DocumentID: id, deleted: false },
+    });
 
     if (!document) {
-      res.status(404).json({
-        success: false,
-        message: 'Không tìm thấy tài liệu',
-      });
+      res.status(404).json({ success: false, message: 'Không tìm thấy user' });
       return;
     }
 
-    // Toggle status
-    const newStatus = status === 'active' ? 'inactive' : 'active';
-
-    await document.update({
-      status: newStatus,
-    });
+    const currentStatus = document.get('status');
+    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+    await document.update({ status: newStatus });
 
     res.json({
       success: true,
-      message: `${newStatus === 'active' ? 'Hiện' : 'Ẩn'} tài liệu thành công`,
+      newStatus,
+      message: `Đã ${
+        newStatus === 'active' ? 'kích hoạt' : 'vô hiệu hóa'
+      } user`,
     });
   } catch (error) {
-    console.error('Update status error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Có lỗi xảy ra khi cập nhật trạng thái',
-    });
+    console.error('Error toggling user status:', error);
+    res.status(500).json({ success: false, message: 'Lỗi server' });
   }
 };
+
 // Thêm chức năng xóa tài liệu
+// export const deleteDocument = async (
+//   req: Request,
+//   res: Response
+// ): Promise<void> => {
+//   try {
+//     const { id } = req.params;
+//     const adminUser = (req.session as any).adminUser;
+
+//     if (!adminUser) {
+//       res.status(401).json({
+//         success: false,
+//         message: 'Unauthorized - Vui lòng đăng nhập',
+//       });
+//       return;
+//     }
+
+//     // Soft delete - cập nhật trường deleted thành true
+//     await Document.update({ deleted: true }, { where: { DocumentID: id } });
+
+//     res.json({
+//       success: true,
+//       message: 'Xóa tài liệu thành công',
+//     });
+//   } catch (error) {
+//     console.error('Delete document error:', error);
+//     res.status(500).json({
+//       success: false,
+//       message: 'Có lỗi xảy ra khi xóa tài liệu',
+//     });
+//   }
+// };
+
+// Xóa người dùng
 export const deleteDocument = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const adminUser = (req.session as any).adminUser;
 
-    if (!adminUser) {
-      res.status(401).json({
-        success: false,
-        message: 'Unauthorized - Vui lòng đăng nhập',
-      });
+    if (!id) {
+      res
+        .status(400)
+        .json({ success: false, message: 'ID người dùng không hợp lệ' });
       return;
     }
 
-    // Soft delete - cập nhật trường deleted thành true
-    await Document.update({ deleted: true }, { where: { DocumentID: id } });
+    const document = await Document.findOne({
+      where: {
+        DocumentID: id,
+        deleted: false,
+      },
+    });
 
-    res.json({
-      success: true,
-      message: 'Xóa tài liệu thành công',
+    if (!document) {
+      res
+        .status(404)
+        .json({ success: false, message: 'Không tìm thấy người dùng' });
+      return;
+    }
+
+    // Soft delete
+    await document.update({
+      deleted: true,
+      deletedAt: new Date(),
     });
+
+    res.json({ success: true, message: 'Xóa người dùng thành công' });
   } catch (error) {
-    console.error('Delete document error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Có lỗi xảy ra khi xóa tài liệu',
-    });
+    console.error('Lỗi khi xóa người dùng:', error);
+    res.status(500).json({ success: false, message: 'Lỗi server' });
   }
 };

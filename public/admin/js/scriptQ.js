@@ -305,3 +305,25 @@ function deleteUser(id, btn) {
       .catch(() => alert('Có lỗi xảy ra khi xóa!'));
   }
 }
+
+ function deleteDocument(id, btn) {
+  if (confirm('Bạn có chắc chắn muốn xóa tài liệu này?')) {
+    fetch(`/admin/document/delete/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          // Ẩn dòng vừa xóa khỏi bảng
+          const row = btn.closest('tr');
+          if (row) row.remove();
+        } else {
+          alert(data.message || 'Xóa không thành công');
+        }
+      })
+      .catch(() => alert('Có lỗi xảy ra khi xóa!'));
+  }
+}
