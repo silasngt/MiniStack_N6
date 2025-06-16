@@ -55,7 +55,6 @@ export const index = async (req: Request, res: Response): Promise<void> => {
             id: cat.get('CategoryID'),
             name: cat.get('Name'),
           }));
-          // console.log(categoryList);
         }
         // Lấy thông tin người upload
         let uploaderName = 'N/A';
@@ -124,16 +123,12 @@ export const create = async (req: Request, res: Response) => {
 };
 export const createPost = async (req: Request, res: Response): Promise<void> => {
   try {
+    console.log(req.body);
     // Lấy dữ liệu từ form
     const { title, category, link, description } = req.body;
     
-    // Log để debug
-    console.log('Dữ liệu gửi lên:', {
-      title,
-      category,
-      link,
-      description
-    });
+       const categories = Array.isArray(category) ? category : [category];
+
 
     // Validate dữ liệu
     if (!title || !category) {
@@ -151,16 +146,18 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
       FilePath: link || '',
       UploadDate: new Date(),
       UploadBy: (req.session as any).adminUser.id,
-      Categories: category,
+      Categories: categories,
       status: 'active',
       Thumbnail: req.body.thumbnail || null
     });
-
-    res.status(200).json({
-      success: true,
-      message: 'Thêm tài liệu thành công',
-      document: newDocument
-    });
+    console.log(newDocument.toJSON());
+    res.redirect('/admin/document');
+    // res.status(200).json({
+    //   success: true,
+    //   message: 'Thêm tài liệu thành công',
+    //   document: newDocument
+    // });
+    // res.redirect('/admin/document');
 
   } catch (error) {
     console.error('Lỗi:', error);
@@ -192,8 +189,6 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
     // Convert to plain object to make sure all properties are accessible
     const documentData = document.get({ plain: true });
     
-    // Debug log
-    console.log('Document data:', documentData);
 
     res.render('admin/pages/document/edit', {
       pageTitle: 'Sửa tài liệu',
@@ -214,11 +209,7 @@ export const update = async (req: RequestWithFile, res: Response): Promise<void>
     const { id } = req.params;
     const { title, category, link, currentThumbnail } = req.body;
 
-    // Debug log
-    console.log('Request data:', {
-      body: req.body,
-      file: req.file
-    });
+ 
 
     const document = await Document.findOne({
       where: { 
@@ -253,11 +244,9 @@ export const update = async (req: RequestWithFile, res: Response): Promise<void>
     if (req.file) {
       // Nếu có file upload mới
       thumbnailPath = req.file.path;
-      console.log('New thumbnail path:', thumbnailPath);
     } else if (currentThumbnail && currentThumbnail !== currentDoc.Thumbnail) {
       // Nếu có currentThumbnail mới khác với ảnh cũ
       thumbnailPath = currentThumbnail;
-      console.log('Using provided thumbnail:', thumbnailPath);
     }
 
     // Tạo object update với thumbnail đã xử lý
@@ -265,21 +254,20 @@ export const update = async (req: RequestWithFile, res: Response): Promise<void>
       Title: title || currentDoc.Title,
       Categories: categories,
       FilePath: link || currentDoc.FilePath,
-      Thumbnail: thumbnailPath
+      Thumbnail: req.body.thumbnail
     };
 
-    console.log('Update data:', updateData);
 
     await document.update(updateData);
-
-    res.status(200).json({
-      success: true,
-      message: 'Cập nhật tài liệu thành công',
-      document: {
-        ...updateData,
-        DocumentID: id
-      }
-    });
+    res.redirect('/admin/document');
+    // res.status(200).json({
+    //   success: true,
+    //   message: 'Cập nhật tài liệu thành công',
+    //   document: {
+    //     ...updateData,
+    //     DocumentID: id
+    //   }
+    // });
 
   } catch (error) {
     console.error('Update error:', error);
@@ -292,72 +280,147 @@ export const update = async (req: RequestWithFile, res: Response): Promise<void>
 };
 
 // Cập nhật trạng thái
-export const updateStatus = async (
+// export const updateStatus = async (
+//   req: Request,
+//   res: Response
+// ): Promise<void> => {
+//   try {
+//     const { id } = req.params;
+//     const { status } = req.body;
+
+//     const document = await Document.findByPk(id);
+
+//     if (!document) {
+//       res.status(404).json({
+//         success: false,
+//         message: 'Không tìm thấy tài liệu',
+//       });
+//       return;
+//     }
+
+//     // Toggle status
+//     const newStatus = status === 'active' ? 'inactive' : 'active';
+
+//     await document.update({
+//       status: newStatus,
+//     });
+
+//     res.json({
+//       success: true,
+//       message: `${newStatus === 'active' ? 'Hiện' : 'Ẩn'} tài liệu thành công`,
+//     });
+//   } catch (error) {
+//     console.error('Update status error:', error);
+//     res.status(500).json({
+//       success: false,
+//       message: 'Có lỗi xảy ra khi cập nhật trạng thái',
+//     });
+//   }
+// };
+
+export const toggleStatus = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
-
-    const document = await Document.findByPk(id);
+    const document = await Document.findOne({
+      where: { DocumentID: id, deleted: false },
+    });
 
     if (!document) {
-      res.status(404).json({
-        success: false,
-        message: 'Không tìm thấy tài liệu',
-      });
+      res.status(404).json({ success: false, message: 'Không tìm thấy user' });
       return;
     }
 
-    // Toggle status
-    const newStatus = status === 'active' ? 'inactive' : 'active';
-
-    await document.update({
-      status: newStatus,
-    });
+    const currentStatus = document.get('status');
+    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+    await document.update({ status: newStatus });
 
     res.json({
       success: true,
-      message: `${newStatus === 'active' ? 'Hiện' : 'Ẩn'} tài liệu thành công`,
+      newStatus,
+      message: `Đã ${
+        newStatus === 'active' ? 'kích hoạt' : 'vô hiệu hóa'
+      } user`,
     });
   } catch (error) {
-    console.error('Update status error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Có lỗi xảy ra khi cập nhật trạng thái',
-    });
+    console.error('Error toggling user status:', error);
+    res.status(500).json({ success: false, message: 'Lỗi server' });
   }
 };
+
 // Thêm chức năng xóa tài liệu
+// export const deleteDocument = async (
+//   req: Request,
+//   res: Response
+// ): Promise<void> => {
+//   try {
+//     const { id } = req.params;
+//     const adminUser = (req.session as any).adminUser;
+
+//     if (!adminUser) {
+//       res.status(401).json({
+//         success: false,
+//         message: 'Unauthorized - Vui lòng đăng nhập',
+//       });
+//       return;
+//     }
+
+//     // Soft delete - cập nhật trường deleted thành true
+//     await Document.update({ deleted: true }, { where: { DocumentID: id } });
+
+//     res.json({
+//       success: true,
+//       message: 'Xóa tài liệu thành công',
+//     });
+//   } catch (error) {
+//     console.error('Delete document error:', error);
+//     res.status(500).json({
+//       success: false,
+//       message: 'Có lỗi xảy ra khi xóa tài liệu',
+//     });
+//   }
+// };
+
+// Xóa người dùng
 export const deleteDocument = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const adminUser = (req.session as any).adminUser;
 
-    if (!adminUser) {
-      res.status(401).json({
-        success: false,
-        message: 'Unauthorized - Vui lòng đăng nhập',
-      });
+    if (!id) {
+      res
+        .status(400)
+        .json({ success: false, message: 'ID người dùng không hợp lệ' });
       return;
     }
 
-    // Soft delete - cập nhật trường deleted thành true
-    await Document.update({ deleted: true }, { where: { DocumentID: id } });
+    const document = await Document.findOne({
+      where: {
+        DocumentID: id,
+        deleted: false,
+      },
+    });
 
-    res.json({
-      success: true,
-      message: 'Xóa tài liệu thành công',
+    if (!document) {
+      res
+        .status(404)
+        .json({ success: false, message: 'Không tìm thấy người dùng' });
+      return;
+    }
+
+    // Soft delete
+    await document.update({
+      deleted: true,
+      deletedAt: new Date(),
     });
+
+    res.json({ success: true, message: 'Xóa người dùng thành công' });
   } catch (error) {
-    console.error('Delete document error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Có lỗi xảy ra khi xóa tài liệu',
-    });
+    console.error('Lỗi khi xóa người dùng:', error);
+    res.status(500).json({ success: false, message: 'Lỗi server' });
   }
 };

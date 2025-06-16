@@ -1,3 +1,5 @@
+
+
 // Utility functions
 const createFormData = (form) => {
   const formData = new FormData();
@@ -18,16 +20,7 @@ const createFormData = (form) => {
     });
   }
 
-        //   // Lấy các category được chọn và thêm vào formData
-        // const categorySelect = document.getElementById('category');
-        // const selectedCategories = Array.from(categorySelect.selectedOptions)
-        //   .map(option => option.value);
-        
-        // // Xóa categories cũ và thêm mảng mới
-        // formData.delete('category');
-        // selectedCategories.forEach(cat => {
-        //   formData.append('category', cat);
-        // });
+      
 
   // Handle image
   const imageInput = form.querySelector('#image-upload');
@@ -45,235 +38,8 @@ const createFormData = (form) => {
 };
 
 // Main document ready handler
-document.addEventListener('DOMContentLoaded', function() {
-  // Form handlers
-  const initializeForms = () => {
-    // Create form handler
-    const createForm = document.querySelector('form[action="/admin/document/create"]');
-    if (createForm) {
-      createForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        try {
-          const formData = createFormData(createForm);
-          const response = await fetch('/admin/document/create', {
-            method: 'POST',
-            body: formData
-          });
-          
-          const result = await response.json();
-          if (result.success) {
-            alert(result.message);
-            window.location.href = '/admin/document';
-          } else {
-            throw new Error(result.message);
-          }
-        } catch (error) {
-          console.error('Create error:', error);
-          alert('Có lỗi xảy ra: ' + error.message);
-        }
-      });
-    }
-
-    // Edit form handler
-    const editForm = document.querySelector('form[action^="/admin/document/edit/"]');
-    if (editForm) {
-      editForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        try {
-          const id = editForm.getAttribute('action').split('/').pop().split('?')[0];
-          const formData = createFormData(editForm);
-          
-          const response = await fetch(`/admin/document/edit/${id}`, {
-            method: 'PATCH',
-            body: formData
-          });
-
-          const result = await response.json();
-          if (result.success) {
-            alert(result.message);
-            window.location.href = '/admin/document';
-          } else {
-            throw new Error(result.message);
-          }
-        } catch (error) {
-          console.error('Edit error:', error);
-          alert('Có lỗi xảy ra: ' + error.message);
-        }
-      });
-    }
-  };
-
-  // Initialize features
-  const initializeFeatures = () => {
-    // Image preview handler
-    const fileInput = document.getElementById('image-upload');
-    const previewContainer = document.getElementById('preview-container');
-    
-    if (fileInput && previewContainer) {
-      handleImagePreview(fileInput, previewContainer);
-    }
-
-    // Category select handler
-    const categorySelect = document.getElementById('category');
-    if (categorySelect) {
-      handleCategorySelect(categorySelect);
-    }
-
-    // Status toggle handler
-    const toggleButtons = document.querySelectorAll('.btn-toggle-status');
-    if (toggleButtons.length) {
-      handleStatusToggle(toggleButtons);
-    }
-
-    // Delete buttons handler
-    const deleteButtons = document.querySelectorAll('.btn-delete');
-    if (deleteButtons.length) {
-      handleDelete(deleteButtons);
-    }
-  };
-
-  // Initialize everything
-  initializeForms();
-  initializeFeatures();
-});
-// Xử lý form submit
-// document.addEventListener('DOMContentLoaded', function() {
-//     // Phân biệt form create và edit
-//   const createForm = document.querySelector('form[action="#"]');
-//   const editForm = document.querySelector('form[action^="/admin/document/edit/"]');
-//   if (createForm) {
-//     createForm.addEventListener('submit', async function(e) {
-//       e.preventDefault();
-      
-//       try {
-//         const formData = new FormData(this);
-        
-//         // Lấy các category được chọn và thêm vào formData
-//         const categorySelect = document.getElementById('category');
-//         const selectedCategories = Array.from(categorySelect.selectedOptions)
-//           .map(option => option.value);
-        
-//         // Xóa categories cũ và thêm mảng mới
-//         formData.delete('category');
-//         selectedCategories.forEach(cat => {
-//           formData.append('category', cat);
-//         });
-
-//         const response = await fetch('/admin/document/create', {
-//           method: 'POST',
-//           body: formData
-//         });
-
-//         const result = await response.json();
-
-//         if (result.success) {
-//           alert(result.message);
-//           window.location.href = '/admin/document';
-//         } else {
-//           throw new Error(result.message);
-//         }
-//       } catch (error) {
-//         alert('Có lỗi xảy ra: ' + error.message);
-//       }
-//     });
-//   }
 
 
-
-//   // Khởi tạo các handlers
-//   handleImagePreview();
-//   handleDragAndDrop();
-
-//   // Xử lý multiple select
-//   const categorySelect = document.getElementById('category');
-//   if (categorySelect) {
-//     // Thêm tooltip khi hover
-//     categorySelect.title = "Giữ Ctrl + Click để chọn nhiều danh mục";
-    
-//     // Thêm style cho selected options
-//     categorySelect.addEventListener('change', function() {
-//       Array.from(this.options).forEach(option => {
-//         if (option.selected) {
-//           option.classList.add('selected');
-//         } else {
-//           option.classList.remove('selected');
-//         }
-//       });
-//     });
-//   }
-
-//   // Xử lý các nút pagination
-//   const handlePagination = () => {
-//     const pagination = document.querySelector('.pagination');
-//     if (!pagination) return;
-
-//     pagination.addEventListener('click', async (e) => {
-//       const target = e.target.closest('button');
-//       if (!target) return;
-
-//       const currentPage = parseInt(document.querySelector('.btn-page.active')?.textContent || '1');
-//       let newPage = currentPage;
-
-//       if (target.classList.contains('btn-prev')) {
-//         newPage = currentPage - 1;
-//       } else if (target.classList.contains('btn-next')) {
-//         newPage = currentPage + 1;
-//       } else if (target.classList.contains('btn-page')) {
-//         newPage = parseInt(target.textContent);
-//       }
-
-//       if (newPage !== currentPage) {
-//         window.location.href = `/admin/document?page=${newPage}`;
-//       }
-//     });
-//   };
-
-//   // Xử lý xóa tài liệu
-//   const handleDelete = () => {
-//     const deleteButtons = document.querySelectorAll('.btn-delete');
-    
-//     deleteButtons.forEach(btn => {
-//       btn.addEventListener('click', async function(e) {
-//         e.preventDefault();
-        
-//         if (!confirm('Bạn có chắc muốn xóa tài liệu này?')) return;
-
-//         const id = this.dataset.id;
-//         try {
-//           const response = await fetch(`/admin/document/${id}`, {
-//             method: 'DELETE'
-//           });
-
-//           const result = await response.json();
-
-//           if (result.success) {
-//             alert(result.message);
-//             window.location.reload();
-//           } else {
-//             throw new Error(result.message);
-//           }
-//         } catch (error) {
-//           alert('Có lỗi xảy ra: ' + error.message);
-//         }
-//       });
-//     });
-//   };
-
-//   // Xử lý hover hiển thị tooltip cho categories dài
-//   const handleCategoryTooltips = () => {
-//     const categorysCells = document.querySelectorAll('.categories-cell');
-//     categorysCells.forEach(cell => {
-//       if (cell.scrollWidth > cell.clientWidth) {
-//         cell.title = cell.textContent;
-//       }
-//     });
-//   };
-
-//   // Initialize
-//   handlePagination();
-//   handleDelete();
-//   handleCategoryTooltips();
-// });
 
    // Xử lý preview ảnh khi upload
   const handleImagePreview = () => {
@@ -533,7 +299,10 @@ const handleStatusToggle = () => {
 
 // Thêm vào DOMContentLoaded
 document.addEventListener('DOMContentLoaded', function() {
+     handleImagePreview();
+   handleDragAndDrop()
   handleStatusToggle();
   handleEdit();
   // ...existing code...
+
 });
