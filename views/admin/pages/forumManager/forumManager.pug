@@ -1,4 +1,5 @@
 extends ../../layouts/default.pug
+include ../../mixins/pagination.pug
 
 block main
   .forum-management-container
@@ -17,55 +18,57 @@ block main
             th.forum-th-replies Lượt trả lời
             th.forum-th-actions Thao tác
         tbody
-          each question in questions
-            tr.forum-tr-question
-              td.forum-td-id #{question.id}
-              td.forum-td-content #{question.content}
-              td.forum-td-name #{question.name}
-              td.forum-td-email #{question.email}
-              td.forum-td-date #{question.date}
-              td.forum-td-replies
-                span.reply-count #{question.commentCount}
-                span.reply-label #{question.commentCount === 1 ? '' : ''}
-              td.forum-td-actions
-                .forum-btn-group(role="group")
-                  button.forum-btn.forum-btn-view(
-                    data-id=question.id,
-                    data-status=question.status,
-                    title="Ẩn/Hiện bài viết"
-                  )
-                    i.fas(class=question.status === 'inactive' ? 'fa-eye-slash' : 'fa-eye')
+          if questions && questions.length > 0
+            each question in questions
+              tr.forum-tr-question
+                td.forum-td-id #{question.id}
+                td.forum-td-content #{question.content}
+                td.forum-td-name #{question.name}
+                td.forum-td-email #{question.email}
+                td.forum-td-date #{question.date}
+                td.forum-td-replies
+                  span.reply-count #{question.commentCount}
+                  span.reply-label #{question.commentCount === 1 ? '' : ''}
+                td.forum-td-actions
+                  .forum-btn-group(role="group")
+                    button.forum-btn.forum-btn-view(
+                      data-id=question.id,
+                      data-status=question.status,
+                      title="Ẩn/Hiện bài viết"
+                    )
+                      i.fas(class=question.status === 'inactive' ? 'fa-eye-slash' : 'fa-eye')
 
-                  button.forum-btn.forum-btn-edit(
-                    data-id=question.id,
-                    title="Chỉnh sửa"
-                  )
-                    i.fas.fa-edit
+                    button.forum-btn.forum-btn-edit(
+                      data-id=question.id,
+                      title="Chỉnh sửa"
+                    )
+                      i.fas.fa-edit
 
-                  button.forum-btn.forum-btn-save(
-                    data-id=question.id,
-                    style="display:none",
-                    title="Lưu"
-                  )
-                    i.fas.fa-save
+                    button.forum-btn.forum-btn-save(
+                      data-id=question.id,
+                      style="display:none",
+                      title="Lưu"
+                    )
+                      i.fas.fa-save
 
-                  button.forum-btn.forum-btn-delete(
-                    data-id=question.id,
-                    title="Xóa"
-                  )
-                    i.fas.fa-trash
+                    button.forum-btn.forum-btn-delete(
+                      data-id=question.id,
+                      title="Xóa"
+                    )
+                      i.fas.fa-trash
+          else
+            tr
+              td(colspan="7" style="text-align: center; padding: 20px;") Không có dữ liệu để hiển thị
 
-    .forum-pagination-wrapper
-      .forum-pagination
-        button.forum-btn-page.forum-btn-prev(disabled)
-          i.icon-prev
-          span Prev
+    // Phân trang
+    .pagination-container
+      +pagination(currentPage, totalPages)
 
-        - var pages = [1, 2, 3, 4, 5]
-        each page in pages
-          - var pageClass = page === 1 ? 'forum-btn-page forum-btn-active' : 'forum-btn-page'
-          button(class=pageClass)= page
-
-        button.forum-btn-page.forum-btn-next
-          span Next
-          i.icon-next
+  // Script xử lý click nút phân trang
+  script.
+    document.querySelectorAll('[button-pagination]').forEach(button => {
+      button.addEventListener('click', () => {
+        const page = button.getAttribute('button-pagination');
+        window.location.href = `/admin/forumManager?limit=#{limit}&page=${page}`;
+      });
+    });
