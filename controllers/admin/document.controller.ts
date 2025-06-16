@@ -123,7 +123,7 @@ export const create = async (req: Request, res: Response) => {
 };
 export const createPost = async (req: Request, res: Response): Promise<void> => {
   try {
-    console.log(req.body);
+    
     // Lấy dữ liệu từ form
     const { title, category, link, description } = req.body;
     
@@ -150,7 +150,7 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
       status: 'active',
       Thumbnail: req.body.thumbnail || null
     });
-    console.log(newDocument.toJSON());
+    
     res.redirect('/admin/document');
     // res.status(200).json({
     //   success: true,
