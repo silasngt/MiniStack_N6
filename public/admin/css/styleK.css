@@ -292,7 +292,7 @@ input.is-invalid {
 
 /* CSS for Post Management Page */
 .post-management-content {
-  padding: 0 16px;
+  padding: 24px 24px;
   background-color: #f8fafc;
   min-height: 100vh;
 }
