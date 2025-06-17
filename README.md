@@ -1,15 +1,14 @@
 <div align="center">
-
 # ĐỒ ÁN MÔN CHUYÊN ĐỀ THỰC TẾ 2 - PRACTICAL THEMATIC
-
 </div>
 
 # MiniStack - Diễn đàn hỏi đáp và chia sẻ tài liệu học tập
-
 Một nền tảng web tương tự Stack Overflow được xây dựng để phục vụ cộng đồng sinh viên và lập trình viên Việt Nam trong việc trao đổi kiến thức, hỏi đáp và chia sẻ tài liệu học tập.
 
-## 🚀 Công nghệ sử dụng
+## 🌐 Demo Online
+**Truy cập ứng dụng trực tuyến tại:** https://ministack-n6.onrender.com
 
+## 🚀 Công nghệ sử dụng
 - **Backend**: Express.js + Node.js
 - **Template Engine**: Pug
 - **Database**: MySQL
@@ -17,7 +16,6 @@ Một nền tảng web tương tự Stack Overflow được xây dựng để ph
 - **Frontend**: HTML, CSS, JavaScript
 
 ## ✨ Tính năng chính
-
 ### Dành cho người dùng
 - **Diễn đàn Q&A**: Đặt câu hỏi và trả lời các thắc mắc lập trình (yêu cầu đăng nhập)
 - **AI hỗ trợ**: Chatbot AI giải đáp thắc mắc nhanh chóng (không lưu lịch sử)
@@ -53,16 +51,36 @@ cd MiniStack_N6
 npm install
 ```
 
-3. **Cấu hình database**
+3. **Cấu hình biến môi trường**
+   
+   Tạo file `.env` trong thư mục gốc của dự án với các biến sau:
+```env
+# Database Configuration
+DB_NAME=your_database_name
+DB_USERNAME=your_database_username
+DB_PASSWORD=your_database_password
+DB_HOST=localhost
+
+# Cloudinary Configuration (cho upload file)
+CLOUD_NAME=your_cloudinary_cloud_name
+CLOUD_SECRET=your_cloudinary_secret_key
+
+# AI Integration
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+> **Lưu ý**: Bạn cần đăng ký tài khoản Cloudinary và Google AI (Gemini) để lấy các API key tương ứng.
+
+4. **Cấu hình database**
 - Tạo database MySQL mới
 - Cập nhật thông tin kết nối trong file `config/database.js`
 
-4. **Chạy migration**
+5. **Chạy migration**
 ```bash
 npx sequelize-cli db:migrate
 ```
 
-5. **Chạy ứng dụng**
+6. **Chạy ứng dụng**
 ```bash
 npm start
 ```
@@ -70,7 +88,6 @@ npm start
 Ứng dụng sẽ chạy tại `http://localhost:3000`
 
 ## 📁 Cấu trúc dự án
-
 ```
 MiniStack_N6/
 ├── config/           # Cấu hình database và app
@@ -80,7 +97,7 @@ MiniStack_N6/
 ├── public/           # Static files (CSS, JS, images)
 ├── routes/           # Route definitions
 ├── views/            # Templates Pug
-├── .env              # Biến môi trường
+├── .env              # Biến môi trường (cần tạo)
 ├── .gitignore        # Git ignore file
 ├── index.js          # Entry point
 ├── package-lock.json # Lock file dependencies
@@ -89,7 +106,6 @@ MiniStack_N6/
 ```
 
 ## 👥 Thành viên nhóm
-
 | MSSV | Họ và tên |
 |------|-----------|
 | 2251120049 | Nguyễn Giang Thành Tài |
@@ -99,13 +115,10 @@ MiniStack_N6/
 | 2251120186 | Phùng Thuận |
 
 ## 📝 License
-
 Dự án này được phát triển cho mục đích học tập và nghiên cứu.
 
 ## 🤝 Đóng góp
-
 Chúng tôi hoan nghênh mọi đóng góp từ cộng đồng. Vui lòng tạo pull request hoặc báo cáo issues nếu phát hiện lỗi.
 
 ---
-
 *Phát triển bởi các thành viên NHÓM 6 Trường Đại học Giao thông vận tải TPHCM - University Of Transport HCM*
