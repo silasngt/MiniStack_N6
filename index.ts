@@ -55,10 +55,9 @@ app.use(cookieParser()); // PHẢI CÓ TRƯỚC checkAuth
 // Middleware cho CLIENT (JWT-based auth) - SAU khi đã có cookieParser
 app.use(checkAuth);
 app.use(addUserToViews);
-
 // Nhúng các Routes vào app
-routesClient(app);
 routesAdmin(app);
+routesClient(app);
 
 app.listen(port, () => {
   console.log(`App listening on port http://localhost:${port}`);
