@@ -1,4 +1,4 @@
-import { Express } from 'express';
+import { Express, Request, Response } from 'express';
 import { miniStackRoute } from './miniStack.route';
 import { forumRoute } from './forum.route';
 import { blogRoute } from './blog.route';
@@ -20,5 +20,9 @@ export const routesClient = (app: Express) => {
   app.use('/search', searchRoute);
   app.use('/document', documentRoute);
   app.use('/contact', contactRoute);
-
+  app.use((req: Request, res: Response) => {
+    res.status(404).render('client/pages/errors/404', {
+      pageTitle: '404 Not Found',
+    });
+  });
 };
