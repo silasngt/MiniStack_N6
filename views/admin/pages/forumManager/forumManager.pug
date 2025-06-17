@@ -10,7 +10,7 @@ block main
       table.forum-table
         thead
           tr
-            th.forum-th-id ID câu hỏi
+            th.forum-th-id STT
             th.forum-th-content Tiêu đề
             th.forum-th-name Tên người đăng
             th.forum-th-email Email
@@ -19,9 +19,9 @@ block main
             th.forum-th-actions Thao tác
         tbody
           if questions && questions.length > 0
-            each question in questions
+            each question,index in questions
               tr.forum-tr-question
-                td.forum-td-id #{question.id}
+                td.forum-td-id #{index + 1}
                 td.forum-td-content #{question.content}
                 td.forum-td-name #{question.name}
                 td.forum-td-email #{question.email}

@@ -19,7 +19,7 @@ block main
             table.post-table
                 thead
                     tr
-                        th ID
+                        th STT
                         th Tiêu đề
                         th Nội dung
                         th Tác giả
@@ -29,12 +29,12 @@ block main
 
                 tbody
                     if posts && posts.length > 0
-                        each post in posts
+                        each post,index in posts
                             tr.post-row(
                                 id=`post-row-${post.PostID}` 
                                 class=post.status === 'inactive' ? 'post-inactive' : ''
                             )
-                                td.post-id= post.PostID
+                                td.post-id= index + 1
                                 td.post-title.truncate(title=post.Title)= post.Title
                                 td.post-content.truncate(title=post.Content)= post.Content
                                 td.post-author= post.authorName
