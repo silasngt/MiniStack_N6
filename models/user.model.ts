@@ -1,42 +1,48 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes } from 'sequelize';
 import sequelize from '../config/database';
 
 const User = sequelize.define(
   'User',
   {
-    userid: {
+    UserID: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      allowNull: false,
       autoIncrement: true,
     },
-    fullname: {
-      type: DataTypes.STRING(45),
+    FullName: DataTypes.STRING(255),
+    Email: {
+      type: DataTypes.STRING(255),
+      unique: true,
+    },
+    Password: DataTypes.STRING(255),
+    Phone: {
+      type: DataTypes.STRING(10),
+      validate: {
+        is: {
+          args: [/^\d{10}$/],
+          msg: 'Phone must be exactly 11 digits',
+        },
+      },
+    },
+    Gender: DataTypes.ENUM('Nam', 'Nữ', 'Khác'),
+    Avatar: DataTypes.STRING(255),
+    Role: DataTypes.ENUM('User', 'Admin'),
+    deleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    status: {
+      type: DataTypes.ENUM('active', 'inactive'),
+      defaultValue: 'active',
+    },
+    createdAt: {
+      type: DataTypes.DATE,
       allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING(45),
-      allowNull: false,
-    },
-    password: {
-      type: DataTypes.STRING(45),
-      allowNull: false,
-    },
-    gender: {
-      type: DataTypes.ENUM('Nam', 'Nữ', 'Khác'),
-      allowNull: true,
-    },
-    avatar: {
-      type: DataTypes.STRING(45),
-      allowNull: true,
-    },
-    role: {
-      type: DataTypes.ENUM('User', 'Admin'),
-      allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
   },
   {
-    tableName: 'user',
+    tableName: 'User',
     timestamps: false,
   }
 );

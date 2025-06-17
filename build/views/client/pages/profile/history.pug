@@ -1,0 +1,62 @@
+extends ../../layouts/defaultMenu.pug
+
+block main
+    .profile-container
+        .row
+            .col-md-4.mb-4
+                .profile-cardpng
+                    .profile-header
+                        .avatar-container
+                            img.profile-avatar(src="https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png" alt="Admin")
+                            .avatar-edit
+                                label(for="avatar-upload")
+                                    i.fas.fa-pencil-alt
+                                input#avatar-upload(type="file", hidden)
+                        .user-name-title #{user.FullName || 'Guest'}
+
+                    .profile-tabs
+                        a.profile-tab(href=`/profile/${user ? user.UserID : 'guest'}`) Thông Tin Cá Nhân
+                        .profile-tab.active Lịch Sử Câu Hỏi
+            .col-md-8
+                .content-card
+                    .section-header
+                        h2.section-title Lịch Sử Câu Hỏi
+                        .question-count Tổng Cộng: #{totalInfoHistory} Câu Hỏi
+
+                    .question-history-list
+                        each question in infoHistory
+                            .question-item
+                                .question-header
+                                    a(href="#").question-title #{question.Title}
+                                .question-content
+                                    p #{question.Content}
+                        //- // Question Item 2
+                        //- .question-item
+                        //-     .question-header
+                        //-         a(href="#").question-title org.hibernate.query.QueryArgumentException: Argument [44]
+                        //-         .question-date 1 ngày trước
+                        //-     .question-content
+                        //-         p I have 2 tables in database "Courses" and "Instructor" with "Instructor" table having one to many relation with "Courses" table and "I...
+
+                        //- // Question Item 3
+                        //- .question-item
+                        //-     .question-header
+                        //-         a(href="#").question-title org.hibernate.query.QueryArgumentException: Argument [44]
+                        //-         .question-date 3 ngày trước
+                        //-     .question-content
+                        //-         p I have 2 tables in database "Courses" and "Instructor" with "Instructor" table having one to many relation with "Courses" table and "I...
+
+                    // Pagination
+                    .pagination-container
+                        nav(aria-label="Question history pagination")
+                            ul.pagination.justify-content-center
+                                li.page-item.disabled
+                                    a.page-link(href="#", tabindex="-1", aria-disabled="true") Trước
+                                li.page-item.active
+                                    a.page-link(href="#") 1
+                                li.page-item
+                                    a.page-link(href="#") 2
+                                li.page-item
+                                    a.page-link(href="#") 3
+                                li.page-item
+                                    a.page-link(href="#") Sau

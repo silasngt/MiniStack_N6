@@ -1,0 +1,58 @@
+extends ../../layouts/defaultMenu.pug
+
+block main
+    .search-results-container
+        .search-header
+            h1.search-title Kết quả tìm kiếm
+            .search-info
+                if searchQuery
+                    span.search-query "#{searchQuery}"
+                    span.search-count #{totalResults} kết quả
+                else
+                    span.search-query Nhập từ khóa để tìm kiếm
+
+        .search-results-list
+            if searchResults && searchResults.length > 0
+                each result in searchResults
+                    .search-result-item
+                        .result-left
+                            .stats-box
+                                .stat-item
+                                    .stat-number #{result.answers}
+                                    .stat-label answer
+                        .result-right
+                            .result-header
+                                h3.result-title
+                                    //- ✅ LINK: Đường dẫn đến chi tiết câu hỏi
+                                    a(href=`/forum/exchange/${result.id}`) #{result.title}
+                            .result-content
+                                p #{result.content}
+
+            else if searchQuery
+                .no-results
+                    i.fas.fa-search.no-results-icon
+                    h2 Không tìm thấy kết quả nào
+                    p Vui lòng thử lại với từ khóa khác hoặc kiểm tra chính tả
+                    .search-suggestions
+                        p Gợi ý tìm kiếm:
+                        ul
+                            li Sử dụng từ khóa ngắn gọn hơn
+                            li Kiểm tra chính tả
+                            li Thử tìm kiếm bằng từ đồng nghĩa
+
+        if searchResults && searchResults.length > 0 && totalPages > 1
+            .pagination-container
+                nav.pagination-nav
+                    ul.pagination
+                        //- Previous page
+                        li.page-item(class=currentPage === 1 ? 'disabled' : '')
+                            a.page-link(href=currentPage > 1 ? `/search?q=${encodeURIComponent(searchQuery)}&page=${currentPage - 1}` : '#') Trang trước
+
+                        //- Page numbers
+                        - for(let i = 1; i <= totalPages; i++)
+                            li.page-item(class=i === currentPage ? 'active' : '')
+                                a.page-link(href=`/search?q=${encodeURIComponent(searchQuery)}&page=${i}`) #{i}
+
+                        //- Next page
+                        li.page-item(class=currentPage === totalPages ? 'disabled' : '')
+                            a.page-link(href=currentPage < totalPages ? `/search?q=${encodeURIComponent(searchQuery)}&page=${currentPage + 1}` : '#') Trang sau
