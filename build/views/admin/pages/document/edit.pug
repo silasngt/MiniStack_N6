@@ -1,0 +1,88 @@
+extends ../../layouts/default.pug
+
+block main
+  .add-document-container
+    .add-document-wrapper
+      .form-card
+        .form-header
+          h2.form-title Chỉnh sửa tài liệu
+          a.btn-back(href="/admin/document")
+            i.fas.fa-arrow-left
+            span Quay lại
+
+        .form-content
+          form.document-form(action=`/${prefixAdmin}/document/edit/${document.DocumentID}?_method=PATCH` method="POST" enctype="multipart/form-data")
+            // Tiêu đề
+            .form-group
+              label.form-label(for="title") Tiêu đề
+              input.form-input(
+                type="text"
+                id="title"
+                name="title"
+                value=document.Title
+                
+                required
+              )
+
+            // Danh mục
+            .form-group
+              label(for="category") Danh mục
+              .category-select-wrapper
+                select.form-control.multiple-select(
+                  name="category[]"
+                  multiple
+                  size="4"
+                )
+                  each category in categories
+                    option(
+                      value=category.CategoryID
+                      selected=document.Categories && document.Categories.includes(category.CategoryID)
+                    )= category.Name
+                .select-hint
+                  small.text-muted Giữ Ctrl + Click để chọn nhiều danh mục
+
+            // Link
+            .form-group
+              label.form-label(for="link") Link tài liệu
+              input.form-input(
+                type="url"
+                id="link" 
+                name="link"
+                value=document.FilePath 
+                placeholder="https://example.com"
+                required
+              )
+
+            // Attach Image và Action buttons
+            .form-footer
+              .image-section
+                label.image-label Attach Image (1/1)
+                
+                .image-actions-wrapper
+                  .image-grid
+                    // Preview container
+                    #preview-container.image-preview-container
+                      if document.Thumbnail
+                        .preview-item
+                          img.preview-image(src=document.Thumbnail name="thumbnail" alt="Current thumbnail")
+                    
+                    // Upload button
+                    label.upload-area(for="image-upload")
+                      .upload-content
+                        svg.upload-icon(fill="none" stroke="currentColor" viewBox="0 0 24 24")
+                          path(stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12")
+                        span.upload-text Upload
+                      input#image-upload.file-input(
+                        type="file"
+                        accept="image/*"
+                        name="thumbnail"
+                      )
+
+            // Action buttons
+            .form-actions
+              button.btn-submit(type="submit" data-redirect="/admin/document") Cập nhật
+              a.btn-cancel(href="/admin/document") Hủy
+                      
+        
+             
+                        

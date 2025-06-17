@@ -1,0 +1,24 @@
+extends ../../layouts/defaultMenu.pug
+
+block main
+  .question-form
+    if error
+      .question-form__error= error
+    form.question-form__form(action="/forum/question" method="POST")
+      .question-form__group
+        label.question-form__label(for="title") Tiêu đề
+        input.question-form__input#title(type="text" name="Title" required)
+      .question-form__group
+        label.question-form__label(for="content") Nội dung
+        textarea.question-form__textarea#content(name="Content" required)
+      .question-form__group
+        label.question-form__label(for="category") Danh mục
+        select.question-form__select#category(name="CategoryID" required)
+          option(value="") Chọn danh mục
+          if categories && categories.length > 0
+            each category in categories
+              option(value=category.CategoryID)= category.Name
+          else
+            option(value="" disabled) Không có danh mục nào
+      .question-form__actions
+        button.question-form__button(type="submit") Gửi câu hỏi
