@@ -1,5 +1,5 @@
 <div align="center">
-# ĐỒ ÁN MÔN CHUYÊN ĐỀ THỰC TẾ 2 - PRACTICAL THEMATIC
+# ĐỒ ÁN MÔN CHUYÊN ĐỀ THỰC TẾ 2 - PRACTICAL THEMATIC 2
 </div>
 
 # MiniStack - Diễn đàn hỏi đáp và chia sẻ tài liệu học tập
