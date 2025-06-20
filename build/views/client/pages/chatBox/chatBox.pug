@@ -1,0 +1,33 @@
+extends ../../layouts/defaultMenu.pug
+
+block main
+  div(class="chat-ui")
+    div(class="chat-ui__content")
+      div(class="chat-ui__header")
+        h1(class="chat-ui__title")
+          | Chat UI
+          span(class="chat-ui__subtitle") AI-Powered Conversations
+
+      div(class="chat-ui__chatbox")
+        div(class="chat-ui__message-group")
+          div(class="chat-ui__message chat-ui__message--left")
+            | Hello! Welcome to the Chat UI.
+          div(class="chat-ui__message chat-ui__message--right")
+            | Hi! How can I assist you today?
+
+    div(class="chat-ui__input-wrapper")
+      form(class="chat-ui__form")
+        input(
+          type="text"
+          name="message"
+          placeholder="Type your message..."
+          class="chat-ui__input"
+          autocomplete="off"
+        )
+        button(
+          type="submit"
+          class="chat-ui__send-btn"
+        )
+          | Send
+  // Thêm đoạn này để load JS riêng cho chatBox
+  script(src="/js/scriptT.js")

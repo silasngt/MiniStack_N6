@@ -1,0 +1,34 @@
+extends ../../layouts/defaultMenu.pug
+
+block main
+  div(class="code-compile")
+    div(class="code-compile__container")
+      form(class="code-compile__form" method="POST" action="/compile/compile")
+        // Left Panel - Code Section
+        div(class="code-compile__panel code-compile__panel--left")
+          div(class="code-compile__header")
+            h2(class="code-compile__title") Code
+
+          div(class="code-compile__subheader")
+            p(class="code-compile__description") Enter the code
+            select(class="code-compile__select" name="language" required)
+              option(value="" disabled selected hidden) Ngôn ngữ
+              option(value="cpp") C++
+              option(value="python") Python
+
+          textarea(name="code" class="code-compile__textarea" placeholder="// Write your code here..." required)
+
+          button(type="submit" class="code-compile__btn")
+            span Compile your code
+
+      // Right Panel - Compile Section  
+      div(class="code-compile__panel code-compile__panel--right")
+        div(class="code-compile__header")
+          h2(class="code-compile__title") Compile
+
+        p(class="code-compile__description code-compile__description--output") Enjoy your Compile code!
+
+        div(class="code-compile__output-wrapper")
+          div(class="code-compile__output")
+            | #{output || '// Output will appear here...'}
+  script(src="/js/scriptT.js")
