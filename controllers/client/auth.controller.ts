@@ -5,38 +5,34 @@ import * as jwt from 'jsonwebtoken';
 import User from '../../models/user.model';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
-//hiển thị giao diện login
+
 export const login = async (req: Request, res: Response) => {
   res.render('client/pages/auth/login.pug', {
     pageTitle: 'Đăng nhập',
   });
 };
-
-//hiển thị giao diện đăng ký
 export const register = async (req: Request, res: Response) => {
   res.render('client/pages/auth/register.pug', {
     pageTitle: 'Đăng ký',
   });
 };
 
-//ràng buộc email
+// Validation helpers
 const validateEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 };
 
-//ràng buộc sdt
 const validatePhone = (phone: string): boolean => {
   const phoneDigits = phone.replace(/\D/g, '');
   return phoneDigits.length === 10;
 };
 
-//ràng buộc password
 const validatePassword = (password: string): boolean => {
   return password.length >= 6;
 };
 
-//xử lý đăng ký
+// Xử lý đăng ký POST
 export const registerPost = async (req: Request, res: Response) => {
   try {
     // Kiểm tra nếu req.body là undefined hoặc rỗng
@@ -208,7 +204,7 @@ export const registerPost = async (req: Request, res: Response) => {
   }
 };
 
-// Xử lý đăng nhập
+// Xử lý đăng nhập POST
 export const loginPost = async (req: Request, res: Response) => {
   try {
     const { username, password, rememberMe } = req.body;
@@ -297,7 +293,6 @@ export const loginPost = async (req: Request, res: Response) => {
   }
 };
 
-//xử lý đăng xuất
 export const logout = (req: Request, res: Response) => {
   res.clearCookie('auth_token', { path: '/' });
   req.session.destroy(() => {
@@ -305,7 +300,7 @@ export const logout = (req: Request, res: Response) => {
   });
 };
 
-//lấy thông tin user hiện tại
+// Lấy thông tin user hiện tại
 export const getProfile = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -345,7 +340,7 @@ export const getProfile = async (req: Request, res: Response) => {
   }
 };
 
-//cập nhật thông tin user
+// Cập nhật thông tin user
 export const updateProfile = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -420,7 +415,7 @@ export const updateProfile = async (req: Request, res: Response) => {
   }
 };
 
-//đổi mật khẩu
+// Đổi mật khẩu
 export const changePassword = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;

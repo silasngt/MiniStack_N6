@@ -55,11 +55,6 @@
   background-color: #f9fafb;
 }
 
-.user-table th:last-child {
-  width: 140px;
-  min-width: 140px;
-}
-
 .role-badge {
   padding: 4px 12px;
   border-radius: 20px;
@@ -77,6 +72,19 @@
   background-color: #fef3c7;
   color: #d97706;
 }
+
+.user-table th:last-child,
+.user-table td.action-buttons {
+  width: 140px;
+  min-width: 140px;
+}
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 /*CSS for login admin */
 * {
   font-family: 'Inter', sans-serif;

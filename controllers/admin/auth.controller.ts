@@ -2,14 +2,13 @@ import { Request, Response } from 'express';
 import User from '../../models/user.model';
 import md5 from 'md5';
 
-//hiển thị giao diện đăng nhập admin
 export const index = async (req: Request, res: Response) => {
   res.render('admin/pages/auth/login.pug', {
     pageTitle: 'Đăng nhập admin',
     errorMessage: null,
   });
 };
-//xử lý login
+
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   const user = await User.findOne({
@@ -39,7 +38,7 @@ export const login = async (req: Request, res: Response) => {
     res.redirect('/admin/dashboard');
   }
 };
-//xử lý logout
+
 export const logout = (req: Request, res: Response) => {
   req.session.destroy(() => {
     res.redirect('/admin/auth/login');
