@@ -21,7 +21,8 @@ block main
                                 option(value="Bài viết" selected=(category.type && category.type.includes("Bài viết"))) Bài viết
                                 option(value="Tài liệu" selected=(category.type && category.type.includes("Tài liệu"))) Tài liệu
                                 option(value="Diễn đàn" selected=(category.type && category.type.includes("Diễn đàn"))) Diễn đàn
-
+                            .select-hint
+                                small.text-muted Giữ Ctrl + Click để chọn nhiều danh mục
                         .mt-5.d-flex.justify-content-between
                             button.btn-login.btn-lg.px-4(type="submit") CẬP NHẬT
                             a.btn.btn-outline-secondary.btn-lg.p-4#closeCategoryForm(href='/admin/categories/' title="HỦY") HỦY

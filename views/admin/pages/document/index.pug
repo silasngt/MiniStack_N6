@@ -25,7 +25,7 @@ block main
         tbody.table-body
           if documents && documents.length > 0
             each doc,index in documents
-              tr.table-row(class=user.status === 'inactive' ? 'inactive-row' : '')
+              tr.table-row(class=doc.status === 'inactive' ? 'inactive-row' : '')
                 td= index + 1
                 td= doc.title
                 td

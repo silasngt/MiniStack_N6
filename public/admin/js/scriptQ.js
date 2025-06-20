@@ -1,26 +1,40 @@
-// JS for categories
-function deleteCategory(id, btn) {
-  if (confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
-    fetch(`/admin/categories/delete/${id}`, {
+// Helper: Xóa entity (user, category, document)
+function deleteEntity(
+  url,
+  btn,
+  successMsg = 'Xóa thành công',
+  failMsg = 'Xóa không thành công'
+) {
+  if (confirm('Bạn có chắc chắn muốn xóa mục này?')) {
+    fetch(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          // Ẩn dòng vừa xóa khỏi bảng
           const row = btn.closest('tr');
           if (row) row.remove();
+          alert(successMsg);
         } else {
-          alert(data.message || 'Xóa không thành công');
+          alert(data.message || failMsg);
         }
       })
       .catch(() => alert('Có lỗi xảy ra khi xóa!'));
   }
 }
 
+function deleteCategory(id, btn) {
+  deleteEntity(`/admin/categories/delete/${id}`, btn);
+}
+function deleteUser(id, btn) {
+  deleteEntity(`/admin/user/delete/${id}`, btn);
+}
+function deleteDocument(id, btn) {
+  deleteEntity(`/admin/document/delete/${id}`, btn);
+}
+
+// Toggle status (user, category, document)
 function toggleStatus(type, id, btn) {
   fetch(`/admin/${type}/toggle-status/${id}`, {
     method: 'POST',
@@ -29,23 +43,21 @@ function toggleStatus(type, id, btn) {
     .then((res) => res.json())
     .then((data) => {
       if (data.success) {
-        // Hiện thông báo xác nhận
-        const msg =
-          'Bạn có muốn chuyển trạng thái thành: ' +
-          (data.newStatus === 'active' ? 'Hoạt động' : 'Không hoạt động');
+        const msg = `Bạn có muốn chuyển trạng thái thành: ${
+          data.newStatus === 'active' ? 'Hoạt động' : 'Không hoạt động'
+        }`;
         if (confirm(msg)) {
           const icon = btn.querySelector('i');
-          if (data.newStatus === 'active') {
-            icon.className = 'fas fa-eye';
-            btn.style.color = '#28a745';
-            btn.title = 'Tắt hoạt động';
-            btn.closest('tr').classList.remove('inactive-row');
-          } else {
-            icon.className = 'fas fa-eye-slash';
-            btn.style.color = '#dc3545';
-            btn.title = 'Bật hoạt động';
-            btn.closest('tr').classList.add('inactive-row');
+          if (icon) {
+            icon.className =
+              data.newStatus === 'active' ? 'fas fa-eye' : 'fas fa-eye-slash';
           }
+          btn.style.color = data.newStatus === 'active' ? '#28a745' : '#dc3545';
+          btn.title =
+            data.newStatus === 'active' ? 'Tắt hoạt động' : 'Bật hoạt động';
+          btn
+            .closest('tr')
+            .classList.toggle('inactive-row', data.newStatus !== 'active');
         }
       } else {
         alert(data.message || 'Chuyển trạng thái thất bại');
@@ -54,18 +66,14 @@ function toggleStatus(type, id, btn) {
     .catch(() => alert('Có lỗi xảy ra!'));
 }
 
-//JS for login admin
+// Toggle password visibility
 document.addEventListener('DOMContentLoaded', function () {
   const togglePassword = document.getElementById('togglePassword');
   const passwordField = document.getElementById('password');
-
-  // Toggle hiển thị mật khẩu
   if (togglePassword && passwordField) {
     togglePassword.addEventListener('click', function () {
-      const type =
-        passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-      passwordField.setAttribute('type', type);
-
+      const type = passwordField.type === 'password' ? 'text' : 'password';
+      passwordField.type = type;
       const icon = this.querySelector('i');
       if (icon) {
         icon.classList.toggle('fa-eye');
@@ -75,255 +83,145 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 
-//add user
+// Validation helpers
+function validateEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+function validatePhone(phone) {
+  return /^\d{10}$/.test(phone);
+}
+function validateField(field, errorElement, validator) {
+  const value = field.value.trim();
+  let isValid = true,
+    errorMessage = '';
+  if (field.required && !value) {
+    isValid = false;
+    errorMessage = 'Trường này là bắt buộc';
+  } else if (value && validator) {
+    const result = validator(value);
+    if (result !== true) {
+      isValid = false;
+      errorMessage = result;
+    }
+  }
+  field.classList.toggle('error', !isValid);
+  errorElement.textContent = isValid ? '' : errorMessage;
+  return isValid;
+}
+
+// Add user form validation
 document.addEventListener('DOMContentLoaded', function () {
   const form = document.getElementById('addUserForm');
+  if (!form) return;
   const submitBtn = form.querySelector('.btn-submit');
+  const fullName = form.querySelector('#fullName');
+  const email = form.querySelector('#email');
+  const phone = form.querySelector('#phone');
+  const password = form.querySelector('#password');
+  const confirmPassword = form.querySelector('#confirmPassword');
 
-  // Validation functions
-  function validateEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
-
-  function validatePhone(phone) {
-    const phoneRegex = /^\d{10}$/;
-    return phoneRegex.test(phone);
-  }
-
-  function validateField(field, errorElement, validator) {
-    const value = field.value.trim();
-    let isValid = true;
-    let errorMessage = '';
-
-    if (field.hasAttribute('required') && !value) {
-      isValid = false;
-      errorMessage = 'Trường này là bắt buộc';
-    } else if (value && validator) {
-      const result = validator(value);
-      if (result !== true) {
-        isValid = false;
-        errorMessage = result;
-      }
-    }
-
-    if (isValid) {
-      field.classList.remove('error');
-      errorElement.textContent = '';
-    } else {
-      field.classList.add('error');
-      errorElement.textContent = errorMessage;
-    }
-
-    return isValid;
-  }
-
-  // Real-time validation
-  document.getElementById('fullName').addEventListener('blur', function () {
-    validateField(
-      this,
-      document.getElementById('fullNameError'),
-      function (value) {
-        if (value.length < 2) return 'Họ tên phải có ít nhất 2 ký tự';
-        if (value.length > 100) return 'Họ tên không được vượt quá 100 ký tự';
-        return true;
-      }
-    );
-  });
-
-  document.getElementById('email').addEventListener('blur', function () {
-    validateField(
-      this,
-      document.getElementById('emailError'),
-      function (value) {
-        if (!validateEmail(value)) return 'Định dạng email không hợp lệ';
-        return true;
-      }
-    );
-  });
-
-  document.getElementById('phone').addEventListener('blur', function () {
-    const value = this.value.trim();
-    if (value) {
-      // Chỉ validate khi có nhập
-      validateField(
-        this,
-        document.getElementById('phoneError'),
-        function (value) {
-          if (!validatePhone(value))
-            return 'Số điện thoại phải có đúng 10 chữ số';
-          return true;
-        }
+  fullName?.addEventListener('blur', () =>
+    validateField(fullName, form.querySelector('#fullNameError'), (v) =>
+      v.length < 2
+        ? 'Họ tên phải có ít nhất 2 ký tự'
+        : v.length > 100
+        ? 'Họ tên không được vượt quá 100 ký tự'
+        : true
+    )
+  );
+  email?.addEventListener('blur', () =>
+    validateField(email, form.querySelector('#emailError'), (v) =>
+      !validateEmail(v) ? 'Định dạng email không hợp lệ' : true
+    )
+  );
+  phone?.addEventListener('blur', function () {
+    if (phone.value.trim()) {
+      validateField(phone, form.querySelector('#phoneError'), (v) =>
+        !validatePhone(v) ? 'Số điện thoại phải có đúng 10 chữ số' : true
       );
     } else {
-      // Clear error nếu không nhập (vì không bắt buộc)
-      this.classList.remove('error');
-      document.getElementById('phoneError').textContent = '';
+      phone.classList.remove('error');
+      form.querySelector('#phoneError').textContent = '';
     }
   });
-
-  // Chỉ cho phép nhập số cho phone
-  document.getElementById('phone').addEventListener('input', function () {
-    this.value = this.value.replace(/[^0-9]/g, '');
+  phone?.addEventListener('input', function () {
+    phone.value = phone.value.replace(/[^0-9]/g, '');
   });
-
-  document.getElementById('password').addEventListener('blur', function () {
+  password?.addEventListener('blur', () =>
+    validateField(password, form.querySelector('#passwordError'), (v) =>
+      v.length < 6
+        ? 'Mật khẩu phải có ít nhất 6 ký tự'
+        : v.length > 50
+        ? 'Mật khẩu không được vượt quá 50 ký tự'
+        : true
+    )
+  );
+  confirmPassword?.addEventListener('blur', function () {
     validateField(
-      this,
-      document.getElementById('passwordError'),
-      function (value) {
-        if (value.length < 6) return 'Mật khẩu phải có ít nhất 6 ký tự';
-        if (value.length > 50) return 'Mật khẩu không được vượt quá 50 ký tự';
-        return true;
-      }
+      confirmPassword,
+      form.querySelector('#confirmPasswordError'),
+      (v) => (v !== password.value ? 'Mật khẩu xác nhận không khớp' : true)
     );
-
-    // Revalidate confirm password if it has value
-    const confirmPassword = document.getElementById('confirmPassword');
-    if (confirmPassword.value) {
-      confirmPassword.dispatchEvent(new Event('blur'));
-    }
   });
-
-  document
-    .getElementById('confirmPassword')
-    .addEventListener('blur', function () {
-      const password = document.getElementById('password').value;
-      validateField(
-        this,
-        document.getElementById('confirmPasswordError'),
-        function (value) {
-          if (value !== password) return 'Mật khẩu xác nhận không khớp';
-          return true;
-        }
-      );
-    });
 
   form.addEventListener('submit', function (e) {
-    const fullName = document.getElementById('fullName');
-    const email = document.getElementById('email');
-    const phone = document.getElementById('phone');
-    const password = document.getElementById('password');
-    const confirmPassword = document.getElementById('confirmPassword');
-
     let isValid = true;
-
     isValid &= validateField(
       fullName,
-      document.getElementById('fullNameError'),
-      function (value) {
-        if (value.length < 2) return 'Họ tên phải có ít nhất 2 ký tự';
-        if (value.length > 100) return 'Họ tên không được vượt quá 100 ký tự';
-        return true;
-      }
+      form.querySelector('#fullNameError'),
+      (v) =>
+        v.length < 2
+          ? 'Họ tên phải có ít nhất 2 ký tự'
+          : v.length > 100
+          ? 'Họ tên không được vượt quá 100 ký tự'
+          : true
     );
-
-    isValid &= validateField(
-      email,
-      document.getElementById('emailError'),
-      function (value) {
-        if (!validateEmail(value)) return 'Định dạng email không hợp lệ';
-        return true;
-      }
+    isValid &= validateField(email, form.querySelector('#emailError'), (v) =>
+      !validateEmail(v) ? 'Định dạng email không hợp lệ' : true
     );
-
-    // Validate phone nếu có nhập
     if (phone.value.trim()) {
-      isValid &= validateField(
-        phone,
-        document.getElementById('phoneError'),
-        function (value) {
-          if (!validatePhone(value))
-            return 'Số điện thoại phải có đúng 10 chữ số';
-          return true;
-        }
+      isValid &= validateField(phone, form.querySelector('#phoneError'), (v) =>
+        !validatePhone(v) ? 'Số điện thoại phải có đúng 10 chữ số' : true
       );
     }
-
     isValid &= validateField(
       password,
-      document.getElementById('passwordError'),
-      function (value) {
-        if (value.length < 6) return 'Mật khẩu phải có ít nhất 6 ký tự';
-        if (value.length > 50) return 'Mật khẩu không được vượt quá 50 ký tự';
-        return true;
-      }
+      form.querySelector('#passwordError'),
+      (v) =>
+        v.length < 6
+          ? 'Mật khẩu phải có ít nhất 6 ký tự'
+          : v.length > 50
+          ? 'Mật khẩu không được vượt quá 50 ký tự'
+          : true
     );
-
     isValid &= validateField(
       confirmPassword,
-      document.getElementById('confirmPasswordError'),
-      function (value) {
-        if (value !== password.value) return 'Mật khẩu xác nhận không khớp';
-        return true;
-      }
+      form.querySelector('#confirmPasswordError'),
+      (v) => (v !== password.value ? 'Mật khẩu xác nhận không khớp' : true)
     );
-
     if (!isValid) {
       e.preventDefault();
       return false;
     }
-
     submitBtn.disabled = true;
     submitBtn.innerHTML =
       '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
   });
 });
+
+// Edit user password confirm
 document.addEventListener('DOMContentLoaded', function () {
   const form = document.getElementById('editUserForm');
-  const newPassword = document.getElementById('newPassword');
-  const confirmPassword = document.getElementById('confirmPassword');
-
-  confirmPassword.addEventListener('input', function () {
-    if (newPassword.value !== confirmPassword.value) {
-      confirmPassword.setCustomValidity('Mật khẩu xác nhận không khớp');
-    } else {
-      confirmPassword.setCustomValidity('');
-    }
-  });
+  if (!form) return;
+  const newPassword = form.querySelector('#newPassword');
+  const confirmPassword = form.querySelector('#confirmPassword');
+  if (newPassword && confirmPassword) {
+    confirmPassword.addEventListener('input', function () {
+      confirmPassword.setCustomValidity(
+        newPassword.value !== confirmPassword.value
+          ? 'Mật khẩu xác nhận không khớp'
+          : ''
+      );
+    });
+  }
 });
-
-//js for user
-function deleteUser(id, btn) {
-  if (confirm('Bạn có chắc chắn muốn xóa người dùng này?')) {
-    fetch(`/admin/user/delete/${id}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          // Ẩn dòng vừa xóa khỏi bảng
-          const row = btn.closest('tr');
-          if (row) row.remove();
-        } else {
-          alert(data.message || 'Xóa không thành công');
-        }
-      })
-      .catch(() => alert('Có lỗi xảy ra khi xóa!'));
-  }
-}
-
- function deleteDocument(id, btn) {
-  if (confirm('Bạn có chắc chắn muốn xóa tài liệu này?')) {
-    fetch(`/admin/document/delete/${id}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          // Ẩn dòng vừa xóa khỏi bảng
-          const row = btn.closest('tr');
-          if (row) row.remove();
-        } else {
-          alert(data.message || 'Xóa không thành công');
-        }
-      })
-      .catch(() => alert('Có lỗi xảy ra khi xóa!'));
-  }
-}
