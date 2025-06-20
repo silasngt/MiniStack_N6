@@ -1,0 +1,29 @@
+.pagination-container
+  .pagination
+    // Nút Prev
+    if typeof currentPage !== 'undefined' && currentPage > 1
+      a.btn-page.btn-prev(href=`?page=${currentPage - 1}`)
+        i.icon-prev
+        span Prev
+    else
+      button.btn-page.btn-prev(disabled)
+        i.icon-prev
+        span Prev
+
+    // Các nút số trang
+    if typeof totalPages !== 'undefined'
+      - for (var page = 1; page <= totalPages; page++)
+        if page === currentPage
+          button.btn-page.active= page
+        else
+          a.btn-page(href=`?page=${page}`)= page
+
+    // Nút Next
+    if typeof currentPage !== 'undefined' && typeof totalPages !== 'undefined' && currentPage < totalPages
+      a.btn-page.btn-next(href=`?page=${currentPage + 1}`)
+        span Next
+        i.icon-next
+    else
+      button.btn-page.btn-next(disabled)
+        span Next
+        i.icon-next

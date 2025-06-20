@@ -1,0 +1,39 @@
+extends ../../layouts/defaultMenu.pug
+include ../../mixins/pagination.pug
+
+block main
+  // Section Câu hỏi
+  div.forum
+    div.forum__question-section
+      div.forum__header
+        h1.forum__title Câu hỏi
+        button.forum__add-btn
+          a.question-detail__add-btn(href="/forum/question") Thêm câu hỏi
+
+    // Danh sách kết quả
+    if topics && topics.length > 0
+      each topic in topics.slice((currentPage - 1) * limit, currentPage * limit)
+        div.forum__item
+          div.forum__stats
+            div.forum__stat-item
+              span.forum__stat-number #{topic.CommentCount || 0}
+              span.forum__stat-label #{parseInt(topic.CommentCount) === 1 ? 'answer' : 'answers'}
+          div.forum__content
+            h2.forum__question
+              a(href=`/forum/exchange/${topic.TopicID}`) #{topic.Title}
+            p.forum__description #{topic.Content}
+    else
+      div.forum__empty
+        p Chưa có câu hỏi nào. Hãy là người đầu tiên đặt câu hỏi!
+
+    // Phân trang
+    +pagination(currentPage, totalPages, limit)
+
+  // Script xử lý click nút phân trang
+  script.
+    document.querySelectorAll('[button-pagination]').forEach(button => {
+      button.addEventListener('click', () => {
+        const page = button.getAttribute('button-pagination');
+        window.location.href = `/forum?limit=#{limit}&page=${page}`;
+      });
+    });

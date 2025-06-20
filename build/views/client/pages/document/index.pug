@@ -1,0 +1,51 @@
+extends ../../layouts/defaultMenu.pug
+
+block main
+  .container
+    if error
+      .error-message= error
+    else
+      .documents-grid
+        each doc in documents
+          .document-card
+            // Phần ảnh đại diện bên trái
+            .document-icon
+              img.thumb-image(
+                src=doc.thumbnail || "/images/doc-thumb.jpg"  
+                alt=doc.title
+              )
+
+            // Phần nội dung bên phải
+            .document-info
+              // Hiển thị nhiều danh mục
+              .categories-list
+                each category in doc.categories
+                  span.category-badge= category.Name
+
+              // Tiêu đề với link
+              h1.document-title #{doc.title}
+                .link-wrapper
+                  span.link-label Link: 
+                  a.doc-link(href=doc.filePath target="_blank") Click vào đây để lấy tài liệu
+
+      // Phân trang
+      if pagination && pagination.totalPages > 1
+        .pagination
+          if pagination.hasPrev
+            a.page-btn.prev(href=`?page=${pagination.page - 1}`) 
+              i.fas.fa-chevron-left
+              
+
+          .page-numbers
+            - var i = 1;
+            while i <= pagination.totalPages
+              a.page-btn(
+                class=i === pagination.page ? 'active' : ''
+                href=`?page=${i}`
+              )= i
+              - i++
+
+          if pagination.hasNext
+            a.page-btn.next(href=`?page=${pagination.page + 1}`)
+              
+              i.fas.fa-chevron-right
