@@ -1,0 +1,22 @@
+extends ../../layouts/default.pug
+
+block main
+  .dashboard-container
+    h1.dashboard-title Dashboard
+    
+    .stats-container
+      .stats-card
+        .stats-title Số lượng câu hỏi
+        .stats-value #{totalForumTopics}
+      
+      .stats-card
+        .stats-title Số lượng người dùng
+        .stats-value #{totalUsers}
+
+      .stats-card
+        .stats-title Số lượng bài viết
+        .stats-value #{totalPost}
+
+      .stats-card
+        .stats-title Số lượng tài liệu
+        .stats-value #{totalDocument}

@@ -1,0 +1,51 @@
+extends ../../layouts/default.pug
+
+block main
+    .create-post-container
+        .create-header
+            h1.create-title Thêm bài viết mới
+            button.btn-close(onclick="window.history.back()")
+                i.fas.fa-times
+
+        .create-form-container
+            form.create-post-form(action="/admin/posts/create" method="POST" enctype="multipart/form-data")
+                .form-group
+                    label(for="title") Tiêu đề
+                    input#title.form-control(type="text" name="title", required)
+
+                .form-group
+                    label(for="category") Danh mục
+                    .category-select-wrapper
+                        select#category.form-control.multiple-select(name="category", required multiple size="4")
+                            if categories && categories.length > 0
+                                each cat in categories
+                                    option(value=cat.CategoryID)= cat.Name
+                            else
+                                option(value="1") Lập trình
+                                option(value="2") Cơ sở dữ liệu
+                                option(value="3") Công nghệ mới
+                                option(value="4") Trí tuệ nhân tạo
+                                option(value="5") Phát triển web
+                                option(value="6") Phát triển ứng dụng di động
+                        .select-hint
+                            small.text-muted Giữ Ctrl + Click để chọn nhiều danh mục
+                .form-group
+                    label(for="content") Nội dung
+                    textarea#content.form-control.content-area(name="content" rows="10", required)
+
+                .form-group
+                    label.attachment-label Đính kèm hình ảnh
+                    .image-attachments
+                        .image-preview-container#imagePreviewContainer
+                            // Single image preview will be added here
+
+                        .image-upload-box
+                            label(for="image-upload")
+                                i.fas.fa-cloud-upload-alt
+                                span Chọn ảnh (chỉ chọn 1 ảnh)
+                            input#image-upload(type="file" name="image" accept="image/*" hidden)
+
+                .form-buttons
+                    button.btn-submit(type="submit") THÊM
+                    button.btn-cancel(type="button" onclick="window.history.back()") HỦY
+    script(src="/admin/js/scriptK.js") 
