@@ -8,7 +8,7 @@ interface RequestWithFile extends Request {
   file?: {
     path: string;
     filename: string;
-  }
+  };
 }
 
 export const index = async (req: Request, res: Response): Promise<void> => {
@@ -121,20 +121,21 @@ export const create = async (req: Request, res: Response) => {
     });
   }
 };
-export const createPost = async (req: Request, res: Response): Promise<void> => {
+export const createPost = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    
     // Lấy dữ liệu từ form
     const { title, category, link, description } = req.body;
-    
-       const categories = Array.isArray(category) ? category : [category];
 
+    const categories = Array.isArray(category) ? category : [category];
 
     // Validate dữ liệu
     if (!title || !category) {
       res.status(400).json({
         success: false,
-        message: 'Thiếu thông tin bắt buộc'
+        message: 'Thiếu thông tin bắt buộc',
       });
       return;
     }
@@ -148,9 +149,9 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
       UploadBy: (req.session as any).adminUser.id,
       Categories: categories,
       status: 'active',
-      Thumbnail: req.body.thumbnail || null
+      Thumbnail: req.body.thumbnail || null,
     });
-    
+
     res.redirect('/admin/document');
     // res.status(200).json({
     //   success: true,
@@ -158,12 +159,11 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
     //   document: newDocument
     // });
     // res.redirect('/admin/document');
-
   } catch (error) {
     console.error('Lỗi:', error);
     res.status(500).json({
       success: false,
-      message: 'Có lỗi xảy ra khi thêm tài liệu'
+      message: 'Có lỗi xảy ra khi thêm tài liệu',
     });
   }
 };
@@ -184,11 +184,10 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
     }
 
     const categories = await Category.findAll({
-      where: {deleted: false, status: 'active' },
+      where: { deleted: false, status: 'active' },
     });
     // Convert to plain object to make sure all properties are accessible
     const documentData = document.get({ plain: true });
-    
 
     res.render('admin/pages/document/edit', {
       pageTitle: 'Sửa tài liệu',
@@ -204,24 +203,25 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
 };
 
 // Cập nhật tài liệu
-export const update = async (req: RequestWithFile, res: Response): Promise<void> => {
+export const update = async (
+  req: RequestWithFile,
+  res: Response
+): Promise<void> => {
   try {
     const { id } = req.params;
     const { title, category, link, currentThumbnail } = req.body;
 
- 
-
     const document = await Document.findOne({
-      where: { 
+      where: {
         DocumentID: id,
-        deleted: false 
-      }
+        deleted: false,
+      },
     });
 
     if (!document) {
       res.status(404).json({
         success: false,
-        message: 'Không tìm thấy tài liệu'
+        message: 'Không tìm thấy tài liệu',
       });
       return;
     }
@@ -254,9 +254,8 @@ export const update = async (req: RequestWithFile, res: Response): Promise<void>
       Title: title || currentDoc.Title,
       Categories: categories,
       FilePath: link || currentDoc.FilePath,
-      Thumbnail: req.body.thumbnail
+      Thumbnail: req.body.thumbnail,
     };
-
 
     await document.update(updateData);
     res.redirect('/admin/document');
@@ -268,55 +267,17 @@ export const update = async (req: RequestWithFile, res: Response): Promise<void>
     //     DocumentID: id
     //   }
     // });
-
   } catch (error) {
     console.error('Update error:', error);
     res.status(500).json({
       success: false,
       message: 'Có lỗi xảy ra khi cập nhật tài liệu',
-      error: error.message
+      error: error.message,
     });
   }
 };
 
 // Cập nhật trạng thái
-// export const updateStatus = async (
-//   req: Request,
-//   res: Response
-// ): Promise<void> => {
-//   try {
-//     const { id } = req.params;
-//     const { status } = req.body;
-
-//     const document = await Document.findByPk(id);
-
-//     if (!document) {
-//       res.status(404).json({
-//         success: false,
-//         message: 'Không tìm thấy tài liệu',
-//       });
-//       return;
-//     }
-
-//     // Toggle status
-//     const newStatus = status === 'active' ? 'inactive' : 'active';
-
-//     await document.update({
-//       status: newStatus,
-//     });
-
-//     res.json({
-//       success: true,
-//       message: `${newStatus === 'active' ? 'Hiện' : 'Ẩn'} tài liệu thành công`,
-//     });
-//   } catch (error) {
-//     console.error('Update status error:', error);
-//     res.status(500).json({
-//       success: false,
-//       message: 'Có lỗi xảy ra khi cập nhật trạng thái',
-//     });
-//   }
-// };
 
 export const toggleStatus = async (
   req: Request,
@@ -350,40 +311,7 @@ export const toggleStatus = async (
   }
 };
 
-// Thêm chức năng xóa tài liệu
-// export const deleteDocument = async (
-//   req: Request,
-//   res: Response
-// ): Promise<void> => {
-//   try {
-//     const { id } = req.params;
-//     const adminUser = (req.session as any).adminUser;
-
-//     if (!adminUser) {
-//       res.status(401).json({
-//         success: false,
-//         message: 'Unauthorized - Vui lòng đăng nhập',
-//       });
-//       return;
-//     }
-
-//     // Soft delete - cập nhật trường deleted thành true
-//     await Document.update({ deleted: true }, { where: { DocumentID: id } });
-
-//     res.json({
-//       success: true,
-//       message: 'Xóa tài liệu thành công',
-//     });
-//   } catch (error) {
-//     console.error('Delete document error:', error);
-//     res.status(500).json({
-//       success: false,
-//       message: 'Có lỗi xảy ra khi xóa tài liệu',
-//     });
-//   }
-// };
-
-// Xóa người dùng
+// Xóa tài liệu
 export const deleteDocument = async (
   req: Request,
   res: Response
