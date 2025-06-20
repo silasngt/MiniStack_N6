@@ -38,7 +38,6 @@ app.use(auth_middleware_1.checkAuth);
 app.use(auth_middleware_1.addUserToViews);
 (0, index_routes_2.routesAdmin)(app);
 (0, index_routes_1.routesClient)(app);
-
 app.listen(port, () => {
     console.log(`App listening on port http://localhost:${port}`);
 });
