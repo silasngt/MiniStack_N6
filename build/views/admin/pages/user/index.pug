@@ -1,0 +1,44 @@
+extends ../../layouts/default.pug
+include ../../mixins/pagination.pug
+
+
+block main
+  .user-management-content
+    .header-section
+      h1.page-title Danh sách người dùng
+      a.add-a(href='/admin/user/add' type="a")
+        | Thêm người dùng mới
+    .table-container
+      table.user-table
+        thead
+          tr
+            th ID
+            th Tên
+            th Email
+            th SĐT
+            th Ngày tạo
+            th Quyền hạn
+            th Thao tác
+        tbody
+          each user in users
+            tr.user-row(class=user.status === 'inactive' ? 'inactive-row' : '')
+              td.user-id= user.stt
+              td.user-name= user.name
+              td.user-email= user.email
+              td.user-phone= user.phone
+              td.user-date= user.date
+              td.user-role
+                - var roleClass = 'role-badge role-' + user.role
+                span(class=roleClass)= user.role
+              td.user-actions
+                - var type = 'user';
+                - var id = user.id;
+                - var status = user.status;
+                - var editUrl = `/admin/user/edit/${user.id}`;
+                - var deleteFunc = 'deleteUser';
+                include ../../partials/action.pug
+              
+    +pagination(currentPage, totalPages)
+
+  
+

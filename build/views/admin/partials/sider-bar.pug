@@ -1,0 +1,17 @@
+.sidebar
+  nav.sidebar-nav
+    ul.nav-list
+      li.nav-item
+        a.nav-link(href=`/${prefixAdmin}/dashboard`, class=(currentPath === '/dashboard' ? 'active' : '')) Dashboard
+      li.nav-item
+        a.nav-link(href=`/${prefixAdmin}/user`, class=(currentPath === '/user' ? 'active' : '')) Quản lý người dùng
+      li.nav-item
+        a.nav-link(href=`/${prefixAdmin}/forumManager`, class=(currentPath === '/forumManager' ? 'active' : '')) Quản lý diễn đàn
+      li.nav-item
+        a.nav-link(href=`/${prefixAdmin}/categories`, class=(currentPath === '/categories' ? 'active' : '')) Quản lý danh mục
+      li.nav-item
+        a.nav-link(href=`/${prefixAdmin}/posts`, class=(currentPath === '/posts' ? 'active' : '')) Quản lý bài viết
+      li.nav-item
+        a.nav-link(href=`/${prefixAdmin}/document`, class=(currentPath === '/document' ? 'active' : '')) Quản lý tài liệu
+      //- li.nav-item
+      //-   a.nav-link(href=`/${prefixAdmin}/testCloud`, class=(currentPath === '/testCloud' ? 'active' : '')) Test Cloud
