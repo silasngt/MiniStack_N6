@@ -7,6 +7,7 @@
   padding: 10px 0;
   position: relative;
   z-index: 1;
+  margin-bottom: 70px;
 }
 
 /* Pagination Links */
@@ -21,33 +22,64 @@
   margin: 0 5px;
 }
 
+.pagination button,
 .pagination a {
-  display: block;
-  padding: 8px 12px;
-  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 8px;
   background-color: #f8f9fa;
   color: #333;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
-  transition: all 0.3s ease;
-  border: 1px solid #ced4da;
+  border: 1.5px solid #e0e0e0;
+  transition: all 0.2s;
+  outline: none;
+  cursor: pointer;
 }
 
-.pagination a:hover {
+.pagination button:disabled,
+.pagination .disabled button,
+.pagination .disabled span {
+  background: #f8f9fa;
+  color: #bdbdbd;
+  border-color: #e0e0e0;
+  cursor: default;
+}
+
+.pagination button:hover:not(:disabled):not(.active),
+.pagination a:hover:not(.active) {
   background-color: #ffc107;
   color: #212529;
   border-color: #ffc107;
 }
 
+.pagination .active button,
 .pagination .active a {
-  background-color: #ffc107;
-  color: #212529;
+  background-color: #2196f3;
+  color: #fff;
   font-weight: bold;
-  border-color: #ffc107;
+  border-color: #2196f3;
+  cursor: default;
 }
 
-/* Ensure Pagination Stays Above Footer */
-.pagination-container {
-  margin-bottom: 40px; /* Add space above the footer */
+.pagination .page-item {
+  display: flex;
+  align-items: center;
+}
+
+.pagination .page-link {
+  border: none;
+  background: none;
+  font-size: inherit;
+  font-family: inherit;
+  padding: 0;
+}
+
+.pagination .page-item.disabled .page-link {
+  pointer-events: none;
 }

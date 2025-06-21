@@ -4,45 +4,60 @@ import Category from '../../models/category.model';
 
 export const index = async (req: Request, res: Response) => {
   try {
-    // Lấy tham số phân trang
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = 5;
-    const offset = (page - 1) * limit;
+    // Phân trang
+    let limit = 4;
+    let page = 1;
 
+    if (req.query.limit) {
+      limit = parseInt(`${req.query.limit}`);
+    }
+    if (req.query.page) {
+      page = parseInt(`${req.query.page}`);
+    }
+
+    const skip = (page - 1) * limit;
+
+    const totalDocuments = await Document.count({
+      where: {
+        deleted: false,
+        status: 'active',
+      },
+    });
+    const totalPages = Math.ceil(totalDocuments / limit);
+
+    // Hết Phân trang
     // Chỉ lấy tài liệu có trạng thái active và chưa bị xóa
     const documents = await Document.findAll({
       where: {
         status: 'active',
-        deleted: false
+        deleted: false,
       },
       order: [['UploadDate', 'DESC']],
-      limit,
-      offset
+      offset: skip,
+      limit: limit,
     });
     // console.log(documents);
     // Xử lý dữ liệu trước khi gửi đến view
-     const formattedDocs = await Promise.all(
+    const formattedDocs = await Promise.all(
       documents.map(async (doc) => {
         const document = doc.get({ plain: true });
 
-        
-        
         // Lấy tất cả danh mục của tài liệu
         const categoryIds = document.Categories || [];
         const categories = await Category.findAll({
           where: {
             CategoryID: categoryIds,
-            status: 'active'
+            status: 'active',
           },
-          attributes: ['CategoryID', 'Name']
+          attributes: ['CategoryID', 'Name'],
         });
         // console.log(document);
         return {
           id: document.DocumentID,
           title: document.Title,
-          thumbnail: document.Thumbnail ,
+          thumbnail: document.Thumbnail,
           filePath: document.FilePath,
-          categories: categories
+          categories: categories,
         };
       })
     );
@@ -53,26 +68,21 @@ export const index = async (req: Request, res: Response) => {
     const totalDocs = await Document.count({
       where: {
         status: 'active',
-        deleted: false
-      }
+        deleted: false,
+      },
     });
 
     res.render('client/pages/document/index', {
       pageTitle: 'Thư viện tài liệu',
       documents: formattedDocs,
-      pagination: {
-        page,
-        totalPages: Math.ceil(totalDocs / limit),
-        hasNext: page * limit < totalDocs,
-        hasPrev: page > 1
-      }
+      currentPage: page,
+      totalPages: totalPages,
     });
-
   } catch (error) {
     console.error('Error:', error);
     res.render('client/pages/document/index', {
       pageTitle: 'Thư viện tài liệu',
-      error: 'Có lỗi xảy ra khi tải dữ liệu'
+      error: 'Có lỗi xảy ra khi tải dữ liệu',
     });
   }
 };

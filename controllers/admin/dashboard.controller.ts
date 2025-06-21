@@ -15,6 +15,7 @@ export const index = async (req: Request, res: Response) => {
     where: {
       deleted: false,
       status: 'active',
+      role: 'user', // Assuming you want to count only regular users
     },
   });
   const totalPost = await Post.count({
