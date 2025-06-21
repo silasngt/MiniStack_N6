@@ -15,7 +15,7 @@ interface UserAttributes {
   status: 'active' | 'inactive';
   createdAt: Date;
 }
-//hiển thị giao diện quản lý người dùng
+
 export const index = async (req: Request, res: Response) => {
   try {
     // Phân trang
@@ -82,7 +82,7 @@ export const index = async (req: Request, res: Response) => {
   }
 };
 
-//form thêm user mới
+// Form thêm user mới
 export const add = async (req: Request, res: Response): Promise<void> => {
   try {
     res.render('admin/pages/user/add.pug', {
@@ -94,7 +94,7 @@ export const add = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-//xử lý việc tạo user mới
+// Function để xử lý việc tạo user mới
 export const create = async (req: Request, res: Response): Promise<void> => {
   try {
     const {
@@ -240,7 +240,6 @@ export const create = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-//form chỉnh sửa user
 export const edit = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = req.params.id;
@@ -269,7 +268,6 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-//cập nhập người dùng
 export const update = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id, name, email, phone, gender, role, status, newPassword } =
@@ -326,7 +324,7 @@ export const update = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-//xóa người dùng
+// Xóa người dùng
 export const deleteUser = async (
   req: Request,
   res: Response
@@ -367,8 +365,6 @@ export const deleteUser = async (
     res.status(500).json({ success: false, message: 'Lỗi server' });
   }
 };
-
-//thay đổi trạng thái
 export const toggleStatus = async (
   req: Request,
   res: Response
