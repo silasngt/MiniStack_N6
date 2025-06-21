@@ -17,17 +17,30 @@ const document_model_1 = __importDefault(require("../../models/document.model"))
 const category_model_1 = __importDefault(require("../../models/category.model"));
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = 5;
-        const offset = (page - 1) * limit;
+        let limit = 4;
+        let page = 1;
+        if (req.query.limit) {
+            limit = parseInt(`${req.query.limit}`);
+        }
+        if (req.query.page) {
+            page = parseInt(`${req.query.page}`);
+        }
+        const skip = (page - 1) * limit;
+        const totalDocuments = yield document_model_1.default.count({
+            where: {
+                deleted: false,
+                status: 'active',
+            },
+        });
+        const totalPages = Math.ceil(totalDocuments / limit);
         const documents = yield document_model_1.default.findAll({
             where: {
                 status: 'active',
-                deleted: false
+                deleted: false,
             },
             order: [['UploadDate', 'DESC']],
-            limit,
-            offset
+            offset: skip,
+            limit: limit,
         });
         const formattedDocs = yield Promise.all(documents.map((doc) => __awaiter(void 0, void 0, void 0, function* () {
             const document = doc.get({ plain: true });
@@ -35,40 +48,36 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             const categories = yield category_model_1.default.findAll({
                 where: {
                     CategoryID: categoryIds,
-                    status: 'active'
+                    status: 'active',
                 },
-                attributes: ['CategoryID', 'Name']
+                attributes: ['CategoryID', 'Name'],
             });
             return {
                 id: document.DocumentID,
                 title: document.Title,
                 thumbnail: document.Thumbnail,
                 filePath: document.FilePath,
-                categories: categories
+                categories: categories,
             };
         })));
         const totalDocs = yield document_model_1.default.count({
             where: {
                 status: 'active',
-                deleted: false
-            }
+                deleted: false,
+            },
         });
         res.render('client/pages/document/index', {
             pageTitle: 'Thư viện tài liệu',
             documents: formattedDocs,
-            pagination: {
-                page,
-                totalPages: Math.ceil(totalDocs / limit),
-                hasNext: page * limit < totalDocs,
-                hasPrev: page > 1
-            }
+            currentPage: page,
+            totalPages: totalPages,
         });
     }
     catch (error) {
         console.error('Error:', error);
         res.render('client/pages/document/index', {
             pageTitle: 'Thư viện tài liệu',
-            error: 'Có lỗi xảy ra khi tải dữ liệu'
+            error: 'Có lỗi xảy ra khi tải dữ liệu',
         });
     }
 });

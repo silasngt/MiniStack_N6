@@ -18,17 +18,30 @@ const category_model_1 = __importDefault(require("../../models/category.model"))
 const user_model_1 = __importDefault(require("../../models/user.model"));
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = 5;
-        const offset = (page - 1) * limit;
+        let limit = 4;
+        let page = 1;
+        if (req.query.limit) {
+            limit = parseInt(`${req.query.limit}`);
+        }
+        if (req.query.page) {
+            page = parseInt(`${req.query.page}`);
+        }
+        const skip = (page - 1) * limit;
+        const totalDocuments = yield document_model_1.default.count({
+            where: {
+                deleted: false,
+                status: 'active',
+            },
+        });
+        const totalPages = Math.ceil(totalDocuments / limit);
         const totalDocs = yield document_model_1.default.count({
             where: { deleted: false },
         });
         const documents = yield document_model_1.default.findAll({
             where: { deleted: false },
             order: [['DocumentID', 'DESC']],
-            limit,
-            offset,
+            offset: skip,
+            limit: limit,
         });
         const formattedDocs = yield Promise.all(documents.map((doc) => __awaiter(void 0, void 0, void 0, function* () {
             const document = doc.get({ plain: true });
@@ -71,12 +84,8 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.render('admin/pages/document/index', {
             pageTitle: 'Danh sách tài liệu',
             documents: formattedDocs,
-            pagination: {
-                page,
-                totalPages: Math.ceil(totalDocs / limit),
-                totalItems: totalDocs,
-                limit,
-            },
+            currentPage: page,
+            totalPages: totalPages,
         });
     }
     catch (error) {
@@ -119,7 +128,7 @@ const createPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         if (!title || !category) {
             res.status(400).json({
                 success: false,
-                message: 'Thiếu thông tin bắt buộc'
+                message: 'Thiếu thông tin bắt buộc',
             });
             return;
         }
@@ -131,7 +140,7 @@ const createPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             UploadBy: req.session.adminUser.id,
             Categories: categories,
             status: 'active',
-            Thumbnail: req.body.thumbnail || null
+            Thumbnail: req.body.thumbnail || null,
         });
         res.redirect('/admin/document');
     }
@@ -139,7 +148,7 @@ const createPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         console.error('Lỗi:', error);
         res.status(500).json({
             success: false,
-            message: 'Có lỗi xảy ra khi thêm tài liệu'
+            message: 'Có lỗi xảy ra khi thêm tài liệu',
         });
     }
 });
@@ -181,13 +190,13 @@ const update = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const document = yield document_model_1.default.findOne({
             where: {
                 DocumentID: id,
-                deleted: false
-            }
+                deleted: false,
+            },
         });
         if (!document) {
             res.status(404).json({
                 success: false,
-                message: 'Không tìm thấy tài liệu'
+                message: 'Không tìm thấy tài liệu',
             });
             return;
         }
@@ -213,7 +222,7 @@ const update = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             Title: title || currentDoc.Title,
             Categories: categories,
             FilePath: link || currentDoc.FilePath,
-            Thumbnail: req.body.thumbnail
+            Thumbnail: req.body.thumbnail,
         };
         yield document.update(updateData);
         res.redirect('/admin/document');
@@ -223,7 +232,7 @@ const update = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(500).json({
             success: false,
             message: 'Có lỗi xảy ra khi cập nhật tài liệu',
-            error: error.message
+            error: error.message,
         });
     }
 });

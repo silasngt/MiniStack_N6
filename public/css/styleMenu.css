@@ -58,6 +58,7 @@ header {
   padding: 20px;
   min-height: calc(100vh - 61px - 50px);
   width: calc(100% - 260px);
+  padding-bottom: 70px; /* Thêm dòng này để chừa chỗ cho footer */
 }
 
 /* Main content */
@@ -258,6 +259,13 @@ footer {
 }
 
 .blog-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 4; /* Số dòng muốn hiển thị */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 2.6em;
+  max-height: 2.6em;
   font-size: 0.9rem;
   color: #6c757d;
   margin-bottom: 1rem;

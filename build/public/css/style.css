@@ -225,6 +225,13 @@ body {
 }
 
 .blog-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 4; /* Số dòng muốn hiển thị */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 2.6em;
+  max-height: 2.6em;
   font-size: 0.9rem;
   color: #6c757d;
   margin-bottom: 1rem;
