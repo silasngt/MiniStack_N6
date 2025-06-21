@@ -89,8 +89,8 @@ const question = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             },
             attributes: ['CategoryID', 'Name', 'Type'],
         });
-        const rawCategories = categories.map(cat => cat.get());
-        const forumCategories = rawCategories.filter(cat => Array.isArray(cat.Type) && cat.Type.includes('Diễn đàn'));
+        const rawCategories = categories.map((cat) => cat.get());
+        const forumCategories = rawCategories.filter((cat) => Array.isArray(cat.Type) && cat.Type.includes('Diễn đàn'));
         res.render('client/pages/forumTopic/question.pug', {
             pageTitle: 'Thêm câu hỏi',
             categories: forumCategories,

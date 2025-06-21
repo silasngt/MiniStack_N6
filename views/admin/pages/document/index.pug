@@ -1,5 +1,5 @@
 extends ../../layouts/default.pug
-
+include ../../mixins/pagination.pug
 block main
   .user-management-content
     //- Header Section
@@ -51,27 +51,5 @@ block main
               td(colspan="6" style="text-align: center") Không có dữ liệu
 
     //- Phân trang
-    if pagination && pagination.totalPages > 1
-      .pagination-container
-        .pagination
-          //- Nút Trang trước
-          if pagination.page > 1
-            a.btn-page.btn-prev(href=`/admin/document?page=${pagination.page - 1}`) 
-              i.fas.fa-angle-double-left
-              
-
-          //- Số trang
-          - var i = 1;
-          while i <= pagination.totalPages
-            if i === pagination.page
-              button.btn-page.active= i
-            else
-              a.btn-page(href=`/admin/document?page=${i}`)= i
-            - i++
-
-          //- Nút Trang sau
-          if pagination.page < pagination.totalPages
-            a.btn-page.btn-next(href=`/admin/document?page=${pagination.page + 1}`)
-              
-              i.fas.fa-angle-double-right
+    +pagination(currentPage, totalPages)
   script(src="/admin/js/scriptN.js")

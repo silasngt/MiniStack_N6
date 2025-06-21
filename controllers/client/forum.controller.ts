@@ -22,7 +22,8 @@ export const index = async (req: Request, res: Response) => {
     const totalPages = Math.ceil(totalTopics / limit);
 
     // Sử dụng raw query với LIMIT và OFFSET
-    const topicsWithComments: any = await sequelize.query(`
+    const topicsWithComments: any = await sequelize.query(
+      `
       SELECT 
         ft.TopicID,
         ft.Title,
@@ -40,14 +41,14 @@ export const index = async (req: Request, res: Response) => {
       GROUP BY ft.TopicID, ft.Title, ft.Content, ft.CreatedAt, u.FullName
       ORDER BY ft.CreatedAt DESC
       LIMIT :limit OFFSET :offset
-    `, {
-      replacements: { limit, offset },
-      type: QueryTypes.SELECT,
-    });
+    `,
+      {
+        replacements: { limit, offset },
+        type: QueryTypes.SELECT,
+      }
+    );
 
     const topics = topicsWithComments;
-
-
 
     res.render('client/pages/forumTopic/index.pug', {
       pageTitle: 'Diễn đàn',
@@ -85,9 +86,9 @@ export const question = async (req: Request, res: Response) => {
       attributes: ['CategoryID', 'Name', 'Type'],
     });
 
-    const rawCategories = categories.map(cat => cat.get());
-    const forumCategories = rawCategories.filter(cat =>
-      Array.isArray(cat.Type) && cat.Type.includes('Diễn đàn')
+    const rawCategories = categories.map((cat) => cat.get());
+    const forumCategories = rawCategories.filter(
+      (cat) => Array.isArray(cat.Type) && cat.Type.includes('Diễn đàn')
     );
 
     res.render('client/pages/forumTopic/question.pug', {
@@ -155,7 +156,10 @@ export const createQuestion = async (req: Request, res: Response) => {
   }
 };
 
-export const exchangeDetail = async (req: Request, res: Response): Promise<void> => {
+export const exchangeDetail = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const topicId = parseInt(req.params.topicId, 10);
   if (isNaN(topicId)) {
     res.status(400).send('ID topic không hợp lệ');
@@ -163,7 +167,8 @@ export const exchangeDetail = async (req: Request, res: Response): Promise<void>
   }
 
   try {
-    const topicResults: any = await sequelize.query(`
+    const topicResults: any = await sequelize.query(
+      `
       SELECT 
         ft.*,
         u.FullName as AuthorName
@@ -172,10 +177,12 @@ export const exchangeDetail = async (req: Request, res: Response): Promise<void>
       WHERE ft.TopicID = :topicId
         AND ft.deleted = false 
         AND ft.status = 'active'
-    `, {
-      replacements: { topicId },
-      type: QueryTypes.SELECT,
-    });
+    `,
+      {
+        replacements: { topicId },
+        type: QueryTypes.SELECT,
+      }
+    );
 
     if (!topicResults || topicResults.length === 0) {
       res.status(404).send('Không tìm thấy bài viết');
@@ -184,7 +191,8 @@ export const exchangeDetail = async (req: Request, res: Response): Promise<void>
 
     const topic = topicResults[0];
 
-    const comments: any = await sequelize.query(`
+    const comments: any = await sequelize.query(
+      `
       SELECT 
         c.*,
         u.FullName as AuthorName
@@ -194,12 +202,12 @@ export const exchangeDetail = async (req: Request, res: Response): Promise<void>
         AND c.deleted = false 
         AND c.status = 'active'
       ORDER BY c.CreatedAt ASC
-    `, {
-      replacements: { topicId },
-      type: QueryTypes.SELECT,
-    });
-
-
+    `,
+      {
+        replacements: { topicId },
+        type: QueryTypes.SELECT,
+      }
+    );
 
     res.render('client/pages/forumTopic/forumExchange', {
       topic,
@@ -212,7 +220,10 @@ export const exchangeDetail = async (req: Request, res: Response): Promise<void>
   }
 };
 
-export const addComment = async (req: Request, res: Response): Promise<void> => {
+export const addComment = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const topicId = parseInt(req.params.topicId, 10);
   const { Content } = req.body;
 
@@ -254,8 +265,6 @@ export const addComment = async (req: Request, res: Response): Promise<void> => 
       deleted: false,
       status: 'active',
     });
-
-
 
     res.redirect(`/forum/exchange/${topicId}`);
   } catch (error) {

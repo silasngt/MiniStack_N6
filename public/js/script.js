@@ -32,3 +32,20 @@ if (listButtonPagination.length > 0) {
   }
 }
 // Hết Phân trang
+
+//Chuyển Menu đến đúng trang đang đứng
+document.addEventListener('DOMContentLoaded', function () {
+  const path = window.location.pathname;
+  document.querySelectorAll('.sidebar-item').forEach(function (item) {
+    // Xóa active cũ
+    item.classList.remove('active');
+    // Nếu href trùng path hoặc path bắt đầu bằng href (cho các trang con)
+    if (
+      item.getAttribute('href') === path ||
+      (item.getAttribute('href') !== '/' && path.startsWith(item.getAttribute('href')))
+    ) {
+      item.classList.add('active');
+    }
+  });
+});
+//Hết Chuyển Menu đến đúng trang đang đứng

@@ -1,17 +1,37 @@
-mixin pagination(currentPage,totalPages)
- nav(class="mt-3")
-     ul(class="pagination")
-      if(currentPage > 1)
-       li(class="page-item")
-        button(class="page-link" button-pagination=currentPage-1) Trang trước
-      if(currentPage < totalPages/2 && currentPage !== 1)
-        li(class="page-item")
-         button(class="page-link" ) ...
-      else 
-        - for(var i = 1 ;i <= totalPages;i++)
-         li(class="page-item")
-          button(class="page-link" button-pagination=i) #{i}
-      
-      if(currentPage < totalPages)
-       li(class="page-item")
-        button(class="page-link" button-pagination=currentPage+1) Trang sau
+mixin pagination(currentPage, totalPages)
+  if totalPages > 1
+    nav(class="pagination-container")
+      ul(class="pagination")
+        // Nút Trang trước
+        if currentPage > 1
+          li(class="page-item")
+            button(class="page-link" button-pagination=(currentPage-1)) <i class="fa-solid fa-arrow-left"></i>
+
+        // Trang đầu
+        li(class="page-item" class=(currentPage === 1 ? 'active' : ''))
+          button(class="page-link" button-pagination=1) 1
+
+        // Dấu ... nếu cần
+        if currentPage > 3
+          li(class="page-item disabled")
+            span(class="page-link") ...
+
+        // Các trang lân cận
+        - for(var i = Math.max(2, currentPage-1); i <= Math.min(totalPages-1, currentPage+1); i++)
+          li(class="page-item" class=(currentPage === i ? 'active' : ''))
+            button(class="page-link" button-pagination=i) #{i}
+
+        // Dấu ... nếu cần
+        if currentPage < totalPages - 2
+          li(class="page-item disabled")
+            span(class="page-link") ...
+
+        // Trang cuối
+        if totalPages > 1
+          li(class="page-item" class=(currentPage === totalPages ? 'active' : ''))
+            button(class="page-link" button-pagination=totalPages) #{totalPages}
+
+        // Nút Trang sau
+        if currentPage < totalPages
+          li(class="page-item")
+            button(class="page-link" button-pagination=(currentPage+1)) <i class="fa-solid fa-arrow-right"></i>

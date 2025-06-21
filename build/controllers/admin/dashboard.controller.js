@@ -28,6 +28,7 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         where: {
             deleted: false,
             status: 'active',
+            role: 'user',
         },
     });
     const totalPost = yield post_model_1.default.count({

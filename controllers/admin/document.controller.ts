@@ -8,14 +8,31 @@ interface RequestWithFile extends Request {
   file?: {
     path: string;
     filename: string;
-  }
+  };
 }
 
 export const index = async (req: Request, res: Response): Promise<void> => {
   try {
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = 5;
-    const offset = (page - 1) * limit;
+    // Phân trang
+    let limit = 4;
+    let page = 1;
+
+    if (req.query.limit) {
+      limit = parseInt(`${req.query.limit}`);
+    }
+    if (req.query.page) {
+      page = parseInt(`${req.query.page}`);
+    }
+
+    const skip = (page - 1) * limit;
+
+    const totalDocuments = await Document.count({
+      where: {
+        deleted: false,
+        status: 'active',
+      },
+    });
+    const totalPages = Math.ceil(totalDocuments / limit);
 
     // Lấy tổng số documents
     const totalDocs = await Document.count({
@@ -26,8 +43,8 @@ export const index = async (req: Request, res: Response): Promise<void> => {
     const documents = await Document.findAll({
       where: { deleted: false },
       order: [['DocumentID', 'DESC']],
-      limit,
-      offset,
+      offset: skip,
+      limit: limit,
     });
 
     // Xử lý data để hiển thị categories và user
@@ -81,12 +98,8 @@ export const index = async (req: Request, res: Response): Promise<void> => {
     res.render('admin/pages/document/index', {
       pageTitle: 'Danh sách tài liệu',
       documents: formattedDocs,
-      pagination: {
-        page,
-        totalPages: Math.ceil(totalDocs / limit),
-        totalItems: totalDocs,
-        limit,
-      },
+      currentPage: page,
+      totalPages: totalPages,
     });
   } catch (error) {
     console.error('Error:', error);
@@ -121,20 +134,21 @@ export const create = async (req: Request, res: Response) => {
     });
   }
 };
-export const createPost = async (req: Request, res: Response): Promise<void> => {
+export const createPost = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    
     // Lấy dữ liệu từ form
     const { title, category, link, description } = req.body;
-    
-       const categories = Array.isArray(category) ? category : [category];
 
+    const categories = Array.isArray(category) ? category : [category];
 
     // Validate dữ liệu
     if (!title || !category) {
       res.status(400).json({
         success: false,
-        message: 'Thiếu thông tin bắt buộc'
+        message: 'Thiếu thông tin bắt buộc',
       });
       return;
     }
@@ -148,9 +162,9 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
       UploadBy: (req.session as any).adminUser.id,
       Categories: categories,
       status: 'active',
-      Thumbnail: req.body.thumbnail || null
+      Thumbnail: req.body.thumbnail || null,
     });
-    
+
     res.redirect('/admin/document');
     // res.status(200).json({
     //   success: true,
@@ -158,12 +172,11 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
     //   document: newDocument
     // });
     // res.redirect('/admin/document');
-
   } catch (error) {
     console.error('Lỗi:', error);
     res.status(500).json({
       success: false,
-      message: 'Có lỗi xảy ra khi thêm tài liệu'
+      message: 'Có lỗi xảy ra khi thêm tài liệu',
     });
   }
 };
@@ -184,11 +197,10 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
     }
 
     const categories = await Category.findAll({
-      where: {deleted: false, status: 'active' },
+      where: { deleted: false, status: 'active' },
     });
     // Convert to plain object to make sure all properties are accessible
     const documentData = document.get({ plain: true });
-    
 
     res.render('admin/pages/document/edit', {
       pageTitle: 'Sửa tài liệu',
@@ -204,24 +216,25 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
 };
 
 // Cập nhật tài liệu
-export const update = async (req: RequestWithFile, res: Response): Promise<void> => {
+export const update = async (
+  req: RequestWithFile,
+  res: Response
+): Promise<void> => {
   try {
     const { id } = req.params;
     const { title, category, link, currentThumbnail } = req.body;
 
- 
-
     const document = await Document.findOne({
-      where: { 
+      where: {
         DocumentID: id,
-        deleted: false 
-      }
+        deleted: false,
+      },
     });
 
     if (!document) {
       res.status(404).json({
         success: false,
-        message: 'Không tìm thấy tài liệu'
+        message: 'Không tìm thấy tài liệu',
       });
       return;
     }
@@ -254,9 +267,8 @@ export const update = async (req: RequestWithFile, res: Response): Promise<void>
       Title: title || currentDoc.Title,
       Categories: categories,
       FilePath: link || currentDoc.FilePath,
-      Thumbnail: req.body.thumbnail
+      Thumbnail: req.body.thumbnail,
     };
-
 
     await document.update(updateData);
     res.redirect('/admin/document');
@@ -268,13 +280,12 @@ export const update = async (req: RequestWithFile, res: Response): Promise<void>
     //     DocumentID: id
     //   }
     // });
-
   } catch (error) {
     console.error('Update error:', error);
     res.status(500).json({
       success: false,
       message: 'Có lỗi xảy ra khi cập nhật tài liệu',
-      error: error.message
+      error: error.message,
     });
   }
 };
