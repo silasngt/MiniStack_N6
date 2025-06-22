@@ -8,7 +8,7 @@ import sequelize from '../../config/database';
 export const index = async (req: Request, res: Response) => {
   try {
     // Lấy query parameters
-    const limit = parseInt(req.query.limit as string) || 10;
+    const limit = parseInt(req.query.limit as string) || 5;
     const page = parseInt(req.query.page as string) || 1;
     const offset = (page - 1) * limit;
 

@@ -18,7 +18,7 @@ const index_model_1 = require("../../models/index.model");
 const database_1 = __importDefault(require("../../config/database"));
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const limit = parseInt(req.query.limit) || 10;
+        const limit = parseInt(req.query.limit) || 5;
         const page = parseInt(req.query.page) || 1;
         const offset = (page - 1) * limit;
         const totalTopics = yield database_1.default.query(`
