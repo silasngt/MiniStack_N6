@@ -15,15 +15,30 @@ const getCurrentUser = (req: Request): { id: number; role: string } | null => {
 // [GET] /admin/posts
 export const index = async (req: Request, res: Response) => {
   try {
-    // ✅ CHECK: Authentication
-    const currentUser = getCurrentUser(req);
-    if (!currentUser) {
-      res.redirect('/admin/auth/login');
-      return;
+    // Phân trang
+    let limit = 4;
+    let page = 1;
+
+    if (req.query.limit) {
+      limit = parseInt(`${req.query.limit}`);
     }
+    if (req.query.page) {
+      page = parseInt(`${req.query.page}`);
+    }
+
+    const skip = (page - 1) * limit;
+
+    const totalPosts = await Post.count({
+      where: {
+        deleted: false,
+      },
+    });
+    const totalPages = Math.ceil(totalPosts / limit);
 
     const posts = await Post.findAll({
       where: { deleted: false },
+      offset: skip,
+      limit: limit,
       order: [['CreatedAt', 'DESC']],
     });
 
@@ -66,26 +81,6 @@ export const index = async (req: Request, res: Response) => {
         };
       })
     );
-    // Phân trang
-    let limit = 4;
-    let page = 1;
-
-    if (req.query.limit) {
-      limit = parseInt(`${req.query.limit}`);
-    }
-    if (req.query.page) {
-      page = parseInt(`${req.query.page}`);
-    }
-
-    const skip = (page - 1) * limit;
-
-    const totalPosts = await Post.count({
-      where: {
-        deleted: false,
-        status: 'active',
-      },
-    });
-    const totalPages = Math.ceil(totalPosts / limit);
 
     // Hết Phân trang
     res.render('admin/pages/post/index.pug', {
