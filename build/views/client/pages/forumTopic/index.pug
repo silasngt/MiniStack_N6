@@ -12,7 +12,7 @@ block main
 
     // Danh sách kết quả
     if topics && topics.length > 0
-      each topic in topics.slice((currentPage - 1) * limit, currentPage * limit)
+      each topic in topics
         div.forum__item
           div.forum__stats
             div.forum__stat-item
