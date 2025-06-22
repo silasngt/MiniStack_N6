@@ -6,7 +6,8 @@ block main
         .header-section
             h1.page-title Danh sách bài viết
             a.btn-add-post(href="/admin/posts/create") Thêm bài viết mới
-        //- Success messages
+
+        //- Success messages (giữ nguyên)
         if success === 'created'
             .alert.alert-success ✅ Bài viết đã được tạo thành công!
         if success === 'updated'
@@ -14,18 +15,17 @@ block main
         if success === 'deleted'
             .alert.alert-success ✅ Bài viết đã được xóa thành công!
 
-        //- Post Table
+        //- Post Table với layout mới
         .table-container
             table.post-table
                 thead
                     tr
-                        th STT
-                        th Tiêu đề
-                        th Nội dung
-                        th Tác giả
-                        th Danh mục
-                        th Ngày tạo
-                        th Thao tác
+                        th.col-stt STT
+                        th.col-title Tiêu đề
+                        th.col-category Danh mục
+                        th.col-author Tác giả
+                        th.col-date Ngày tạo
+                        th.col-actions Thao tác
 
                 tbody
                     if posts && posts.length > 0
@@ -34,13 +34,21 @@ block main
                                 id=`post-row-${post.PostID}` 
                                 class=post.status === 'inactive' ? 'post-inactive' : ''
                             )
-                                td.post-id= index + 1
-                                td.post-title.truncate(title=post.Title)= post.Title
-                                td.post-content.truncate(title=post.Content)= post.Content
-                                td.post-author= post.authorName
-                                td.post-category= post.categoryNames || 'Chưa phân loại'
-                                td.post-date= post.formattedDate
-                                td.post-actions
+                                td.post-id.col-stt= index + 1
+                                td.post-title.col-title(title=post.Title)
+                                    .title-wrapper
+                                        .title-text= post.Title
+                                        .content-preview= post.Content
+
+                                td.post-category.col-category
+                                    .category-badges
+                                        - const categories = post.categoryNames ? post.categoryNames.split(',') : ['Chưa phân loại']
+                                        each category, catIndex in categories
+                                            span.badge.category-badge(class=`badge-color-${catIndex % 6}`)= category.trim()
+
+                                td.post-author.col-author= post.authorName
+                                td.post-date.col-date= post.formattedDate
+                                td.post-actions.col-actions
                                     .btn-group(role="group")
                                         button.btn.btn-outline-secondary.btn-sm(
                                             title=post.status === 'active' ? 'Tạm dừng bài viết' : 'Kích hoạt bài viết'
@@ -59,7 +67,7 @@ block main
                                             i.fas.fa-trash
                     else
                         tr
-                            td(colspan="9" style="text-align: center; padding: 40px; color: #999;")
+                            td(colspan="6" style="text-align: center; padding: 40px; color: #999;")
                                 i.fas.fa-inbox(style="font-size: 3rem; margin-bottom: 15px; display: block;")
                                 div Chưa có bài viết nào
                                 a.btn-add-post(href="/admin/posts/create" style="margin-top: 15px; display: inline-block;") Thêm bài viết đầu tiên
