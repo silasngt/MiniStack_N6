@@ -25,13 +25,25 @@ const getCurrentUser = (req) => {
 };
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const currentUser = getCurrentUser(req);
-        if (!currentUser) {
-            res.redirect('/admin/auth/login');
-            return;
+        let limit = 4;
+        let page = 1;
+        if (req.query.limit) {
+            limit = parseInt(`${req.query.limit}`);
         }
+        if (req.query.page) {
+            page = parseInt(`${req.query.page}`);
+        }
+        const skip = (page - 1) * limit;
+        const totalPosts = yield post_model_1.default.count({
+            where: {
+                deleted: false,
+            },
+        });
+        const totalPages = Math.ceil(totalPosts / limit);
         const posts = yield post_model_1.default.findAll({
             where: { deleted: false },
+            offset: skip,
+            limit: limit,
             order: [['CreatedAt', 'DESC']],
         });
         const postsWithCategories = yield Promise.all(posts.map((post) => __awaiter(void 0, void 0, void 0, function* () {
@@ -56,22 +68,6 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             }
             return Object.assign(Object.assign({}, postData), { categoryNames: categoryNames.join(', '), authorName: authorName, formattedDate: new Date(postData.CreatedAt).toLocaleDateString('vi-VN'), hasImage: !!postData.Image, status: postData.status || 'active' });
         })));
-        let limit = 4;
-        let page = 1;
-        if (req.query.limit) {
-            limit = parseInt(`${req.query.limit}`);
-        }
-        if (req.query.page) {
-            page = parseInt(`${req.query.page}`);
-        }
-        const skip = (page - 1) * limit;
-        const totalPosts = yield post_model_1.default.count({
-            where: {
-                deleted: false,
-                status: 'active',
-            },
-        });
-        const totalPages = Math.ceil(totalPosts / limit);
         res.render('admin/pages/post/index.pug', {
             pageTitle: 'Quản lý bài viết',
             posts: postsWithCategories,

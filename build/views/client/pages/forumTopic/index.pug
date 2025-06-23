@@ -12,7 +12,7 @@ block main
 
     // Danh sách kết quả
     if topics && topics.length > 0
-      each topic in topics.slice((currentPage - 1) * limit, currentPage * limit)
+      each topic in topics
         div.forum__item
           div.forum__stats
             div.forum__stat-item
@@ -21,7 +21,7 @@ block main
           div.forum__content
             h2.forum__question
               a(href=`/forum/exchange/${topic.TopicID}`) #{topic.Title}
-            p.forum__description #{topic.Content}
+            p.forum__description #{topic.Content.length > 150 ? topic.Content.substring(0, topic.Content.lastIndexOf(' ', 150)) + '...' : topic.Content}
     else
       div.forum__empty
         p Chưa có câu hỏi nào. Hãy là người đầu tiên đặt câu hỏi!

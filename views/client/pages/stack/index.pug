@@ -22,7 +22,7 @@ block main
               div
                 a.text-decoration-none(href=`/forum/exchange/${question.TopicID}`) 
                   .error-text #{question.Title}
-                  p.mb-0 #{question.Content}
+                  p.mb-0 #{question.Content.length > 120 ? question.Content.substring(0, question.Content.lastIndexOf(' ', 120)) + '...' : question.Content}
                 
     
     //- // Câu hỏi 1
@@ -96,4 +96,3 @@ block main
                   div
                     each category in blog.CategoryNames
                       span.blog-tag= category
-  

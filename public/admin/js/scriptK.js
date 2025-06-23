@@ -844,4 +844,24 @@ function updatePasswordStrengthUI(strength) {
     strengthLevel.style.color = strength.color;
     strengthLevel.style.fontWeight = 'bold';
   }
+
+  // THÊM: Xử lý phân trang
+  if (isIndexPage) {
+    // Lắng nghe click trên tất cả button phân trang
+    document.addEventListener('click', function (e) {
+      const target = e.target.closest('[button-pagination]');
+      if (target) {
+        e.preventDefault();
+
+        const page = target.getAttribute('button-pagination');
+        const currentUrl = new URL(window.location);
+
+        // Cập nhật parameter page
+        currentUrl.searchParams.set('page', page);
+
+        // Chuyển hướng với parameter mới
+        window.location.href = currentUrl.toString();
+      }
+    });
+  }
 }

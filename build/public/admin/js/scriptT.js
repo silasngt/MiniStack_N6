@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const icon = btn.querySelector('i');
       const currentStatus = btn.dataset.status;
       const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+      const tr = btn.closest('tr'); // Lấy dòng chứa nút
 
       const res = await fetch(`/admin/forumManager/update-status/${topicId}`, {
         method: 'PATCH',
@@ -17,6 +18,16 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.dataset.status = newStatus;
         icon.classList.toggle('fa-eye');
         icon.classList.toggle('fa-eye-slash');
+        
+        // Lấy tất cả các td trừ cột thao tác (td cuối cùng)
+        const contentCells = tr.querySelectorAll('td:not(.forum-td-actions)');
+        
+        // Nếu status là inactive, làm mờ nội dung, nếu active thì bỏ mờ
+        if (newStatus === 'inactive') {
+          contentCells.forEach(cell => cell.style.opacity = '0.5'); // Làm mờ cho inactive
+        } else {
+          contentCells.forEach(cell => cell.style.opacity = '1'); // Bỏ mờ cho active
+        }
       }
     });
   });
@@ -82,5 +93,17 @@ document.addEventListener('DOMContentLoaded', () => {
         tr.remove(); // Xóa khỏi giao diện
       }
     });
+  });
+
+  // Khởi tạo opacity cho các dòng inactive khi load trang
+  document.querySelectorAll('.forum-btn-view').forEach(btn => {
+    const tr = btn.closest('tr');
+    const status = btn.dataset.status;
+    
+    if (status === 'inactive') {
+      // Chỉ làm mờ nội dung, không làm mờ cột thao tác
+      const contentCells = tr.querySelectorAll('td:not(.forum-td-actions)');
+      contentCells.forEach(cell => cell.style.opacity = '0.5');
+    }
   });
 });
