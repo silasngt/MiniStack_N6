@@ -19,7 +19,7 @@ const user_model_1 = __importDefault(require("../../models/user.model"));
 const moment_1 = __importDefault(require("moment"));
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let limit = 4;
+        let limit = 6;
         let page = 1;
         if (req.query.limit) {
             limit = parseInt(`${req.query.limit}`);

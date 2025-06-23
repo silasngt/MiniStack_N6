@@ -7,7 +7,7 @@ import moment from 'moment';
 export const index = async (req: Request, res: Response) => {
   try {
     // Phân trang
-    let limit = 4;
+    let limit = 6;
     let page = 1;
 
     if (req.query.limit) {
