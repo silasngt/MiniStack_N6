@@ -46,5 +46,5 @@ router.get('/exchange', controller.exchangeIndex);
 router.get('/exchange/:topicId', controller.exchangeDetail);
 router.get('/question', auth_middleware_1.requireClientLogin, controller.question);
 router.post('/question', controller.createQuestion);
-router.post('/exchange/:topicId/add-comment', controller.addComment);
+router.post('/exchange/:topicId/add-comment', auth_middleware_1.requireClientLogin, controller.addComment);
 exports.forumRoute = router;
